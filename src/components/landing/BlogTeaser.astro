@@ -1,47 +1,45 @@
 ---
 // BlogTeaser — landing page "Latest writing" section.
 //
-// Renders 3 PostCards in a grid. For now the posts are hardcoded
-// here; Phase 5a will replace this with `getCollection('posts')`
-// (sorted desc by pubDate, sliced to 3).
+// Renders 3 PostCards in a grid, pulled from the `posts` content
+// collection. Drafts are filtered out; featured posts float to the
+// front, then most-recent fills the rest.
 //
 // Mirrors template lines 826–866; container styles (`.b-blog`,
 // `.b-blog-foot`) mirror template lines 399 and 435–440. The card
 // CSS lives in PostCard.astro.
 
+import { getCollection } from "astro:content";
 import PostCard from "@/components/PostCard.astro";
 
-// TODO(Phase 5a): replace with getCollection('posts'), sorted desc
-//                 by pubDate, sliced 3.
-const posts = [
-  {
-    href: "/posts/auditable-working-definition",
-    title: 'What we mean by "auditable" — a working definition',
-    description:
-      "Six properties an analytical run should carry with it so a reviewer, a regulator, or a future you can rerun it cold.",
-    pubDate: new Date("2026-05-15"),
-    category: "Method",
-    stamp: "Note · 008",
-  },
-  {
-    href: "/posts/cohort-retention-four-ways",
-    title: "Cohort retention, redone four ways",
-    description:
-      "A small case study from a pilot — the same business question routed through four different LLM-assisted pipelines, and what their audit bundles revealed about each.",
-    pubDate: new Date("2026-04-12"),
-    category: "Field report",
-    stamp: "Note · 007",
-  },
-  {
-    href: "/posts/intent-verification-beats-code-review",
-    title: "Why intent verification beats code review for LLM output",
-    description:
-      "Code that runs is not code that answers the right question. A short argument for checking implementations against the stated goal, not just against the compiler.",
-    pubDate: new Date("2026-03-20"),
-    category: "Position",
-    stamp: "Note · 006",
-  },
-];
+const allPosts = await getCollection(
+  "posts",
+  ({ data }) => data.draft !== true
+);
+
+// Sort by date descending. Featured posts float to the front, but
+// stay date-ordered among themselves so the latest featured shows
+// first.
+const byDateDesc = (
+  a: (typeof allPosts)[number],
+  b: (typeof allPosts)[number]
+) => +new Date(b.data.pubDatetime) - +new Date(a.data.pubDatetime);
+
+const featured = allPosts
+  .filter(p => p.data.featured === true)
+  .sort(byDateDesc);
+const others = allPosts
+  .filter(p => p.data.featured !== true)
+  .sort(byDateDesc);
+const posts = [...featured, ...others].slice(0, 3);
+
+// Stamp numbers are intentionally hardcoded for now; if posts grow we
+// can derive these from a `series` frontmatter field. Count down from
+// 008 so the latest gets the highest number (matching the template).
+const SERIES_START = 8;
+function stampFor(idx: number): string {
+  return `Note · ${String(SERIES_START - idx).padStart(3, "0")}`;
+}
 ---
 
 <section class="b-section" id="blog">
@@ -52,7 +50,18 @@ const posts = [
     </div>
 
     <div class="b-blog">
-      {posts.map(p => <PostCard {...p} />)}
+      {
+        posts.map((p, i) => (
+          <PostCard
+            href={`/posts/${p.id}`}
+            title={p.data.title}
+            description={p.data.description}
+            pubDate={p.data.pubDatetime}
+            category={p.data.category}
+            stamp={stampFor(i)}
+          />
+        ))
+      }
     </div>
 
     <div class="b-blog-foot">
