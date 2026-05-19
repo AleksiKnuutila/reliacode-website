@@ -2,14 +2,15 @@ import { defineAstroPaperConfig } from "./src/types/config";
 
 export default defineAstroPaperConfig({
   site: {
-    url: "https://astro-paper.pages.dev/",
-    title: "AstroPaper",
-    description: "A minimal, responsive and SEO-friendly Astro blog theme.",
-    author: "Sat Naing",
-    profile: "https://satna.ing",
-    ogImage: "default-og.jpg",
+    // Placeholder. Real deploy URL is set later (see Phase 6).
+    url: "https://reliaground.example/",
+    title: "ReliaGround",
+    description: "Auditable LLMs for the work that has to be right.",
+    author: "ReliaGround Team",
+    // ogImage intentionally omitted — falls back to AstroPaper default
+    // and the dynamic OG image route. Phase 6 restyles.
     lang: "en",
-    timezone: "Asia/Bangkok",
+    timezone: "Europe/Helsinki",
     dir: "ltr",
   },
   posts: {
@@ -18,28 +19,17 @@ export default defineAstroPaperConfig({
     scheduledPostMargin: 15 * 60 * 1000,
   },
   features: {
+    // Single-theme site — dark mode disabled for the research preview.
     lightAndDarkMode: false,
     dynamicOgImage: true,
     showArchives: true,
     showBackButton: true,
-    editPost: {
-      enabled: true,
-      url: "https://github.com/satnaing/astro-paper/edit/main/",
-    },
+    // No public source repo to edit yet.
+    editPost: { enabled: false },
     search: "pagefind",
   },
-  socials: [
-    { name: "github",   url: "https://github.com/satnaing/astro-paper" },
-    { name: "x",        url: "https://x.com/username" },
-    { name: "linkedin", url: "https://www.linkedin.com/in/username/" },
-    { name: "mail",     url: "mailto:yourmail@gmail.com" },
-  ],
-  shareLinks: [
-    { name: "whatsapp", url: "https://wa.me/?text=" },
-    { name: "facebook", url: "https://www.facebook.com/sharer.php?u=" },
-    { name: "x",        url: "https://x.com/intent/post?url=" },
-    { name: "telegram", url: "https://t.me/share/url?url=" },
-    { name: "pinterest", url: "https://pinterest.com/pin/create/button/?url=" },
-    { name: "mail",     url: "mailto:?subject=See%20this%20post&body=" },
-  ],
+  // Research project — no social profiles yet.
+  socials: [],
+  // No share buttons on posts during the research preview.
+  shareLinks: [],
 });
