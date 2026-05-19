@@ -44,11 +44,17 @@ const rssHref = getRelativeLocaleUrl(
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Font -->
+    <!-- Fonts: preload the body sans and the display serif. Geist Mono
+         is loaded but not preloaded (only used in tight components). -->
     <Font
-      cssVariable="--font-google-sans-code"
+      cssVariable="--font-manrope"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
+    <Font
+      cssVariable="--font-fraunces"
+      preload={[{ subset: "latin", weight: 600, style: "normal" }]}
+    />
+    <Font cssVariable="--font-geist-mono" />
 
     <!-- Primary meta -->
     <title>{title}</title>

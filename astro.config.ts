@@ -52,13 +52,52 @@ export default defineConfig({
   },
   fonts: [
     {
-      name: "Google Sans Code",
-      cssVariable: "--font-google-sans-code",
+      // Display serif. Variable across opsz/wght with optional SOFT and
+      // WONK axes (low-contrast Fraunces look used on h1-h4). Italic 400
+      // only — we never italicize a weight other than the body weight.
+      name: "Fraunces",
+      cssVariable: "--font-fraunces",
       provider: fontProviders.google(),
-      fallbacks: ["monospace"],
-      weights: [300, 400, 500, 600, 700],
+      fallbacks: ["Source Serif 4", "Georgia", "serif"],
+      weights: ["400 600"],
       styles: ["normal", "italic"],
-      formats: ["woff", "ttf"],
+      formats: ["woff2", "woff"],
+      // Unifont experimental option, forwarded by Astro to the google
+      // provider. Tuples become range axes (`9..144`); strings are
+      // passed through. SOFT 0..100, WONK 0..1 are Fraunces-specific
+      // axes; opsz 9..144 is the standard optical-sizing range.
+      options: {
+        experimental: {
+          variableAxis: {
+            opsz: [["9", "144"]],
+            SOFT: [["0", "100"]],
+            WONK: [["0", "1"]],
+          },
+        },
+      },
+    },
+    {
+      // Body sans. Discrete weights are sufficient — the body never
+      // animates wght, and static faces keep OG image rendering
+      // (satori) straightforward. `ttf` is included so satori (which
+      // needs raw font tables) can load the bold weight for OG images.
+      name: "Manrope",
+      cssVariable: "--font-manrope",
+      provider: fontProviders.google(),
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
+      formats: ["woff2", "woff", "ttf"],
+    },
+    {
+      // Monospace. Geist Mono ships as a wght-variable font.
+      name: "Geist Mono",
+      cssVariable: "--font-geist-mono",
+      provider: fontProviders.google(),
+      fallbacks: ["ui-monospace", "SF Mono", "Menlo", "monospace"],
+      weights: ["400 500"],
+      styles: ["normal"],
+      formats: ["woff2", "woff"],
     },
   ],
   env: {
