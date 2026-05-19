@@ -1,26 +1,23 @@
 ---
 // FAQ — landing page FAQ accordion.
 //
-// Native <details>/<summary> based accordion driven by FAQ_ITEMS.
-// First item with `open: true` renders with the `open` attribute so
-// it expands on first paint. The summary's "+" rotates 45° to "×"
-// when its parent <details> is open.
-//
-// Mirrors template lines 758–823; styles mirror lines 389–396.
-// Global summary-marker reset lives in global.css.
+// Native <details>/<summary> driven by src/content/landing/faq.md.
+// The summary's "+" rotates 45° to "×" when its parent <details> is open.
 
-import { FAQ_ITEMS } from "@/config";
+import { getLandingSection } from "@/utils/getLandingSection";
+
+const faq = await getLandingSection("faq");
 ---
 
 <section class="b-section alt" id="faq">
   <div class="b-wrap">
     <div class="b-shead">
-      <div class="b-kicker">FAQ</div>
-      <h2>Questions we hear from prospective pilots.</h2>
+      <div class="b-kicker">{faq.kicker}</div>
+      <h2>{faq.headline}</h2>
     </div>
     <div class="b-faq">
       {
-        FAQ_ITEMS.map(item => (
+        faq.items.map(item => (
           <details open={item.open ? true : undefined}>
             <summary>
               <span class="q">{item.q}</span>

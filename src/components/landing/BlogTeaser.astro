@@ -13,7 +13,10 @@ import { getCollection } from "astro:content";
 import PostCard from "@/components/PostCard.astro";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { buildPostStamps } from "@/utils/getPostStamps";
+import { getLandingSection } from "@/utils/getLandingSection";
 import config from "@/config";
+
+const blog = await getLandingSection("blog");
 
 const allPosts = await getCollection(
   "posts",
@@ -46,8 +49,8 @@ const locale = Astro.currentLocale ?? config.site.lang;
 <section class="b-section" id="blog">
   <div class="b-wrap">
     <div class="b-shead">
-      <div class="b-kicker">Latest writing</div>
-      <h2>From the research notebook.</h2>
+      <div class="b-kicker">{blog.kicker}</div>
+      <h2>{blog.headline}</h2>
     </div>
 
     <div class="b-blog">
@@ -66,11 +69,8 @@ const locale = Astro.currentLocale ?? config.site.lang;
     </div>
 
     <div class="b-blog-foot">
-      <span
-        >Roughly one note a month. Methods, field reports, and the occasional
-        position piece.</span
-      >
-      <a href="/posts">All notes →</a>
+      <span>{blog.footer_text}</span>
+      <a href={blog.footer_link.href}>{blog.footer_link.label}</a>
     </div>
   </div>
 </section>

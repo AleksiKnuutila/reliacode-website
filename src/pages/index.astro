@@ -2,8 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/landing/Hero.astro";
 import ProblemSplit from "@/components/landing/ProblemSplit.astro";
-import Pillars from "@/components/landing/Pillars.astro";
-import Workflow from "@/components/landing/Workflow.astro";
+import Approach from "@/components/landing/Approach.astro";
 import TeamGrid from "@/components/landing/TeamGrid.astro";
 import FAQ from "@/components/landing/FAQ.astro";
 import BlogTeaser from "@/components/landing/BlogTeaser.astro";
@@ -17,18 +16,7 @@ const description =
 <Layout title={title} description={description} currentPage="landing">
   <Hero />
   <ProblemSplit />
-
-  <section class="b-section alt" id="approach">
-    <div class="b-wrap">
-      <div class="b-shead">
-        <div class="b-kicker">Approach</div>
-        <h2>Three pillars, one trace.</h2>
-      </div>
-      <Pillars />
-      <Workflow />
-    </div>
-  </section>
-
+  <Approach />
   <TeamGrid />
   <FAQ />
   <BlogTeaser />

@@ -1,0 +1,242 @@
+---
+// Approach — landing page "Approach" section.
+//
+// Combines the shared shead (kicker + h2), the three Pillars cards
+// (including the decorative constraints.yaml block on Pillar III), and
+// the five-step Workflow strip. Driven by src/content/landing/approach.md.
+
+import { getLandingSection } from "@/utils/getLandingSection";
+
+const approach = await getLandingSection("approach");
+---
+
+<section class="b-section alt" id="approach">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">{approach.kicker}</div>
+      <h2>{approach.headline}</h2>
+    </div>
+
+    <div class="b-pillars">
+      {
+        approach.pillars.map(pillar => (
+          <div class="b-pillar">
+            <div class="pn">{pillar.pn}</div>
+            <h3>{pillar.h3}</h3>
+            {pillar.has_spec_block ? (
+              <div class="b-spec">
+                <div>
+                  <span class="com"># constraints.yaml</span>
+                </div>
+                <div>
+                  <span class="kw">schema:</span> warehouse.users.v12
+                </div>
+                <div>
+                  <span class="kw">invariants:</span>
+                </div>
+                <div>
+                  &nbsp;&nbsp;- non_negative(<span class="str">"retention"</span>)
+                </div>
+                <div>
+                  &nbsp;&nbsp;- monotonic(<span class="str">"cohort_month"</span>)
+                </div>
+                <div>
+                  <span class="kw">privacy:</span> aggregate_only
+                </div>
+                <div>
+                  <span class="ok">✓ 4 / 4 satisfied</span>
+                </div>
+              </div>
+            ) : (
+              pillar.body && <p>{pillar.body}</p>
+            )}
+          </div>
+        ))
+      }
+    </div>
+
+    <div class="b-workflow">
+      <div class="b-wf-head">
+        <span class="ttl">{approach.workflow.ttl}</span>
+        <span class="meta">{approach.workflow.meta}</span>
+      </div>
+      <div class="b-wf-row">
+        {
+          approach.workflow.steps.map(step => (
+            <div class="b-wf-step">
+              <span class="check">✓</span>
+              <div class="sn">{step.sn}</div>
+              <h3>{step.h4}</h3>
+              <p>{step.p}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --- Pillars --- */
+  .b-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 20px;
+  }
+  .b-pillar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 320px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .b-pillar:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-pillar .pn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+  }
+  .b-pillar h3 {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+  .b-pillar p {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+  .b-spec {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: color-mix(in oklch, var(--brand-deep) 96%, white);
+    color: color-mix(in oklch, var(--primary-fg) 92%, transparent);
+    border-radius: 6px;
+    padding: 14px 16px;
+    line-height: 1.7;
+  }
+  .b-spec .kw {
+    color: color-mix(in oklch, var(--brand-soft) 80%, white);
+  }
+  .b-spec .str {
+    color: oklch(0.85 0.12 80);
+  }
+  .b-spec .com {
+    color: color-mix(in oklch, var(--primary-fg) 55%, transparent);
+  }
+  .b-spec .ok {
+    color: oklch(0.82 0.16 155);
+  }
+
+  /* --- Workflow --- */
+  .b-workflow {
+    margin-top: 64px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 32px;
+  }
+  .b-wf-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+  .b-wf-head .ttl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+  }
+  .b-wf-head .meta {
+    font-size: 12px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+  }
+  .b-wf-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    align-items: stretch;
+  }
+  .b-wf-step {
+    position: relative;
+    padding: 14px 18px;
+    border-left: 1px solid var(--border);
+  }
+  .b-wf-step:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .b-wf-step .sn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--brand-mid);
+    letter-spacing: 0.16em;
+  }
+  .b-wf-step h3 {
+    margin: 6px 0 4px;
+    font-size: 16px;
+    font-weight: 500;
+    font-family: var(--font-head);
+  }
+  .b-wf-step p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .b-wf-step .check {
+    position: absolute;
+    right: 14px;
+    top: 14px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--brand-mid);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-fg);
+    font-size: 10px;
+  }
+
+  /* --- Responsive --- */
+  @media (max-width: 900px) {
+    .b-pillars {
+      grid-template-columns: 1fr;
+    }
+    .b-pillar {
+      min-height: auto;
+    }
+    .b-wf-row {
+      grid-template-columns: 1fr;
+    }
+    .b-wf-step {
+      padding: 18px 0;
+      border-left: 0;
+      border-top: 1px dashed var(--border);
+    }
+    .b-wf-step:first-child {
+      border-top: 0;
+      padding-top: 4px;
+    }
+    .b-wf-head {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+  }
+</style>

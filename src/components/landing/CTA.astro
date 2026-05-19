@@ -1,56 +1,38 @@
 ---
 // CTA — landing page pilot-recruitment block.
 //
-// Gradient navy section with a left column (kicker, h2, paragraph,
-// contact buttons) and a right-side "what a pilot looks like" card.
-//
-// Mirrors template lines 868–894; styles mirror template lines
-// 443–482. The template inlined a few style overrides on lines 873,
-// 880 and 882 — they are extracted here into named scoped classes
-// (`.cta-kicker`, `.cta-actions`, `.cta-mail`).
-//
-// The template also wrapped both mailto links in Cloudflare's email
-// obfuscation (`/cdn-cgi/l/email-protection#…`). Those have been
-// replaced with plain `mailto:` URLs sourced from PILOT_EMAIL.
+// Driven by src/content/landing/cta.md. Mailto links use PILOT_EMAIL
+// from src/config.ts (the address is shared with the footer and not
+// editorial copy).
 
 import { PILOT_EMAIL } from "@/config";
+import { getLandingSection } from "@/utils/getLandingSection";
+
+const cta = await getLandingSection("cta");
 ---
 
 <section class="b-cta" id="contact">
   <div class="b-cta-grid" aria-hidden="true"></div>
   <div class="b-wrap b-cta-inner">
     <div>
-      <div class="mono cta-kicker">Pilots — open</div>
-      <h2>We are looking for pilot organisations.</h2>
-      <p>
-        Bring an analytical workflow where correctness matters. We bring the
-        methods, the team and a scoped engagement. No licence fees during the
-        research phase.
-      </p>
+      <div class="mono cta-kicker">{cta.kicker}</div>
+      <h2>{cta.headline}</h2>
+      <p>{cta.lead}</p>
       <div class="cta-actions">
-        <a href={`mailto:${PILOT_EMAIL}`} class="btn-light"
-          >Contact the team →</a
-        >
+        <a href={`mailto:${PILOT_EMAIL}`} class="btn-light">{cta.cta_label}</a>
         <a href={`mailto:${PILOT_EMAIL}`} class="cta-mail">{PILOT_EMAIL}</a>
       </div>
     </div>
     <div class="b-cta-card">
-      <h3>What a pilot looks like</h3>
-      <div class="row"><span class="k">Duration</span><span>≈ 3 months</span></div>
-      <div class="row">
-        <span class="k">Scope</span><span>1 – 2 workflows</span>
-      </div>
-      <div class="row">
-        <span class="k">Team commitment</span><span>0.5 FTE, your side</span>
-      </div>
-      <div class="row">
-        <span class="k">Licence fee</span><span>None (research phase)</span>
-      </div>
-      <div class="row">
-        <span class="k">Outputs</span><span
-          >Methods report · audit bundles</span
-        >
-      </div>
+      <h3>{cta.card_title}</h3>
+      {
+        cta.card_rows.map(row => (
+          <div class="row">
+            <span class="k">{row.k}</span>
+            <span>{row.v}</span>
+          </div>
+        ))
+      }
     </div>
   </div>
 </section>

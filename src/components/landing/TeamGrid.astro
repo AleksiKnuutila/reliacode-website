@@ -1,34 +1,27 @@
 ---
 // TeamGrid — landing page "Research team" section.
 //
-// Renders the full <section> including kicker, h2, intro paragraph,
-// the 4-card grid driven by TEAM_MEMBERS, and the trailing placeholder
-// note about names + photographs.
-//
-// Mirrors template lines 704–754; styles mirror lines 348–386.
+// Driven by src/content/landing/team.md.
 
-import { TEAM_MEMBERS } from "@/config";
+import { getLandingSection } from "@/utils/getLandingSection";
+
+const team = await getLandingSection("team");
 ---
 
 <section class="b-section" id="team">
   <div class="b-wrap">
     <div class="b-shead">
-      <div class="b-kicker">Research team</div>
-      <h2>A small group based in Helsinki.</h2>
+      <div class="b-kicker">{team.kicker}</div>
+      <h2>{team.headline}</h2>
     </div>
 
     <div class="b-team-intro">
-      <p>
-        ReliaGround is run by a tight team working across machine learning,
-        software engineering and applied analytics, alongside pilot
-        organisations and external advisors. We share what we learn — methods,
-        failure modes, and the auditable artefacts our pipelines produce.
-      </p>
+      <p>{team.intro}</p>
     </div>
 
     <div class="b-team">
       {
-        TEAM_MEMBERS.map(member => (
+        team.members.map(member => (
           <div class="b-tcard">
             <div class="av" aria-hidden="true">
               {member.initial}
@@ -42,9 +35,7 @@ import { TEAM_MEMBERS } from "@/config";
       }
     </div>
 
-    <p class="team-note">
-      Names and photographs to follow as the team is finalised.
-    </p>
+    {team.note && <p class="team-note">{team.note}</p>}
   </div>
 </section>
 

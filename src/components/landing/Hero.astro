@@ -7,13 +7,11 @@
 //
 // All copy comes from src/content/landing/main.md (frontmatter).
 
-import { getEntry } from "astro:content";
+import { getLandingSection } from "@/utils/getLandingSection";
 import TruchetGrid from "./TruchetGrid.astro";
 import TraceCard from "./TraceCard.astro";
 
-const landing = await getEntry("landing", "main");
-if (!landing) throw new Error("Missing src/content/landing/main.md");
-const { hero } = landing.data;
+const hero = await getLandingSection("hero");
 ---
 
 <section class="b-hero" id="top">
