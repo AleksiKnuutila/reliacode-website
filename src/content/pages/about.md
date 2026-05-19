@@ -1,37 +1,22 @@
 ---
 title: "About"
-description: "A bit about me and this blog."
+description: "ReliaGround is a research-to-business project on reliable, auditable LLM-assisted analytics, hosted at the University of Helsinki."
 ---
 
-AstroPaper is a minimal, accessible and SEO-friendly blog theme built with [Astro](https://astro.build/) and [Tailwind CSS](https://tailwindcss.com/).
+ReliaGround is a research project at the University of Helsinki on **reliable, auditable LLM-assisted analytics**. We work with a small number of pilot organisations to develop and validate methods that make large-language-model-driven data work trustworthy enough to use on real decisions.
 
-![Astro Paper](@/assets/images/astropaper-og.jpg)
+## What we do
 
-AstroPaper provides a solid foundation for blogs, or even portfolios\_ with full markdown support, built-in dark mode, and a clean layout that works out-of-the-box.
+Analytical teams in finance, public administration, life sciences and other regulated settings are under pressure to adopt LLMs. The everyday reality is brittle: a chat answer that looks plausible, a one-shot script that nobody can re-run, results that cannot be defended in a review. We are building the missing layer — methods that combine LLMs with deterministic tools so that every generated artefact comes with a clear chain from intent to result.
 
-The blog posts in this theme also serve as guides, docs or example articles\_ making AstroPaper a flexible starting point for your next content-driven site.
+The work has three strands that feed each other:
 
-## Features
+- **Intent verification.** Methods that check whether a generated implementation matches a stated analytical intent, before it touches a stakeholder.
+- **Workflow integration.** Field studies of how analytical teams actually work today, and where reliable LLM assistance fits without breaking the rest of the pipeline.
+- **Pilot engagements.** Scoped collaborations with real organisations on real workflows, run under written agreements that protect both sides.
 
-AstroPaper comes with a set of useful features that make content publishing easy and effective:
+## How we work
 
-- SEO-friendly
-- Fast performance
-- Light & dark mode
-- Highly customizable
-- Organizable blog posts
-- Responsive & accessible
-- Static search with [PageFind](https://pagefind.app/)
-- Automatic social image generation
+We are a small group inside the university, with backgrounds in machine learning, software engineering, applied statistics and tech transfer. We publish what we learn, and we are explicit about what is still unproven. The blog on this site is part of that: short notes from the field, written in the same voice we use with pilot partners.
 
-and so much more.
-
-## Show your support
-
-If you like [AstroPaper](https://github.com/satnaing/astro-paper), consider giving it a star ⭐️.
-
-Found a bug 🐛 or have an improvement ✨ in mind? Feel free to open an [issue](https://github.com/satnaing/astro-paper/issues), submit a [pull request](https://github.com/satnaing/astro-paper/pulls) or start a [discussion](https://github.com/satnaing/astro-paper/discussions).
-
-If you find this theme helpful, you can also [sponsor me on GitHub](https://github.com/sponsors/satnaing) or [buy me a coffee](https://buymeacoffee.com/satnaing) to show your support — every penny counts.
-
-Kyay zuu! 🙏🏼
+If your team has an analytical workflow where correctness matters and you are curious whether reliable LLM assistance could fit, we would like to hear about it. A short note describing the workflow is the right place to start.

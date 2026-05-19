@@ -1,29 +1,46 @@
 ---
+/**
+ * 404 — page-not-found shell in ReliaGround voice.
+ *
+ * Mirrors the visual idiom of landing sections: kicker, h2, then a
+ * short paragraph and two ghost-button links back into the site.
+ */
 import Layout from "@/layouts/Layout.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import { getRelativeLocaleUrl } from "astro:i18n";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
-
-const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
 ---
 
-<Layout title={`${t.notFound.title} | ${config.site.title}`}>
-  <main
-    id="main-content"
-    class="app-layout flex flex-1 items-center justify-center"
-  >
-    <div class="mb-14 flex flex-col items-center justify-center">
-      <h1 class="text-accent text-9xl font-bold">404</h1>
-      <span aria-hidden="true"> ¯\_(ツ)_/¯ </span>
-      <p class="mt-4 text-2xl sm:text-3xl">{t.notFound.message}</p>
-      <LinkButton
-        href={getRelativeLocaleUrl(locale, "")}
-        class="my-6 text-lg underline decoration-dashed underline-offset-8"
-      >
-        {t.notFound.goHome}
-      </LinkButton>
+<Layout
+  title={`Page not found | ${config.site.title}`}
+  description="The page you were looking for could not be found."
+>
+  <section class="b-section">
+    <div class="b-wrap">
+      <div class="b-shead">
+        <div class="b-kicker">404</div>
+        <h2>Page not found.</h2>
+      </div>
+      <p class="not-found-body">
+        This page isn't here. It may have moved, or the link may have gone stale.
+      </p>
+      <div class="not-found-actions">
+        <a href="/" class="btn-ghost">Home →</a>
+        <a href="/posts" class="btn-ghost">All notes →</a>
+      </div>
     </div>
-  </main>
+  </section>
 </Layout>
+
+<style>
+  .not-found-body {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 50ch;
+    margin-bottom: 32px;
+  }
+
+  .not-found-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+</style>

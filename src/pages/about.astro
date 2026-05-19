@@ -1,30 +1,71 @@
 ---
+/**
+ * /about — ReliaGround colophon page.
+ *
+ * Uses the shared <Layout> shell (Header + Footer + SEO) and renders the
+ * `about` content entry inside the same .post-prose typography the blog
+ * posts use, minus the meta strip, tags, and back link.
+ */
 import { getEntry, render } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Main from "@/components/Main.astro";
 import config from "@/config";
 
-const about = await getEntry("pages", "about");
-
-if (!about) {
+const aboutEntry = await getEntry("pages", "about");
+if (!aboutEntry) {
   throw new Error(
     "Missing content entry: `about.md` or `about.mdx` in `src/content/pages/`"
   );
 }
-
-const { Content } = await render(about);
+const { Content } = await render(aboutEntry);
+const { data } = aboutEntry;
 ---
 
 <Layout
-  title={`${about.data.title} | ${config.site.title}`}
-  description={about.data.description}
-  ogImage={about.data.ogImage}
-  canonicalURL={about.data.canonicalURL}
+  title={`${data.title} | ${config.site.title}`}
+  description={data.description}
+  ogImage={data.ogImage}
+  canonicalURL={data.canonicalURL}
 >
-  <Breadcrumb />
-
-  <Main pageTitle={about.data.title} class="app-prose">
-    <Content />
-  </Main>
+  <article class="about-page">
+    <header class="about-head">
+      <h1 class="about-title">{data.title}</h1>
+    </header>
+    <div class="post-prose">
+      <Content />
+    </div>
+  </article>
 </Layout>
+
+<style>
+  .about-page {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 80px 40px 96px;
+  }
+
+  .about-head {
+    margin-bottom: 48px;
+  }
+
+  .about-title {
+    font-family: var(--font-head);
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    font-weight: 500;
+    font-variation-settings:
+      "SOFT" 50,
+      "WONK" 0,
+      "opsz" 96;
+    margin: 0;
+  }
+
+  @media (max-width: 620px) {
+    .about-page {
+      padding: 56px 24px 72px;
+    }
+    .about-title {
+      font-size: 34px;
+    }
+  }
+</style>
