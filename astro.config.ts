@@ -61,7 +61,9 @@ export default defineConfig({
       fallbacks: ["Source Serif 4", "Georgia", "serif"],
       weights: ["400 600"],
       styles: ["normal", "italic"],
-      formats: ["woff2", "woff"],
+      // `ttf` is included so satori (which needs raw font tables) can
+      // load Fraunces for OG-image titles.
+      formats: ["woff2", "woff", "ttf"],
       // Unifont experimental option, forwarded by Astro to the google
       // provider. Tuples become range axes (`9..144`); strings are
       // passed through. SOFT 0..100, WONK 0..1 are Fraunces-specific
