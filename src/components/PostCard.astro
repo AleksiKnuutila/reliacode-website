@@ -1,0 +1,137 @@
+---
+// PostCard — shared blog-post card used by the landing BlogTeaser
+// and (in Phase 5b) the /posts index. Visually mirrors a single
+// `.b-post` in the template (lines 833–841); styles mirror template
+// lines 400–434.
+
+type Props = {
+  /** Destination URL — typically `/posts/<slug>`. */
+  href: string;
+  /** Post title. */
+  title: string;
+  /** Short excerpt (1–2 sentences). */
+  description: string;
+  /** Publication date — either a Date or an ISO-ish string. */
+  pubDate: Date | string;
+  /** Optional category label appended to the meta line. */
+  category?: string;
+  /**
+   * Optional badge shown on the thumbnail. If omitted, a fallback is
+   * derived from the publication date (e.g. "Note · 2026-05").
+   */
+  stamp?: string;
+};
+
+const { href, title, description, pubDate, category, stamp } = Astro.props;
+
+const date = pubDate instanceof Date ? pubDate : new Date(pubDate);
+
+const monthYear = date.toLocaleDateString("en-GB", {
+  month: "long",
+  year: "numeric",
+});
+
+const formattedMeta = category ? `${monthYear} · ${category}` : monthYear;
+
+const fallbackStamp = `Note · ${date.getFullYear()}-${String(
+  date.getMonth() + 1,
+).padStart(2, "0")}`;
+const stampLabel = stamp ?? fallbackStamp;
+---
+
+<a class="b-post" href={href}>
+  <div class="thumb">
+    <span class="stamp">{stampLabel}</span>
+  </div>
+  <div class="body">
+    <div class="meta">{formattedMeta}</div>
+    <h3>{title}</h3>
+    <p>{description}</p>
+    <span class="more">Read note →</span>
+  </div>
+</a>
+
+<style>
+  .b-post {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+    text-decoration: none;
+    color: inherit;
+  }
+  .b-post:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-post .thumb {
+    aspect-ratio: 16 / 10;
+    background: var(--gradient-hero);
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .b-post .thumb::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: 0.18;
+    background-image:
+      linear-gradient(var(--grid-ink) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-ink) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+  .b-post .thumb .stamp {
+    position: absolute;
+    left: 16px;
+    bottom: 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--brand-deep);
+    background: color-mix(in oklch, var(--card) 88%, transparent);
+    border: 1px solid var(--border-strong);
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .b-post .body {
+    padding: 22px 24px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+  .b-post .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+  }
+  .b-post h3 {
+    font-size: 20px;
+    line-height: 1.25;
+    font-weight: 500;
+    letter-spacing: -0.012em;
+  }
+  .b-post p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    flex: 1;
+  }
+  .b-post .more {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+    padding-top: 8px;
+  }
+</style>

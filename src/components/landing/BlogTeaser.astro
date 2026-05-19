@@ -1,0 +1,91 @@
+---
+// BlogTeaser — landing page "Latest writing" section.
+//
+// Renders 3 PostCards in a grid. For now the posts are hardcoded
+// here; Phase 5a will replace this with `getCollection('posts')`
+// (sorted desc by pubDate, sliced to 3).
+//
+// Mirrors template lines 826–866; container styles (`.b-blog`,
+// `.b-blog-foot`) mirror template lines 399 and 435–440. The card
+// CSS lives in PostCard.astro.
+
+import PostCard from "@/components/PostCard.astro";
+
+// TODO(Phase 5a): replace with getCollection('posts'), sorted desc
+//                 by pubDate, sliced 3.
+const posts = [
+  {
+    href: "/posts/auditable-working-definition",
+    title: 'What we mean by "auditable" — a working definition',
+    description:
+      "Six properties an analytical run should carry with it so a reviewer, a regulator, or a future you can rerun it cold.",
+    pubDate: new Date("2026-05-15"),
+    category: "Method",
+    stamp: "Note · 008",
+  },
+  {
+    href: "/posts/cohort-retention-four-ways",
+    title: "Cohort retention, redone four ways",
+    description:
+      "A small case study from a pilot — the same business question routed through four different LLM-assisted pipelines, and what their audit bundles revealed about each.",
+    pubDate: new Date("2026-04-12"),
+    category: "Field report",
+    stamp: "Note · 007",
+  },
+  {
+    href: "/posts/intent-verification-beats-code-review",
+    title: "Why intent verification beats code review for LLM output",
+    description:
+      "Code that runs is not code that answers the right question. A short argument for checking implementations against the stated goal, not just against the compiler.",
+    pubDate: new Date("2026-03-20"),
+    category: "Position",
+    stamp: "Note · 006",
+  },
+];
+---
+
+<section class="b-section" id="blog">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">Latest writing</div>
+      <h2>From the research notebook.</h2>
+    </div>
+
+    <div class="b-blog">
+      {posts.map(p => <PostCard {...p} />)}
+    </div>
+
+    <div class="b-blog-foot">
+      <span
+        >Roughly one note a month. Methods, field reports, and the occasional
+        position piece.</span
+      >
+      <a href="/posts">All notes →</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-blog {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .b-blog-foot {
+    margin-top: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border);
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  .b-blog-foot a {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    color: var(--fg);
+  }
+</style>

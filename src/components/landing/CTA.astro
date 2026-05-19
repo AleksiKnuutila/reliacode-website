@@ -1,0 +1,175 @@
+---
+// CTA — landing page pilot-recruitment block.
+//
+// Gradient navy section with a left column (kicker, h2, paragraph,
+// contact buttons) and a right-side "what a pilot looks like" card.
+//
+// Mirrors template lines 868–894; styles mirror template lines
+// 443–482. The template inlined a few style overrides on lines 873,
+// 880 and 882 — they are extracted here into named scoped classes
+// (`.cta-kicker`, `.cta-actions`, `.cta-mail`).
+//
+// The template also wrapped both mailto links in Cloudflare's email
+// obfuscation (`/cdn-cgi/l/email-protection#…`). Those have been
+// replaced with plain `mailto:` URLs sourced from PILOT_EMAIL.
+
+import { PILOT_EMAIL } from "@/config";
+---
+
+<section class="b-cta" id="contact">
+  <div class="b-cta-grid" aria-hidden="true"></div>
+  <div class="b-wrap b-cta-inner">
+    <div>
+      <div class="mono cta-kicker">Pilots — open</div>
+      <h2>We are looking for pilot organisations.</h2>
+      <p>
+        Bring an analytical workflow where correctness matters. We bring the
+        methods, the team and a scoped engagement. No licence fees during the
+        research phase.
+      </p>
+      <div class="cta-actions">
+        <a href={`mailto:${PILOT_EMAIL}`} class="btn-light"
+          >Contact the team →</a
+        >
+        <a href={`mailto:${PILOT_EMAIL}`} class="cta-mail">{PILOT_EMAIL}</a>
+      </div>
+    </div>
+    <div class="b-cta-card">
+      <h4>What a pilot looks like</h4>
+      <div class="row"><span class="k">Duration</span><span>≈ 3 months</span></div>
+      <div class="row">
+        <span class="k">Scope</span><span>1 – 2 workflows</span>
+      </div>
+      <div class="row">
+        <span class="k">Team commitment</span><span>0.5 FTE, your side</span>
+      </div>
+      <div class="row">
+        <span class="k">Licence fee</span><span>None (research phase)</span>
+      </div>
+      <div class="row">
+        <span class="k">Outputs</span><span
+          >Methods report · audit bundles</span
+        >
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-cta {
+    position: relative;
+    overflow: hidden;
+    background: var(--gradient-accent);
+    color: var(--primary-fg);
+  }
+  .b-cta-grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.08;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--primary-fg) 1px, transparent 1px),
+      linear-gradient(90deg, var(--primary-fg) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: radial-gradient(
+      ellipse at 50% 30%,
+      black 40%,
+      transparent 80%
+    );
+    mask-image: radial-gradient(
+      ellipse at 50% 30%,
+      black 40%,
+      transparent 80%
+    );
+  }
+  .b-cta-inner {
+    position: relative;
+    padding: 96px 0;
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .b-cta h2 {
+    color: var(--primary-fg);
+    font-size: 50px;
+    line-height: 1.05;
+    letter-spacing: -0.018em;
+    max-width: 18ch;
+    font-weight: 500;
+  }
+  .b-cta p {
+    color: color-mix(in oklch, var(--primary-fg) 78%, transparent);
+    font-size: 16px;
+    margin-top: 22px;
+    line-height: 1.65;
+    max-width: 50ch;
+  }
+  .b-cta .btn-light {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg);
+    color: var(--fg);
+    padding: 14px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  /* Extracted from template line 873's inline style. */
+  .cta-kicker {
+    color: color-mix(in oklch, var(--primary-fg) 75%, transparent);
+    margin-bottom: 18px;
+  }
+
+  /* Extracted from template line 880's inline style. */
+  .cta-actions {
+    margin-top: 32px;
+    display: flex;
+    gap: 14px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  /* Extracted from template line 882's inline style on the email link. */
+  .cta-mail {
+    color: color-mix(in oklch, var(--primary-fg) 80%, transparent);
+    font-size: 14px;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .b-cta-card {
+    background: color-mix(in oklch, var(--primary-fg) 8%, transparent);
+    border: 1px solid color-mix(in oklch, var(--primary-fg) 25%, transparent);
+    border-radius: 10px;
+    padding: 28px;
+  }
+  .b-cta-card h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--primary-fg) 80%, transparent);
+    margin: 0 0 18px;
+    font-weight: 500;
+  }
+  .b-cta-card .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid color-mix(in oklch, var(--primary-fg) 15%, transparent);
+    font-size: 13.5px;
+    color: color-mix(in oklch, var(--primary-fg) 88%, transparent);
+  }
+  .b-cta-card .row:first-of-type {
+    border-top: 0;
+  }
+  .b-cta-card .row .k {
+    color: color-mix(in oklch, var(--primary-fg) 65%, transparent);
+  }
+</style>
