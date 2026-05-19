@@ -105,7 +105,12 @@
 
   .b-shead {
     margin-bottom: 56px;
-    max-width: 32ch;
+    /* Template uses 32ch (~330px with Manrope 16px). Our self-hosted
+       Fraunces renders display glyphs ~16% wider than Google's
+       CDN-served Fraunces (different opsz=96 metrics), so we widen the
+       cap proportionally to land on the template's visual line counts
+       for each section h2. */
+    max-width: 460px;
   }
   .b-kicker {
     display: inline-flex;
@@ -130,7 +135,12 @@
     font-size: 46px;
     line-height: 1.08;
     letter-spacing: -0.018em;
-    max-width: 22ch;
+    /* The template uses 22ch with Google-CDN Fraunces (narrower "0"
+       glyph than the variable build Astro emits). Pinning to a px
+       value reproduces the template's wrap behaviour regardless of
+       which Fraunces variant is loaded. ~520px ≈ 22ch in the
+       Google-CDN build at 46px. */
+    max-width: 520px;
     font-weight: 500;
   }
 

@@ -72,7 +72,10 @@ import TraceCard from "./TraceCard.astro";
     font-size: 68px;
     line-height: 1.04;
     letter-spacing: -0.022em;
-    max-width: 13ch;
+    /* Matches template line 143: 13ch with Google-CDN Fraunces ≈ 460px
+       at 68px. Pinned in px so the self-hosted variable Fraunces (with
+       a wider "0" glyph at opsz=96) wraps the same way. */
+    max-width: 460px;
     font-weight: 500;
   }
   .b-hero h1 .accent {

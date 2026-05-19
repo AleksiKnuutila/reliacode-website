@@ -95,7 +95,9 @@ import { PILOT_EMAIL } from "@/config";
     font-size: 50px;
     line-height: 1.05;
     letter-spacing: -0.018em;
-    max-width: 18ch;
+    /* Matches template line 457: 18ch with Google-CDN Fraunces ≈ 460px.
+       Pinned in px so our self-hosted Fraunces wraps identically. */
+    max-width: 460px;
     font-weight: 500;
   }
   .b-cta p {
