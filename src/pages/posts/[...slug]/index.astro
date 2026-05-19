@@ -1,8 +1,6 @@
 ---
 import { type CollectionEntry, getCollection, render } from "astro:content";
 import PostLayout from "@/layouts/PostLayout.astro";
-import Header from "@/components/Header.astro";
-import Footer from "@/components/Footer.astro";
 import Datetime from "@/components/Datetime.astro";
 import Tag from "@/components/Tag.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
@@ -100,9 +98,8 @@ const ogImage = ogImageUrl
   canonicalURL={canonicalURL}
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
+  currentPage="post"
 >
-  <Header />
-
   <BackButton />
 
   <main
@@ -158,7 +155,6 @@ const ogImage = ogImageUrl
 
     <AdjacentPostNav {prevPost} {nextPost} />
   </main>
-  <Footer />
 </PostLayout>
 
 <script is:inline data-astro-rerun>

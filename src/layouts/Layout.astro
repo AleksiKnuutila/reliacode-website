@@ -1,9 +1,10 @@
 ---
 import { Font } from "astro:assets";
-import { ClientRouter } from "astro:transitions";
 import { getRelativeLocaleUrl } from "astro:i18n";
 import { resolveDefaultOgImagePath } from "@/utils/resolveDefaultOgImagePath";
 import { getAssetPath } from "@/utils/withBase";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
 import config from "@/config";
 import "@/styles/global.css";
 
@@ -12,6 +13,15 @@ type Props = {
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
+  /**
+   * Which page is rendering this layout. Header uses this to decide
+   * whether nav anchors stay as in-page fragments ("#problem") or get
+   * rewritten to navigate back to the landing page ("/#problem").
+   *
+   * Undefined and anything other than "landing" are treated as
+   * "not the landing page".
+   */
+  currentPage?: "landing" | "post" | "archives" | "tags" | "search";
 };
 
 const { site } = config;
@@ -21,6 +31,7 @@ const {
   description = site.description,
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
+  currentPage,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -86,9 +97,6 @@ const rssHref = getRelativeLocaleUrl(
       href={new URL(rssHref, Astro.site)}
     />
 
-    <!-- Filled at runtime by theme.ts to match the current background colour -->
-    <meta name="theme-color" content="" />
-
     <!-- Extra head content injected by child layouts (e.g. JSON-LD, article meta) -->
     <slot name="head" />
 
@@ -100,32 +108,12 @@ const rssHref = getRelativeLocaleUrl(
         />
       )
     }
-
-    <!--
-      Inline FOUC-prevention script: sets data-theme on <html> before
-      the browser paints. Runs synchronously, no defer/async.
-    -->
-    <script is:inline>
-      (function () {
-        const stored = localStorage.getItem("theme");
-        const prefersDark = window.matchMedia(
-          "(prefers-color-scheme: dark)"
-        ).matches;
-        const theme = stored ?? (prefersDark ? "dark" : "light");
-        document.firstElementChild?.setAttribute("data-theme", theme);
-        // Expose value so theme.ts can skip re-detection.
-        window.__theme = { value: theme };
-      })();
-    </script>
-
-    <ClientRouter />
   </head>
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
+    <Header currentPage={currentPage} />
     <slot />
-    <script>
-      import "@/scripts/theme";
-    </script>
+    <Footer />
   </body>
 </html>

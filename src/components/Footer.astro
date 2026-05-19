@@ -1,30 +1,163 @@
 ---
-import type { HTMLAttributes } from "astro/types";
-import Socials from "./Socials.astro";
-import { useTranslations } from "@/i18n";
+/**
+ * Site footer — four columns (colophon / Site / Project / Contact)
+ * plus a thin legal strip. Markup mirrors template.html lines 897–935.
+ *
+ * All section links use the "/#anchor" form so they work whether the
+ * footer is rendered on the landing page or any other page.
+ */
+import {
+  FOOTER_COLS,
+  COLOPHON,
+  PILOT_EMAIL,
+  SITE_AFFILIATION,
+} from "@/config";
 
-type Props = {
-  noMarginTop?: boolean;
-} & HTMLAttributes<"footer">;
-
-const { noMarginTop = false, class: className, ...attrs } = Astro.props;
-
-const t = useTranslations(Astro.currentLocale);
 const currentYear = new Date().getFullYear();
+
+/** Force hash links to "/#…" so they resolve from any page. Pass-through
+ *  for anything else (e.g. project links currently set to "#"). */
+const toFooterHref = (href: string): string =>
+  href.startsWith("#") && href.length > 1 ? `/${href}` : href;
 ---
 
-<footer
-  class:list={["app-layout", { "mt-auto": !noMarginTop }, className]}
-  {...attrs}
->
-  <div
-    class="border-border flex flex-col items-center justify-between border-t py-6 sm:flex-row-reverse sm:py-4"
-  >
-    <Socials />
-    <div class="my-2 flex flex-col items-center whitespace-nowrap sm:flex-row">
-      <span>{t.footer.copyright} &#169; {currentYear}</span>
-      <span class="hidden sm:inline">&nbsp;|&nbsp;</span>
-      <span>{t.footer.allRightsReserved}</span>
+<footer class="b-footer">
+  <div class="b-footer-inner">
+    <div>
+      <div class="rg-logo">
+        <span class="mark" aria-hidden="true"></span>
+        <span class="name">ReliaGround</span>
+      </div>
+      <p class="colophon">{COLOPHON}</p>
+    </div>
+    <div>
+      <h4>Site</h4>
+      <ul>
+        {
+          FOOTER_COLS.site.map(link => (
+            <li>
+              <a href={toFooterHref(link.href)}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h4>Project</h4>
+      <ul>
+        {
+          FOOTER_COLS.project.map(link => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <p class="contact">
+        Pilot enquiries<br />
+        <a class="contact-mail" href={`mailto:${PILOT_EMAIL}`}>
+          {PILOT_EMAIL}
+        </a>
+      </p>
     </div>
   </div>
+  <div class="legal">
+    <span>© {currentYear} ReliaGround · {SITE_AFFILIATION}</span>
+    <span>Research preview · Pilots open</span>
+  </div>
 </footer>
+
+<style>
+  /* ── FOOTER ───────────────────────────────────────────────────
+     Ported from template.html lines 484–503. */
+  .b-footer {
+    background: var(--secondary);
+    border-top: 1px solid var(--border);
+  }
+  .b-footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 56px 40px 28px;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+  }
+  .b-footer h4 {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    margin: 0 0 16px;
+    font-weight: 500;
+  }
+  .b-footer ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 14px;
+  }
+  .b-footer li {
+    margin-bottom: 10px;
+  }
+  .b-footer li a {
+    color: var(--muted);
+    text-decoration: none;
+  }
+  .b-footer li a:hover {
+    color: var(--fg);
+  }
+  .b-footer .colophon {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 38ch;
+    margin-top: 16px;
+  }
+  .b-footer .legal {
+    border-top: 1px solid var(--border);
+    padding: 18px 40px;
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* Logo repeat in column 1 — same tokens as the header logo. */
+  .b-footer .rg-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  .b-footer .rg-logo .mark {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    background: var(--gradient-accent);
+  }
+  .b-footer .rg-logo .name {
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    font-size: 15px;
+  }
+
+  /* Contact column body — template.html lines 926–929. */
+  .b-footer .contact {
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.6;
+  }
+  .b-footer .contact-mail {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: var(--border-strong);
+  }
+</style>
