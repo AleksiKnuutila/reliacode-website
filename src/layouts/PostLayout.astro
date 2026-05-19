@@ -207,19 +207,10 @@ const metaParts = [
     flex-wrap: wrap;
   }
 
-  /* The base `.b-chip` is defined in Hero.astro for the landing page;
-     we redeclare here so the chip renders correctly on /posts/<slug>
-     where Hero is not in the bundle. Keep visuals identical. */
+  /* Base `.b-chip` styles live in global.css. Add link-specific
+     niceties (hover state, no underline) for tag chips inside the
+     post header. */
   .post-tags :global(.b-chip) {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 6px 11px;
-    border: 1px solid var(--border-strong);
-    border-radius: 999px;
-    font-size: 12.5px;
-    color: var(--muted);
-    background: color-mix(in oklch, var(--card) 80%, transparent);
     text-decoration: none;
     transition:
       border-color 0.15s,

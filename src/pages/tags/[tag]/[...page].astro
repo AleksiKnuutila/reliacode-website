@@ -1,22 +1,20 @@
 ---
-import { getCollection } from "astro:content";
 import type { GetStaticPathsOptions } from "astro";
+import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
-import Main from "@/components/Main.astro";
-import Breadcrumb from "@/components/Breadcrumb.astro";
-import Card from "@/components/Card.astro";
-import Pagination from "@/components/Pagination.astro";
-import { getUniqueTags } from "@/utils/getUniqueTags";
+import PostCard from "@/components/PostCard.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
+import { getUniqueTags } from "@/utils/getUniqueTags";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { buildPostStamps } from "@/utils/getPostStamps";
 import { slugifyAll } from "@/utils/slugify";
-import { useTranslations } from "@/i18n";
 import config from "@/config";
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection("posts", ({ data }) => !data.draft);
-  const tags = getUniqueTags(posts);
+  const uniqueTags = getUniqueTags(posts);
 
-  return tags.flatMap(({ tag, tagName }) => {
+  return uniqueTags.flatMap(({ tag, tagName }) => {
     const tagPosts = getSortedPosts(
       posts.filter(({ data }) => slugifyAll(data.tags).includes(tag))
     );
@@ -30,25 +28,131 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 }
 
 const { page, tagName } = Astro.props;
-
 const locale = Astro.currentLocale ?? config.site.lang;
-const t = useTranslations(locale);
+
+// Build stamps across the FULL catalogue so a given post receives the
+// same "Note · NNN" stamp here as on the landing teaser and /posts.
+const allPosts = await getCollection("posts", ({ data }) => !data.draft);
+const stamps = buildPostStamps(allPosts);
+
+const posts = page.data;
 ---
 
 <Layout
-  title={`${t.pages.tagTitle}: ${tagName} | ${config.site.title}`}
+  title={`Tagged "${tagName}" · ReliaGround`}
+  description={`Notes tagged ${tagName}.`}
   currentPage="tags"
 >
-  <Breadcrumb />
+  <section class="b-section">
+    <div class="b-wrap">
+      <div class="b-shead">
+        <div class="b-kicker">Tag · {tagName}</div>
+        <h2>Notes tagged &ldquo;{tagName}&rdquo;.</h2>
+      </div>
 
-  <Main
-    pageTitle={`${t.pages.tagTitle}: ${tagName}`}
-    pageDesc={`${t.pages.tagDesc} "${tagName}".`}
-  >
-    <ul>
-      {page.data.map(data => <Card {...data} />)}
-    </ul>
-  </Main>
+      {
+        posts.length === 0 ? (
+          <p class="posts-empty">No notes with this tag.</p>
+        ) : (
+          <div class="b-blog">
+            {posts.map(p => (
+              <PostCard
+                href={getPostUrl(p.id, p.filePath, locale)}
+                title={p.data.title}
+                description={p.data.description}
+                pubDate={p.data.pubDatetime}
+                category={p.data.category}
+                stamp={stamps.get(p.id)}
+              />
+            ))}
+          </div>
+        )
+      }
 
-  <Pagination {page} />
+      {
+        (page.url.prev || page.url.next) && (
+          <nav class="posts-pagination" aria-label="Posts pagination">
+            <span class="page-slot page-slot-left">
+              {page.url.prev && (
+                <a class="page-link prev" href={page.url.prev}>
+                  ← Newer
+                </a>
+              )}
+            </span>
+            <span class="page-divider" aria-hidden="true">
+              ·
+            </span>
+            <span class="page-slot page-slot-right">
+              {page.url.next && (
+                <a class="page-link next" href={page.url.next}>
+                  Older →
+                </a>
+              )}
+            </span>
+          </nav>
+        )
+      }
+    </div>
+  </section>
 </Layout>
+
+<style>
+  .b-blog {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+  @media (max-width: 900px) {
+    .b-blog {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 620px) {
+    .b-blog {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .posts-empty {
+    text-align: center;
+    color: var(--muted);
+    font-size: 14px;
+    padding: 48px 0;
+  }
+
+  .posts-pagination {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .posts-pagination .page-slot {
+    flex: 1 1 0;
+    display: inline-flex;
+  }
+  .posts-pagination .page-slot-left {
+    justify-content: flex-start;
+  }
+  .posts-pagination .page-slot-right {
+    justify-content: flex-end;
+  }
+  .posts-pagination .page-link {
+    color: var(--fg);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .posts-pagination .page-link:hover {
+    color: var(--brand-mid);
+  }
+  .posts-pagination .page-divider {
+    color: var(--border-strong);
+    padding: 0 12px;
+  }
+</style>
