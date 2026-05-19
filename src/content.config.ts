@@ -35,4 +35,24 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { posts, pages };
+const linkSchema = z.object({ label: z.string(), href: z.string() });
+
+const landing = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/landing" }),
+  schema: z.object({
+    title: z.string(),
+    hero: z.object({
+      headline_prefix: z.string().default(""),
+      headline_accent: z.string(),
+      headline_suffix: z.string().default(""),
+      lead: z.string(),
+      cta_primary: linkSchema,
+      cta_secondary: linkSchema,
+      partners: z
+        .array(z.object({ name: z.string(), kind: z.string() }))
+        .default([]),
+    }),
+  }),
+});
+
+export const collections = { posts, pages, landing };

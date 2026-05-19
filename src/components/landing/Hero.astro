@@ -5,10 +5,15 @@
 // the Truchet maze SVG that sits behind everything, and the
 // "In collaboration with" partner logo rail below the main content.
 //
-// No props.
+// All copy comes from src/content/landing/main.md (frontmatter).
 
+import { getEntry } from "astro:content";
 import TruchetGrid from "./TruchetGrid.astro";
 import TraceCard from "./TraceCard.astro";
+
+const landing = await getEntry("landing", "main");
+if (!landing) throw new Error("Missing src/content/landing/main.md");
+const { hero } = landing.data;
 ---
 
 <section class="b-hero" id="top">
@@ -16,41 +21,38 @@ import TraceCard from "./TraceCard.astro";
   <div class="b-wrap b-hero-inner">
     <div>
       <h1>
-        <span class="accent">Auditable</span> language models for the work that has
-        to be right.
+        {hero.headline_prefix}<span class="accent">{hero.headline_accent}</span>{
+          hero.headline_suffix
+        }
       </h1>
-      <p class="lead">
-        ReliaGround pairs LLMs with deterministic tools and verification
-        methods, so that analytical work done with their help stays
-        reproducible, traceable and trustworthy — the qualities serious
-        analytics depends on.
-      </p>
+      <p class="lead">{hero.lead}</p>
       <div class="b-hero-cta">
-        <a href="#contact" class="btn-primary">Become a pilot →</a>
-        <a href="#approach" class="btn-ghost">See the approach</a>
+        <a href={hero.cta_primary.href} class="btn-primary">
+          {hero.cta_primary.label}
+        </a>
+        <a href={hero.cta_secondary.href} class="btn-ghost">
+          {hero.cta_secondary.label}
+        </a>
       </div>
     </div>
     <TraceCard />
   </div>
 
-  <!-- In collaboration with — partner rail -->
-  <div class="b-collab" aria-label="In collaboration with">
-    <div class="label">In collaboration with</div>
-    <div class="logos">
-      <div class="b-logo">
-        University of&nbsp;Helsinki<span class="sub">Host institution</span>
+  {
+    hero.partners.length > 0 && (
+      <div class="b-collab" aria-label="In collaboration with">
+        <div class="label">In collaboration with</div>
+        <div class="logos">
+          {hero.partners.map(p => (
+            <div class="b-logo">
+              {p.name}
+              <span class="sub">{p.kind}</span>
+            </div>
+          ))}
+        </div>
       </div>
-      <div class="b-logo">
-        Partner&nbsp;Logo<span class="sub">Pilot organisation</span>
-      </div>
-      <div class="b-logo">
-        Partner&nbsp;Logo<span class="sub">Pilot organisation</span>
-      </div>
-      <div class="b-logo">
-        Funder&nbsp;Logo<span class="sub">Research funder</span>
-      </div>
-    </div>
-  </div>
+    )
+  }
 </section>
 
 <style>
