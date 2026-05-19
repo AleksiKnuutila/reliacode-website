@@ -2,21 +2,143 @@
 @import "./theme.css";
 @import "./typography.css";
 
-@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
 @layer base {
-  * {
-    @apply border-border outline-accent/75;
-    scrollbar-width: auto;
-    scrollbar-color: var(--color-muted) transparent;
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
+
+  * {
+    @apply border-border;
+    scrollbar-width: auto;
+    scrollbar-color: var(--muted) transparent;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-optical-sizing: auto;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    line-height: 1.55;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-head);
+    letter-spacing: -0.018em;
+    color: var(--fg);
+    font-weight: 600;
+    line-height: 1.08;
+    margin: 0;
+    /* Fraunces optional axes — falls back gracefully if not loaded */
+    font-variation-settings: "SOFT" 50, "WONK" 0, "opsz" 96;
+    font-optical-sizing: auto;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  a {
+    color: inherit;
+  }
+
+  ::selection {
+    background: var(--brand-soft);
+  }
+
   a,
   button {
-    @apply outline-accent outline-offset-1 focus-visible:no-underline focus-visible:outline-2 focus-visible:outline-dashed;
+    outline-color: var(--accent-text);
+    outline-offset: 1px;
   }
+
+  a:focus-visible,
+  button:focus-visible {
+    text-decoration: none;
+    outline: 2px dashed var(--accent-text);
+  }
+
   button:not(:disabled),
   [role="button"]:not(:disabled) {
     cursor: pointer;
+  }
+
+  details > summary {
+    list-style: none;
+    cursor: pointer;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+}
+
+@layer components {
+  .mono {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    font-weight: 500;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: var(--primary-fg);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 0;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      transform 0.15s,
+      box-shadow 0.15s;
+    box-shadow: 0 1px 0 oklch(0 0 0 / 0.04);
+  }
+  .btn-primary:hover {
+    background: color-mix(in oklch, var(--primary) 88%, white);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px oklch(0.3 0.05 250 / 0.12);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--card);
+    color: var(--fg);
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid var(--border-strong);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
+  }
+  .btn-ghost:hover {
+    background: var(--secondary);
+    border-color: var(--brand-mid);
   }
 }
 
