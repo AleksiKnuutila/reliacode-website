@@ -1,0 +1,178 @@
+---
+// Hero — landing page hero section.
+//
+// Composes the headline column, the verification trace mock card,
+// the Truchet maze SVG that sits behind everything, and the
+// "In collaboration with" partner logo rail below the main content.
+//
+// No props.
+
+import TruchetGrid from "./TruchetGrid.astro";
+import TraceCard from "./TraceCard.astro";
+---
+
+<section class="b-hero" id="top">
+  <TruchetGrid />
+  <div class="b-wrap b-hero-inner">
+    <div>
+      <h1>
+        <span class="accent">Auditable</span> language models for the work that has
+        to be right.
+      </h1>
+      <p class="lead">
+        ReliaGround pairs LLMs with deterministic tools and verification
+        methods, so that analytical work done with their help stays
+        reproducible, traceable and trustworthy — the qualities serious
+        analytics depends on.
+      </p>
+      <div class="b-hero-cta">
+        <a href="#contact" class="btn-primary">Become a pilot →</a>
+        <a href="#approach" class="btn-ghost">See the approach</a>
+      </div>
+    </div>
+    <TraceCard />
+  </div>
+
+  <!-- In collaboration with — partner rail -->
+  <div class="b-collab" aria-label="In collaboration with">
+    <div class="label">In collaboration with</div>
+    <div class="logos">
+      <div class="b-logo">
+        University of&nbsp;Helsinki<span class="sub">Host institution</span>
+      </div>
+      <div class="b-logo">
+        Partner&nbsp;Logo<span class="sub">Pilot organisation</span>
+      </div>
+      <div class="b-logo">
+        Partner&nbsp;Logo<span class="sub">Pilot organisation</span>
+      </div>
+      <div class="b-logo">
+        Funder&nbsp;Logo<span class="sub">Research funder</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+    background: var(--gradient-hero);
+  }
+  .b-hero-inner {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    gap: 64px;
+    padding: 88px 0 80px;
+    align-items: center;
+  }
+  .b-hero h1 {
+    font-size: 68px;
+    line-height: 1.04;
+    letter-spacing: -0.022em;
+    max-width: 13ch;
+    font-weight: 500;
+  }
+  .b-hero h1 .accent {
+    background: linear-gradient(135deg, var(--brand-deep), var(--brand-mid));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .b-hero p.lead {
+    margin-top: 28px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 48ch;
+  }
+  .b-hero-cta {
+    margin-top: 36px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .b-hero-chips {
+    margin-top: 24px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .b-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: 12.5px;
+    color: var(--muted);
+    background: color-mix(in oklch, var(--card) 80%, transparent);
+  }
+  .b-chip .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--brand-mid);
+  }
+
+  /* In collaboration with — partner logo rail */
+  .b-collab {
+    position: relative;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 28px 40px 56px;
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    border-top: 1px dashed var(--border);
+  }
+  .b-collab .label {
+    flex: 0 0 auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    max-width: 14ch;
+    line-height: 1.5;
+  }
+  .b-collab .logos {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+    flex: 1;
+  }
+  .b-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 56px;
+    padding: 0 18px;
+    border: 1px dashed var(--border-strong);
+    border-radius: 6px;
+    color: var(--muted);
+    font-family: var(--font-head);
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    background: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklch, var(--card) 100%, transparent) 0 14px,
+      color-mix(in oklch, var(--secondary) 70%, var(--card)) 14px 15px
+    );
+    text-align: center;
+  }
+  .b-logo .sub {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    margin-top: 2px;
+  }
+</style>

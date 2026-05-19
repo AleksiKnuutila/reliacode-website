@@ -1,0 +1,229 @@
+---
+// TraceCard — verification trace mock used inside the hero.
+//
+// Renders a fake run log: header (hash + timestamp), a body of rows
+// (one indicator per row, message + optional emphasis fragment, meta),
+// and a footer (verified + bundle hash).
+//
+// Defaults mirror the example from template.html lines 545–586.
+
+export type TraceRow = {
+  ts: string; // "14:22:08"
+  status: "pass" | "run";
+  message: string; // full message text, with `{emphasis}` substring rendered as <em>
+  emphasis?: string; // optional substring to wrap in <em>; case-sensitive
+  meta: string; // right column
+};
+
+type Props = {
+  hash?: string;
+  timestamp?: string;
+  rows?: TraceRow[];
+  bundleHash?: string;
+};
+
+const {
+  hash = "run_a7c41f",
+  timestamp = "2026-05-09 14:22:08Z",
+  bundleHash = "b3:9f12…aef",
+  rows = [
+    {
+      ts: "14:22:08",
+      status: "pass",
+      message: 'Intent registered "monthly cohort retention by segment"',
+      emphasis: '"monthly cohort retention by segment"',
+      meta: "→ spec.yaml",
+    },
+    {
+      ts: "14:22:09",
+      status: "pass",
+      message: "LLM proposed plan 3 steps",
+      emphasis: "3 steps",
+      meta: "model · checked",
+    },
+    {
+      ts: "14:22:11",
+      status: "pass",
+      message: "Schema verified against warehouse.users · v12",
+      emphasis: "warehouse.users · v12",
+      meta: "constraint ✓",
+    },
+    {
+      ts: "14:22:12",
+      status: "pass",
+      message: "Deterministic exec SQL + pandas",
+      emphasis: "SQL + pandas",
+      meta: "2.41 s",
+    },
+    {
+      ts: "14:22:14",
+      status: "pass",
+      message: "Intent check · result matches stated goal",
+      meta: "96% conf.",
+    },
+    {
+      ts: "14:22:15",
+      status: "run",
+      message: "Writing audit bundle…",
+      meta: "inputs · code · outputs",
+    },
+  ],
+}: Props = Astro.props;
+
+// Split a message into [before, em, after] given an `emphasis` substring.
+// If emphasis is undefined or not found, returns [message, "", ""].
+function splitMessage(
+  message: string,
+  emphasis?: string
+): [string, string, string] {
+  if (!emphasis) return [message, "", ""];
+  const idx = message.indexOf(emphasis);
+  if (idx === -1) return [message, "", ""];
+  return [
+    message.slice(0, idx),
+    emphasis,
+    message.slice(idx + emphasis.length),
+  ];
+}
+---
+
+<div class="b-trace" aria-label="Verification trace example">
+  <div class="b-trace-head">
+    <span class="ttl">Run · trace</span>
+    <span class="hash">{hash} · {timestamp}</span>
+  </div>
+  <div class="b-trace-body">
+    {
+      rows.map(row => {
+        const [before, em, after] = splitMessage(row.message, row.emphasis);
+        return (
+          <div class="b-trace-row">
+            <span class="ts">{row.ts}</span>
+            <span class={`ind ${row.status}`} />
+            <span class="msg">
+              {before}
+              {em && <em>{em}</em>}
+              {after}
+            </span>
+            <span class="meta">{row.meta}</span>
+          </div>
+        );
+      })
+    }
+  </div>
+  <div class="b-trace-foot">
+    <span class="verified">Result · verified</span>
+    <span>bundle · {bundleHash}</span>
+  </div>
+</div>
+
+<style>
+  .b-trace {
+    position: relative;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+  }
+  .b-trace-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    background: color-mix(in oklch, var(--secondary) 70%, var(--card));
+  }
+  .b-trace-head .ttl {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+  }
+  .b-trace-head .hash {
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+  .b-trace-body {
+    padding: 6px 0;
+  }
+  .b-trace-row {
+    display: grid;
+    grid-template-columns: 78px 18px 1fr auto;
+    gap: 12px;
+    padding: 11px 16px;
+    align-items: center;
+    border-bottom: 1px dashed
+      color-mix(in oklch, var(--border) 80%, transparent);
+  }
+  .b-trace-row:last-of-type {
+    border-bottom: 0;
+  }
+  .b-trace-row .ts {
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+  .b-trace-row .ind {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid;
+  }
+  .b-trace-row .ind.pass {
+    background: var(--brand-mid);
+    border-color: var(--brand-mid);
+  }
+  .b-trace-row .ind.run {
+    background: transparent;
+    border-color: var(--brand-mid);
+    animation: bspin 1.4s linear infinite;
+  }
+  @keyframes bspin {
+    from {
+      transform: rotate(0);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  .b-trace-row .msg {
+    color: var(--fg);
+  }
+  .b-trace-row .msg em {
+    font-style: normal;
+    color: var(--brand-mid);
+  }
+  .b-trace-row .meta {
+    color: var(--muted);
+    font-size: 11.5px;
+  }
+  .b-trace-foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid var(--border);
+    background: color-mix(in oklch, var(--secondary) 70%, var(--card));
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .b-trace-foot .verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--brand-mid);
+    font-weight: 500;
+  }
+  .b-trace-foot .verified::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--brand-mid);
+    box-shadow: 0 0 0 4px
+      color-mix(in oklch, var(--brand-mid) 18%, transparent);
+  }
+</style>

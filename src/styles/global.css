@@ -85,6 +85,55 @@
 }
 
 @layer components {
+  /* Shared layout container — used by hero, problem, approach, team,
+     FAQ, blog, and CTA sections. Mirrors template line 126. */
+  .b-wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px;
+  }
+
+  /* Shared section scaffold — used by every non-hero landing section.
+     Mirrors template lines 252–269. */
+  .b-section {
+    padding: 112px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .b-section.alt {
+    background: color-mix(in oklch, var(--secondary) 55%, var(--bg));
+  }
+
+  .b-shead {
+    margin-bottom: 56px;
+    max-width: 32ch;
+  }
+  .b-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    font-weight: 500;
+    margin-bottom: 16px;
+  }
+  .b-kicker::before {
+    content: "";
+    display: inline-block;
+    width: 18px;
+    height: 1px;
+    background: var(--brand-mid);
+  }
+  .b-shead h2 {
+    font-size: 46px;
+    line-height: 1.08;
+    letter-spacing: -0.018em;
+    max-width: 22ch;
+    font-weight: 500;
+  }
+
   .mono {
     font-family: var(--font-mono);
     font-size: 0.72rem;
