@@ -15,11 +15,11 @@ export async function getStaticPaths() {
   }));
 }
 
-type Props = {
+interface Props {
   post: CollectionEntry<"posts">;
-};
+}
 
-const { post } = Astro.props;
+const { post } = Astro.props as Props;
 const locale = Astro.currentLocale ?? config.site.lang;
 
 const {
