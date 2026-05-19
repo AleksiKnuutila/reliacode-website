@@ -1,0 +1,164 @@
+---
+// TeamGrid — landing page "Research team" section.
+//
+// Renders the full <section> including kicker, h2, intro paragraph,
+// the 4-card grid driven by TEAM_MEMBERS, and the trailing placeholder
+// note about names + photographs.
+//
+// Mirrors template lines 704–754; styles mirror lines 348–386.
+
+import { TEAM_MEMBERS } from "@/config";
+---
+
+<section class="b-section" id="team">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">Research team</div>
+      <h2>A small group based in Helsinki.</h2>
+    </div>
+
+    <div class="b-team-intro">
+      <p>
+        ReliaGround is run by a tight team working across machine learning,
+        software engineering and applied analytics, alongside pilot
+        organisations and external advisors. We share what we learn — methods,
+        failure modes, and the auditable artefacts our pipelines produce.
+      </p>
+    </div>
+
+    <div class="b-team">
+      {
+        TEAM_MEMBERS.map(member => (
+          <div class="b-tcard">
+            <div class="av" aria-hidden="true">
+              {member.initial}
+            </div>
+            <div class="nm">{member.name}</div>
+            <div class="rl">{member.role}</div>
+            <p class="bio">{member.bio}</p>
+            <div class="af">{member.affiliation}</div>
+          </div>
+        ))
+      }
+    </div>
+
+    <p class="team-note">
+      Names and photographs to follow as the team is finalised.
+    </p>
+  </div>
+</section>
+
+<style>
+  .b-team-intro {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 64px;
+    margin-bottom: 56px;
+    align-items: end;
+  }
+  .b-team-intro p {
+    font-size: 16px;
+    color: var(--muted);
+    line-height: 1.65;
+    max-width: 48ch;
+  }
+
+  .b-team {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  .b-tcard {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 22px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .b-tcard:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-tcard .av {
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background: var(--gradient-accent);
+    margin-bottom: 18px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-fg);
+    font-family: var(--font-head);
+    font-size: 18px;
+    font-weight: 500;
+  }
+  .b-tcard .av::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      transparent 40%,
+      color-mix(in oklch, white 30%, transparent) 60%,
+      transparent 80%
+    );
+  }
+  .b-tcard .nm {
+    font-family: var(--font-head);
+    font-size: 17px;
+    font-weight: 500;
+  }
+  .b-tcard .rl {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+  .b-tcard .bio {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .b-tcard .af {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--brand-mid);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .b-team-foot {
+    margin-top: 48px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding: 28px 32px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--card);
+  }
+  .b-team-foot h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .b-team-foot p {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.65;
+  }
+
+  .team-note {
+    margin-top: 32px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+</style>

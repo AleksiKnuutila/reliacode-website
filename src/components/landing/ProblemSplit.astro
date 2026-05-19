@@ -1,0 +1,77 @@
+---
+// ProblemSplit — landing page "Problem" section.
+//
+// Two contrasting cards: the status-quo "LLM in a notebook" and the
+// ReliaGround "LLM inside a verified pipeline". Static content, no props.
+//
+// Mirrors template lines 602–631; styles mirror template lines 272–281.
+---
+
+<section class="b-section" id="problem">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">Problem</div>
+      <h2>LLMs reshaped software. Analytics has barely moved.</h2>
+    </div>
+    <div class="b-problem">
+      <div class="b-prob-card bad">
+        <div class="pn">Status quo</div>
+        <h3>An LLM in a notebook</h3>
+        <p>
+          One-shot prompts, non-deterministic outputs, no schema guarantees, no
+          record of which inputs produced which figure. Teams treat the model as
+          an ideation aid, not as part of the pipeline.
+        </p>
+      </div>
+      <div class="b-prob-card good">
+        <div class="pn">What changes with ReliaGround</div>
+        <h3>An LLM inside a verified pipeline</h3>
+        <p>
+          Deterministic tools do the work; the LLM proposes, explains and
+          adapts. Each step is checked against intent and constraints, and every
+          run produces an auditable bundle a reviewer can rerun.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-problem {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .b-prob-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+  }
+  .b-prob-card .pn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .b-prob-card h3 {
+    font-size: 20px;
+    margin: 0 0 12px;
+    font-weight: 500;
+  }
+  .b-prob-card p {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .b-prob-card.bad {
+    border-left: 2px solid
+      color-mix(in oklch, var(--brand-mid) 50%, var(--border));
+  }
+  .b-prob-card.good {
+    border-left: 2px solid var(--brand-deep);
+    background: color-mix(in oklch, var(--brand-soft) 35%, var(--card));
+  }
+</style>

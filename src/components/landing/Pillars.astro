@@ -1,0 +1,108 @@
+---
+// Pillars — the three-card "Approach" grid.
+//
+// Renders only the `.b-pillars` block (no <section> wrapper). The
+// surrounding `<section class="b-section alt" id="approach">` plus
+// its `.b-shead` live in index.astro so Pillars + Workflow can share
+// one section heading.
+//
+// Mirrors template lines 640–664; styles mirror lines 284–306.
+---
+
+<div class="b-pillars">
+  <div class="b-pillar">
+    <div class="pn">Pillar I</div>
+    <h3>Deterministic integration</h3>
+    <p>
+      LLMs sit alongside well-specified analytical tools. Each step is
+      checkable, replayable, trustable in isolation.
+    </p>
+  </div>
+  <div class="b-pillar">
+    <div class="pn">Pillar II</div>
+    <h3>Intent verification</h3>
+    <p>
+      Methods to verify that generated implementations correspond to what the
+      user actually asked for — not merely code that runs.
+    </p>
+  </div>
+  <div class="b-pillar">
+    <div class="pn">Pillar III</div>
+    <h3>Constraint satisfaction</h3>
+    <div class="b-spec">
+      <div><span class="com"># constraints.yaml</span></div>
+      <div><span class="kw">schema:</span> warehouse.users.v12</div>
+      <div><span class="kw">invariants:</span></div>
+      <div>&nbsp;&nbsp;- non_negative(<span class="str">"retention"</span>)</div>
+      <div>
+        &nbsp;&nbsp;- monotonic(<span class="str">"cohort_month"</span>)
+      </div>
+      <div><span class="kw">privacy:</span> aggregate_only</div>
+      <div><span class="ok">✓ 4 / 4 satisfied</span></div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .b-pillars {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1.3fr;
+    gap: 20px;
+  }
+  .b-pillar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-height: 320px;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .b-pillar:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-pillar .pn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+  }
+  .b-pillar h3 {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 500;
+  }
+  .b-pillar p {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+  .b-spec {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    background: color-mix(in oklch, var(--brand-deep) 96%, white);
+    color: color-mix(in oklch, var(--primary-fg) 92%, transparent);
+    border-radius: 6px;
+    padding: 14px 16px;
+    line-height: 1.7;
+  }
+  .b-spec .kw {
+    color: color-mix(in oklch, var(--brand-soft) 80%, white);
+  }
+  .b-spec .str {
+    color: oklch(0.85 0.12 80);
+  }
+  .b-spec .com {
+    color: color-mix(in oklch, var(--primary-fg) 55%, transparent);
+  }
+  .b-spec .ok {
+    color: oklch(0.82 0.16 155);
+  }
+</style>

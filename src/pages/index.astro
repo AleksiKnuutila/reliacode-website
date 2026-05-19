@@ -1,11 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/landing/Hero.astro";
-// import ProblemSplit from "@/components/landing/ProblemSplit.astro";
-// import Pillars from "@/components/landing/Pillars.astro";
-// import Workflow from "@/components/landing/Workflow.astro";
-// import TeamGrid from "@/components/landing/TeamGrid.astro";
-// import FAQ from "@/components/landing/FAQ.astro";
+import ProblemSplit from "@/components/landing/ProblemSplit.astro";
+import Pillars from "@/components/landing/Pillars.astro";
+import Workflow from "@/components/landing/Workflow.astro";
+import TeamGrid from "@/components/landing/TeamGrid.astro";
+import FAQ from "@/components/landing/FAQ.astro";
 // import BlogTeaser from "@/components/landing/BlogTeaser.astro";
 // import CTA from "@/components/landing/CTA.astro";
 
@@ -16,11 +16,22 @@ const description =
 
 <Layout title={title} description={description} currentPage="landing">
   <Hero />
-  <!-- <ProblemSplit /> -->
-  <!-- <Pillars /> -->
-  <!-- <Workflow /> -->
-  <!-- <TeamGrid /> -->
-  <!-- <FAQ /> -->
+  <ProblemSplit />
+
+  <section class="b-section alt" id="approach">
+    <div class="b-wrap">
+      <div class="b-shead">
+        <div class="b-kicker">Approach</div>
+        <h2>Three pillars, one trace.</h2>
+      </div>
+      <Pillars />
+      <Workflow />
+    </div>
+  </section>
+
+  <TeamGrid />
+  <FAQ />
+
   <!-- <BlogTeaser /> -->
   <!-- <CTA /> -->
 </Layout>

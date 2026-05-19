@@ -1,0 +1,74 @@
+---
+// FAQ — landing page FAQ accordion.
+//
+// Native <details>/<summary> based accordion driven by FAQ_ITEMS.
+// First item with `open: true` renders with the `open` attribute so
+// it expands on first paint. The summary's "+" rotates 45° to "×"
+// when its parent <details> is open.
+//
+// Mirrors template lines 758–823; styles mirror lines 389–396.
+// Global summary-marker reset lives in global.css.
+
+import { FAQ_ITEMS } from "@/config";
+---
+
+<section class="b-section alt" id="faq">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">FAQ</div>
+      <h2>Questions we hear from prospective pilots.</h2>
+    </div>
+    <div class="b-faq">
+      {
+        FAQ_ITEMS.map(item => (
+          <details open={item.open ? true : undefined}>
+            <summary>
+              <span class="q">{item.q}</span>
+              <span class="plus">+</span>
+            </summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  .b-faq {
+    max-width: 880px;
+  }
+  .b-faq details {
+    border-bottom: 1px solid var(--border);
+    padding: 22px 0;
+  }
+  .b-faq details:first-of-type {
+    border-top: 1px solid var(--border);
+  }
+  .b-faq summary {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+  }
+  .b-faq summary .q {
+    font-size: 17px;
+    font-weight: 500;
+    font-family: var(--font-head);
+  }
+  .b-faq summary .plus {
+    color: var(--brand-mid);
+    font-size: 18px;
+    transition: transform 0.2s;
+  }
+  .b-faq details[open] summary .plus {
+    transform: rotate(45deg);
+  }
+  .b-faq details p {
+    margin-top: 14px;
+    color: var(--muted);
+    font-size: 15px;
+    line-height: 1.65;
+    max-width: 60ch;
+  }
+</style>
