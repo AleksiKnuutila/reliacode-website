@@ -174,4 +174,21 @@ import { PILOT_EMAIL } from "@/config";
   .b-cta-card .row .k {
     color: color-mix(in oklch, var(--primary-fg) 65%, transparent);
   }
+
+  @media (max-width: 900px) {
+    .b-cta-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 64px 0;
+    }
+    .b-cta h2 {
+      font-size: 38px;
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .b-cta h2 {
+      font-size: 32px;
+    }
+  }
 </style>

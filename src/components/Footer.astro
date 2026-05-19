@@ -160,4 +160,23 @@ const toFooterHref = (href: string): string =>
     text-underline-offset: 4px;
     text-decoration-color: var(--border-strong);
   }
+
+  @media (max-width: 900px) {
+    .b-footer-inner {
+      grid-template-columns: 1fr 1fr;
+      padding: 40px 24px 24px;
+      gap: 32px;
+    }
+    .b-footer .legal {
+      padding: 18px 24px;
+      flex-direction: column;
+      gap: 6px;
+    }
+  }
+  @media (max-width: 600px) {
+    .b-footer-inner {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
 </style>

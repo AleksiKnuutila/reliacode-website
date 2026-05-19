@@ -120,4 +120,25 @@ const logoHref = isLanding ? "#top" : "/";
   .rg-nav a.rg-header-cta:hover {
     color: var(--primary-fg);
   }
+
+  /* ── RESPONSIVE ───────────────────────────────────────────────
+     Hide secondary nav links below ~720px to keep the header tidy.
+     The Pilot CTA stays visible so the primary action remains within
+     reach on mobile. */
+  @media (max-width: 900px) {
+    .rg-nav {
+      gap: 18px;
+    }
+    .rg-logo .aff {
+      display: none;
+    }
+  }
+  @media (max-width: 720px) {
+    .rg-header-inner {
+      padding: 0 20px;
+    }
+    .rg-nav > a:not(.rg-header-cta) {
+      display: none;
+    }
+  }
 </style>

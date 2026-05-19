@@ -98,4 +98,20 @@ const locale = Astro.currentLocale ?? config.site.lang;
     text-underline-offset: 4px;
     color: var(--fg);
   }
+
+  @media (max-width: 900px) {
+    .b-blog {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 600px) {
+    .b-blog {
+      grid-template-columns: 1fr;
+    }
+    .b-blog-foot {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+  }
 </style>

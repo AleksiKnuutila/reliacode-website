@@ -138,4 +138,21 @@ const monthDay = (d: Date | string) =>
     color: var(--muted);
     font-size: 14px;
   }
+
+  @media (max-width: 480px) {
+    .year-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      padding: 12px 0;
+    }
+    .row-date {
+      font-size: 11px;
+    }
+    .row-title {
+      font-size: 16px;
+    }
+    .year {
+      font-size: 30px;
+    }
+  }
 </style>

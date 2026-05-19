@@ -164,4 +164,44 @@ import TraceCard from "./TraceCard.astro";
     color: var(--brand-mid);
     margin-top: 2px;
   }
+
+  /* ── RESPONSIVE ─────────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .b-hero-inner {
+      grid-template-columns: 1fr;
+      gap: 40px;
+      padding: 56px 0 56px;
+    }
+    .b-hero h1 {
+      font-size: 52px;
+      max-width: none;
+    }
+    .b-hero p.lead {
+      max-width: none;
+    }
+    .b-collab {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 18px;
+      padding: 24px 24px 40px;
+    }
+    .b-collab .logos {
+      grid-template-columns: repeat(2, 1fr);
+      width: 100%;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .b-hero h1 {
+      font-size: 44px;
+    }
+    .b-hero-inner {
+      padding: 40px 0 40px;
+    }
+    .b-logo {
+      height: 52px;
+      font-size: 14px;
+      padding: 0 12px;
+    }
+  }
 </style>

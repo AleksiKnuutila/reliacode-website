@@ -92,12 +92,27 @@
     margin: 0 auto;
     padding: 0 40px;
   }
+  @media (max-width: 600px) {
+    .b-wrap {
+      padding: 0 20px;
+    }
+  }
 
   /* Shared section scaffold — used by every non-hero landing section.
      Mirrors template lines 252–269. */
   .b-section {
     padding: 112px 0;
     border-bottom: 1px solid var(--border);
+  }
+  @media (max-width: 900px) {
+    .b-section {
+      padding: 72px 0;
+    }
+  }
+  @media (max-width: 600px) {
+    .b-section {
+      padding: 56px 0;
+    }
   }
   .b-section.alt {
     background: color-mix(in oklch, var(--secondary) 55%, var(--bg));
@@ -142,6 +157,19 @@
        Google-CDN build at 46px. */
     max-width: 520px;
     font-weight: 500;
+  }
+  @media (max-width: 900px) {
+    .b-shead h2 {
+      font-size: 38px;
+    }
+    .b-shead {
+      max-width: none;
+    }
+  }
+  @media (max-width: 600px) {
+    .b-shead h2 {
+      font-size: 32px;
+    }
   }
 
   .mono {
