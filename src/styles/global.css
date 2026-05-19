@@ -191,6 +191,134 @@
   }
 }
 
+/* ── POST PROSE ────────────────────────────────────────────────
+   Body styles for /posts/<slug>. Defined globally (not inside
+   PostLayout's <style> block) so markdown-rendered descendants
+   inherit them past Astro's component-scope hash. */
+.post-prose {
+  font-family: var(--font-body);
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--fg);
+}
+
+.post-prose p {
+  margin: 0 0 1.2em;
+}
+
+.post-prose p:last-child {
+  margin-bottom: 0;
+}
+
+.post-prose h2 {
+  font-family: var(--font-head);
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.012em;
+  margin: 2.2em 0 0.6em;
+}
+
+.post-prose h3 {
+  font-family: var(--font-head);
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 1.25;
+  margin: 1.8em 0 0.5em;
+}
+
+.post-prose h4 {
+  font-family: var(--font-head);
+  font-size: 18px;
+  font-weight: 500;
+  margin: 1.6em 0 0.4em;
+}
+
+.post-prose ul,
+.post-prose ol {
+  padding-left: 1.4em;
+  margin: 0 0 1.2em;
+}
+
+.post-prose li {
+  margin-bottom: 0.4em;
+}
+
+.post-prose a {
+  color: var(--brand-mid);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-color: color-mix(
+    in oklch,
+    var(--brand-mid) 40%,
+    transparent
+  );
+  transition: text-decoration-color 0.15s;
+}
+
+.post-prose a:hover {
+  text-decoration-color: var(--brand-mid);
+}
+
+.post-prose blockquote {
+  border-left: 2px solid var(--brand-mid);
+  padding-left: 1.2em;
+  margin: 1.4em 0;
+  font-family: var(--font-head);
+  font-style: italic;
+  font-size: 19px;
+  color: color-mix(in oklch, var(--fg) 88%, transparent);
+}
+
+.post-prose code {
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  background: var(--secondary);
+  padding: 0.18em 0.4em;
+  border-radius: 3px;
+}
+
+.post-prose pre {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  background: color-mix(in oklch, var(--brand-deep) 96%, white);
+  color: color-mix(in oklch, var(--primary-fg) 92%, transparent);
+  padding: 16px 18px;
+  border-radius: 6px;
+  overflow-x: auto;
+  margin: 1.4em 0;
+}
+
+.post-prose pre code {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+.post-prose hr {
+  border: 0;
+  border-top: 1px dashed var(--border);
+  margin: 2.4em 0;
+}
+
+.post-prose img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 6px;
+  margin: 1.6em 0;
+}
+
+.post-prose em {
+  font-style: italic;
+}
+
+.post-prose strong {
+  font-weight: 600;
+}
+
 @utility max-w-app {
   @apply max-w-3xl;
 }

@@ -11,11 +11,18 @@
 
 import { getCollection } from "astro:content";
 import PostCard from "@/components/PostCard.astro";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { buildPostStamps } from "@/utils/getPostStamps";
+import config from "@/config";
 
 const allPosts = await getCollection(
   "posts",
   ({ data }) => data.draft !== true
 );
+
+// Stable "Note · NNN" stamps across the whole catalogue — same number
+// on this teaser and on /posts.
+const stamps = buildPostStamps(allPosts);
 
 // Sort by date descending. Featured posts float to the front, but
 // stay date-ordered among themselves so the latest featured shows
@@ -33,13 +40,7 @@ const others = allPosts
   .sort(byDateDesc);
 const posts = [...featured, ...others].slice(0, 3);
 
-// Stamp numbers are intentionally hardcoded for now; if posts grow we
-// can derive these from a `series` frontmatter field. Count down from
-// 008 so the latest gets the highest number (matching the template).
-const SERIES_START = 8;
-function stampFor(idx: number): string {
-  return `Note · ${String(SERIES_START - idx).padStart(3, "0")}`;
-}
+const locale = Astro.currentLocale ?? config.site.lang;
 ---
 
 <section class="b-section" id="blog">
@@ -51,14 +52,14 @@ function stampFor(idx: number): string {
 
     <div class="b-blog">
       {
-        posts.map((p, i) => (
+        posts.map(p => (
           <PostCard
-            href={`/posts/${p.id}`}
+            href={getPostUrl(p.id, p.filePath, locale)}
             title={p.data.title}
             description={p.data.description}
             pubDate={p.data.pubDatetime}
             category={p.data.category}
-            stamp={stampFor(i)}
+            stamp={stamps.get(p.id)}
           />
         ))
       }

@@ -1,14 +1,29 @@
 ---
+/**
+ * PostLayout — calmer reading shell for individual posts.
+ *
+ * Renders the Layout chrome (Header / Footer / SEO) and a narrow-measure
+ * article body. Strips AstroPaper's default breadcrumb, share links,
+ * edit-post link, table of contents, related posts, and prev/next nav —
+ * the design calls for a quiet single-column page.
+ *
+ * Prose styles live in `src/styles/global.css` under `.post-prose` so
+ * markdown-rendered descendants pick them up.
+ */
 import Layout from "./Layout.astro";
 import config from "@/config";
 
 type Props = {
-  title?: string;
+  title: string;
   description?: string;
   ogImage?: string;
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
+  category?: string;
+  tags?: string[];
+  /** Approximate read time in minutes — omitted if undefined. */
+  readingMinutes?: number;
   currentPage?: "landing" | "post" | "archives" | "tags" | "search";
 };
 
@@ -21,13 +36,16 @@ const {
   canonicalURL,
   pubDatetime,
   modDatetime,
+  category,
+  tags = [],
+  readingMinutes,
   currentPage,
 } = Astro.props;
 
 const structuredData = {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  headline: title ?? site.title,
+  headline: title,
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
@@ -39,13 +57,32 @@ const structuredData = {
     },
   ],
 };
+
+const monthYear = pubDatetime
+  ? new Intl.DateTimeFormat("en-GB", {
+      year: "numeric",
+      month: "long",
+    }).format(pubDatetime)
+  : undefined;
+
+// Meta-strip segments — drop anything that is missing rather than
+// rendering empty slots.
+const metaParts = [
+  monthYear,
+  category,
+  readingMinutes ? `${readingMinutes} min read` : undefined,
+].filter((part): part is string => Boolean(part));
 ---
 
-<Layout {title} {description} {ogImage} {canonicalURL} {currentPage}>
+<Layout
+  title={`${title} | ${site.title}`}
+  description={description}
+  ogImage={ogImage}
+  canonicalURL={canonicalURL}
+  currentPage={currentPage ?? "post"}
+>
   <Fragment slot="head">
-    <!-- Override og:type for article pages -->
     <meta property="og:type" content="article" />
-
     {
       pubDatetime && (
         <meta
@@ -62,7 +99,6 @@ const structuredData = {
         />
       )
     }
-
     <script
       type="application/ld+json"
       is:inline
@@ -70,5 +106,143 @@ const structuredData = {
     />
   </Fragment>
 
-  <slot />
+  <article class="post" data-pagefind-body>
+    <header class="post-head">
+      {
+        metaParts.length > 0 && (
+          <div class="post-meta">
+            {metaParts.map((part, i) => (
+              <Fragment>
+                {i > 0 && (
+                  <span class="mono-sep" aria-hidden="true">
+                    ·
+                  </span>
+                )}
+                <span class="mono-seg">{part}</span>
+              </Fragment>
+            ))}
+          </div>
+        )
+      }
+      <h1 class="post-title">{title}</h1>
+      {
+        tags.length > 0 && (
+          <div class="post-tags">
+            {tags.map(t => (
+              <a class="b-chip" href={`/tags/${t}/`}>
+                {t}
+              </a>
+            ))}
+          </div>
+        )
+      }
+    </header>
+
+    <div class="post-prose">
+      <slot />
+    </div>
+
+    <footer class="post-foot">
+      <a class="back-link mono" href="/posts">← back to all notes</a>
+    </footer>
+  </article>
 </Layout>
+
+<style>
+  /* Page-scoped wrappers. Prose styles for markdown-rendered descendants
+     live in global.css so they cascade past Astro's scope-hash. */
+  .post {
+    max-width: 68ch;
+    margin: 0 auto;
+    padding: 80px 40px 96px;
+  }
+
+  .post-head {
+    margin-bottom: 48px;
+  }
+
+  .post-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    flex-wrap: wrap;
+  }
+
+  .post-meta .mono-sep {
+    color: var(--border-strong);
+  }
+
+  .post-title {
+    font-family: var(--font-head);
+    font-size: 44px;
+    line-height: 1.1;
+    letter-spacing: -0.018em;
+    font-weight: 500;
+    font-variation-settings:
+      "SOFT" 50,
+      "WONK" 0,
+      "opsz" 96;
+    margin: 0;
+  }
+
+  @media (max-width: 620px) {
+    .post {
+      padding: 56px 24px 72px;
+    }
+    .post-title {
+      font-size: 34px;
+    }
+  }
+
+  .post-tags {
+    margin-top: 22px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  /* The base `.b-chip` is defined in Hero.astro for the landing page;
+     we redeclare here so the chip renders correctly on /posts/<slug>
+     where Hero is not in the bundle. Keep visuals identical. */
+  .post-tags :global(.b-chip) {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 11px;
+    border: 1px solid var(--border-strong);
+    border-radius: 999px;
+    font-size: 12.5px;
+    color: var(--muted);
+    background: color-mix(in oklch, var(--card) 80%, transparent);
+    text-decoration: none;
+    transition:
+      border-color 0.15s,
+      color 0.15s;
+  }
+  .post-tags :global(.b-chip:hover) {
+    border-color: var(--brand-mid);
+    color: var(--fg);
+  }
+
+  .post-foot {
+    max-width: 68ch;
+    margin: 64px auto 0;
+    padding-top: 24px;
+    border-top: 1px dashed var(--border);
+  }
+
+  .back-link {
+    color: var(--brand-mid);
+    text-decoration: none;
+    transition: color 0.15s;
+  }
+  .back-link:hover {
+    color: var(--fg);
+  }
+</style>
