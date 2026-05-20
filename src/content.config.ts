@@ -121,38 +121,25 @@ const landing = defineCollection({
       }),
     }),
 
-    // --- team ---
+    // --- team (section header only; individual members live in the
+    //     `team` collection, one file per person, so each is editable
+    //     standalone in Obsidian). ---
     z.object({
       section: z.literal("team"),
       title: z.string(),
       kicker: z.string(),
       headline: z.string(),
       intro: z.string(),
-      members: z.array(
-        z.object({
-          initial: z.string(),
-          name: z.string(),
-          role: z.string(),
-          bio: z.string(),
-          affiliation: z.string(),
-        }),
-      ),
       note: z.string().optional(),
     }),
 
-    // --- faq ---
+    // --- faq (section header only; individual Q&As live in the `faq`
+    //     collection, one file per question). ---
     z.object({
       section: z.literal("faq"),
       title: z.string(),
       kicker: z.string(),
       headline: z.string(),
-      items: z.array(
-        z.object({
-          q: z.string(),
-          a: z.string(),
-          open: z.boolean().default(false),
-        }),
-      ),
     }),
 
     // --- blog teaser (3 posts are pulled from the posts collection; this
@@ -180,4 +167,38 @@ const landing = defineCollection({
   ]),
 });
 
-export const collections = { posts, pages, landing, site };
+// FAQ entries — one file per question. The answer lives in the markdown
+// body so it can use full markdown formatting.
+const faq = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/faq" }),
+  schema: z.object({
+    title: z.string(),
+    question: z.string(),
+    /** Lower numbers appear first. Leave gaps (10, 20, 30…) for easy
+     *  insertion between items later. */
+    sort: z.number(),
+    /** Render this item with the `open` attribute on first paint. */
+    open: z.boolean().default(false),
+  }),
+});
+
+// Team members — one file per person. The short bio lives in the
+// markdown body.
+const team = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/team" }),
+  schema: z.object({
+    title: z.string(),
+    /** Single character shown inside the gradient avatar tile. */
+    initial: z.string(),
+    /** Role title — used in place of a real name until the team is public. */
+    name: z.string(),
+    /** Sub-line below the name. */
+    role: z.string(),
+    /** Small mono tag at the bottom of the card. */
+    affiliation: z.string(),
+    /** Lower numbers appear first. */
+    sort: z.number(),
+  }),
+});
+
+export const collections = { posts, pages, landing, site, faq, team };

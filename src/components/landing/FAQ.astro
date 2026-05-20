@@ -1,12 +1,25 @@
 ---
 // FAQ — landing page FAQ accordion.
 //
-// Native <details>/<summary> driven by src/content/landing/faq.md.
-// The summary's "+" rotates 45° to "×" when its parent <details> is open.
+// Section header (kicker + headline) from src/content/landing/faq.md.
+// Individual Q&As are one file per question under src/content/faq/,
+// sorted by the `sort` field in each file's frontmatter.
 
+import { getCollection, render } from "astro:content";
 import { getLandingSection } from "@/utils/getLandingSection";
 
 const faq = await getLandingSection("faq");
+
+const itemEntries = await getCollection("faq");
+itemEntries.sort((a, b) => a.data.sort - b.data.sort);
+
+// Pre-render each item's body so we can drop it into the accordion.
+const items = await Promise.all(
+  itemEntries.map(async entry => {
+    const { Content } = await render(entry);
+    return { data: entry.data, Content };
+  }),
+);
 ---
 
 <section class="b-section alt" id="faq">
@@ -17,13 +30,15 @@ const faq = await getLandingSection("faq");
     </div>
     <div class="b-faq">
       {
-        faq.items.map(item => (
-          <details open={item.open ? true : undefined}>
+        items.map(({ data, Content }) => (
+          <details open={data.open ? true : undefined}>
             <summary>
-              <span class="q">{item.q}</span>
+              <span class="q">{data.question}</span>
               <span class="plus">+</span>
             </summary>
-            <p>{item.a}</p>
+            <div class="answer">
+              <Content />
+            </div>
           </details>
         ))
       }
@@ -61,11 +76,22 @@ const faq = await getLandingSection("faq");
   .b-faq details[open] summary .plus {
     transform: rotate(45deg);
   }
-  .b-faq details p {
+  .b-faq .answer {
     margin-top: 14px;
     color: var(--muted);
     font-size: 15px;
     line-height: 1.65;
     max-width: 60ch;
+  }
+  .b-faq .answer :global(p) {
+    margin: 0 0 0.8em;
+  }
+  .b-faq .answer :global(p:last-child) {
+    margin-bottom: 0;
+  }
+  .b-faq .answer :global(a) {
+    color: var(--brand-mid);
+    text-decoration: underline;
+    text-underline-offset: 3px;
   }
 </style>

@@ -1,11 +1,24 @@
 ---
 // TeamGrid — landing page "Research team" section.
 //
-// Driven by src/content/landing/team.md.
+// Section header (kicker + headline + intro + closing note) from
+// src/content/landing/team.md. Individual members are one file per
+// person under src/content/team/, sorted by the `sort` field.
 
+import { getCollection, render } from "astro:content";
 import { getLandingSection } from "@/utils/getLandingSection";
 
 const team = await getLandingSection("team");
+
+const memberEntries = await getCollection("team");
+memberEntries.sort((a, b) => a.data.sort - b.data.sort);
+
+const members = await Promise.all(
+  memberEntries.map(async entry => {
+    const { Content } = await render(entry);
+    return { data: entry.data, Content };
+  }),
+);
 ---
 
 <section class="b-section" id="team">
@@ -21,15 +34,17 @@ const team = await getLandingSection("team");
 
     <div class="b-team">
       {
-        team.members.map(member => (
+        members.map(({ data, Content }) => (
           <div class="b-tcard">
             <div class="av" aria-hidden="true">
-              {member.initial}
+              {data.initial}
             </div>
-            <div class="nm">{member.name}</div>
-            <div class="rl">{member.role}</div>
-            <p class="bio">{member.bio}</p>
-            <div class="af">{member.affiliation}</div>
+            <div class="nm">{data.name}</div>
+            <div class="rl">{data.role}</div>
+            <div class="bio">
+              <Content />
+            </div>
+            <div class="af">{data.affiliation}</div>
           </div>
         ))
       }
@@ -115,6 +130,12 @@ const team = await getLandingSection("team");
     color: var(--muted);
     margin-top: 12px;
     line-height: 1.6;
+  }
+  .b-tcard .bio :global(p) {
+    margin: 0 0 0.5em;
+  }
+  .b-tcard .bio :global(p:last-child) {
+    margin-bottom: 0;
   }
   .b-tcard .af {
     font-family: var(--font-mono);
