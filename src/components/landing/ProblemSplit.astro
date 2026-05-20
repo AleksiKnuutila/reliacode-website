@@ -1,11 +1,18 @@
 ---
 // ProblemSplit — landing page "Problem" section.
 //
-// Two contrasting cards driven by src/content/landing/problem.md.
+// Two contrasting cards driven by src/content/landing/problem.md. Kicker,
+// headline, and optional intro paragraph live in frontmatter as flat
+// scalars; cards live in the body as H2 items (`## {kicker} — {title}`,
+// followed by a prose paragraph). First card uses the `bad` styling
+// variant; second uses `good` (assigned by position).
 
-import { getLandingSection } from "@/utils/getLandingSection";
+import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import { parseSectionItems } from "@/utils/parseSectionBody";
 
-const problem = await getLandingSection("problem");
+const { data: problem, body } = await getLandingSectionWithBody("problem");
+const cards = parseSectionItems(body);
+const variants = ["bad", "good"] as const;
 ---
 
 <section class="b-section" id="problem">
@@ -17,11 +24,11 @@ const problem = await getLandingSection("problem");
     {problem.intro && <p class="b-prob-intro">{problem.intro}</p>}
     <div class="b-problem">
       {
-        problem.cards.map(card => (
-          <div class={`b-prob-card ${card.variant}`}>
-            <div class="pn">{card.pn}</div>
-            <h3>{card.h3}</h3>
-            <p>{card.body}</p>
+        cards.map((card, i) => (
+          <div class={`b-prob-card ${variants[i] ?? "bad"}`}>
+            <div class="pn">{card.label}</div>
+            <h3>{card.title}</h3>
+            <div class="prob-body" set:html={card.bodyHtml} />
           </div>
         ))
       }
@@ -61,10 +68,11 @@ const problem = await getLandingSection("problem");
     margin: 0 0 12px;
     font-weight: 500;
   }
-  .b-prob-card p {
+  .b-prob-card :global(p) {
     font-size: 14.5px;
     color: var(--muted);
     line-height: 1.7;
+    margin: 0;
   }
   .b-prob-card.bad {
     border-left: 2px solid

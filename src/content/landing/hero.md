@@ -5,19 +5,16 @@ headline_prefix: "Developing AI models for "
 headline_accent: high-stakes
 headline_suffix: " decisions."
 lead: "Language models are powerful at retrieving facts from messy sources such as documents. They also frequently make mistakes while sounding confident in their answers. We're building compound AI systems with a different approach: pairing generative AI with discriminative zero-shot models, that give a clearer signal on how confident models should be."
-cta_primary:
-  label: Become a pilot →
-  href: "#contact"
-cta_secondary:
-  label: See the approach
-  href: "#approach"
-partners:
-  - name: University of Helsinki
-    kind: Host institution
-  - name: Partner Logo
-    kind: Pilot organisation
-  - name: Partner Logo
-    kind: Pilot organisation
-  - name: Funder Logo
-    kind: Research funder
+cta_primary_label: Become a pilot →
+cta_primary_href: "#contact"
+cta_secondary_label: See the approach
+cta_secondary_href: "#approach"
 ---
+
+## University of Helsinki — Host institution
+
+## Partner Logo — Pilot organisation
+
+## Partner Logo — Pilot organisation
+
+## Funder Logo — Research funder

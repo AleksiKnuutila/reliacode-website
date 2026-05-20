@@ -60,7 +60,8 @@ const site = defineCollection({
 const landing = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/landing" }),
   schema: z.discriminatedUnion("section", [
-    // --- hero ---
+    // --- hero (flat scalars only; partners live as H2 items in the
+    //     markdown body, parsed via parseSectionItems). ---
     z.object({
       section: z.literal("hero"),
       title: z.string(),
@@ -68,14 +69,15 @@ const landing = defineCollection({
       headline_accent: z.string(),
       headline_suffix: z.string().default(""),
       lead: z.string(),
-      cta_primary: linkSchema,
-      cta_secondary: linkSchema,
-      partners: z
-        .array(z.object({ name: z.string(), kind: z.string() }))
-        .default([]),
+      cta_primary_label: z.string(),
+      cta_primary_href: z.string(),
+      cta_secondary_label: z.string(),
+      cta_secondary_href: z.string(),
     }),
 
-    // --- problem ---
+    // --- problem (flat scalars only; comparison cards live as H2 items
+    //     in the markdown body — first card = "bad" variant, second =
+    //     "good", by position. Parsed via parseSectionItems). ---
     z.object({
       section: z.literal("problem"),
       title: z.string(),
@@ -85,14 +87,6 @@ const landing = defineCollection({
        *  two comparison cards. Use when the headline alone doesn't
        *  carry the framing. */
       intro: z.string().optional(),
-      cards: z.array(
-        z.object({
-          variant: z.enum(["bad", "good"]),
-          pn: z.string(),
-          h3: z.string(),
-          body: z.string(),
-        }),
-      ),
     }),
 
     // --- approach (kicker/h2 + workflow header scalars). Pillars and

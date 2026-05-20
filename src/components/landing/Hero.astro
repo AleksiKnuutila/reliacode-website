@@ -1,17 +1,21 @@
 ---
 // Hero — landing page hero section.
 //
-// Composes the headline column, the verification trace mock card,
-// the Truchet maze SVG that sits behind everything, and the
-// "In collaboration with" partner logo rail below the main content.
+// Composes the headline column, the verification trace mock card, the
+// Truchet maze SVG behind everything, and the "In collaboration with"
+// partner logo rail below the main content.
 //
-// All copy comes from src/content/landing/main.md (frontmatter).
+// Editorial copy lives in src/content/landing/hero.md — flat scalars in
+// frontmatter for the headline / lead / CTAs, and partners as H2 items
+// in the body (`## {Name} — {Kind}`).
 
-import { getLandingSection } from "@/utils/getLandingSection";
+import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import { parseSectionItems } from "@/utils/parseSectionBody";
 import TruchetGrid from "./TruchetGrid.astro";
 import TraceCard from "./TraceCard.astro";
 
-const hero = await getLandingSection("hero");
+const { data: hero, body } = await getLandingSectionWithBody("hero");
+const partners = parseSectionItems(body);
 ---
 
 <section class="b-hero" id="top">
@@ -25,11 +29,11 @@ const hero = await getLandingSection("hero");
       </h1>
       <p class="lead">{hero.lead}</p>
       <div class="b-hero-cta">
-        <a href={hero.cta_primary.href} class="btn-primary">
-          {hero.cta_primary.label}
+        <a href={hero.cta_primary_href} class="btn-primary">
+          {hero.cta_primary_label}
         </a>
-        <a href={hero.cta_secondary.href} class="btn-ghost">
-          {hero.cta_secondary.label}
+        <a href={hero.cta_secondary_href} class="btn-ghost">
+          {hero.cta_secondary_label}
         </a>
       </div>
     </div>
@@ -37,14 +41,14 @@ const hero = await getLandingSection("hero");
   </div>
 
   {
-    hero.partners.length > 0 && (
+    partners.length > 0 && (
       <div class="b-collab" aria-label="In collaboration with">
         <div class="label">In collaboration with</div>
         <div class="logos">
-          {hero.partners.map(p => (
+          {partners.map(p => (
             <div class="b-logo">
-              {p.name}
-              <span class="sub">{p.kind}</span>
+              {p.label}
+              <span class="sub">{p.title}</span>
             </div>
           ))}
         </div>
