@@ -1,24 +1,16 @@
 ---
 section: problem
 title: Problem
-
 kicker: Problem
-headline: "LLMs reshaped software. Analytics has barely moved."
-
+headline: "Knowledge work runs on documents."
+intro: "Underwriting, diligence, compliance, research — so much of it comes down to finding the right facts in messy, scattered sources. Chat-based AI tools offer help, but they work like black boxes: confident answers with no honest signal of what they got wrong."
 cards:
   - variant: bad
-    pn: "Status quo"
-    h3: "An LLM in a notebook"
-    body: >
-      One-shot prompts, non-deterministic outputs, no schema guarantees,
-      no record of which inputs produced which figure. Teams treat the
-      model as an ideation aid, not as part of the pipeline.
-
+    pn: Today's tools
+    h3: ChatGPT or Copilot
+    body: "Loses the thread across long document sets. Citations inconsistent, often hallucinated. Confident output regardless of underlying certainty."
   - variant: good
-    pn: "What changes with ReliaGround"
-    h3: "An LLM inside a verified pipeline"
-    body: >
-      Deterministic tools do the work; the LLM proposes, explains and adapts.
-      Each step is checked against intent and constraints, and every run
-      produces an auditable bundle a reviewer can rerun.
+    pn: With ReliaGround
+    h3: Auditable, calibrated, abstaining
+    body: "Reads documents exhaustively and works across many documents. Backs claims with auditable source citations. Model abstains and asks for clarifications when uncertain or there is contradictory information."
 ---

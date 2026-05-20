@@ -5,6 +5,9 @@ sort: 10
 open: true
 ---
 
-Not yet. ReliaGround is an active research project. We are working with a
-small number of pilot organisations to validate the methods before any
-commercial release.
+Not yet. ReliaGround is a research project actively developing new
+approaches to document AI, and we're working with a small number of design
+partners to evaluate the system on real, high-stakes work. Pilots get
+hands-on access to the current system and direct involvement in shaping
+where it goes next. We expect a productised offering to follow, but pilots
+come first.

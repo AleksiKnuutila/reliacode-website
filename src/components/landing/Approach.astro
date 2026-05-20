@@ -1,13 +1,18 @@
 ---
 // Approach — landing page "Approach" section.
 //
-// Combines the shared shead (kicker + h2), the three Pillars cards
-// (including the decorative constraints.yaml block on Pillar III), and
-// the five-step Workflow strip. Driven by src/content/landing/approach.md.
+// Combines the shared shead (kicker + h2), the three Pillars cards, and
+// the five-step Workflow strip. Driven by src/content/landing/approach.md
+// — kicker/headline/workflow labels are frontmatter scalars; pillars and
+// workflow steps are H1-delimited groups of H2 items in the body.
 
-import { getLandingSection } from "@/utils/getLandingSection";
+import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import { parseSectionGroups } from "@/utils/parseSectionBody";
 
-const approach = await getLandingSection("approach");
+const { data: approach, body } = await getLandingSectionWithBody("approach");
+const groups = parseSectionGroups(body);
+const pillars = groups.find(g => g.heading === "Pillars")?.items ?? [];
+const workflow = groups.find(g => g.heading === "Workflow")?.items ?? [];
 ---
 
 <section class="b-section alt" id="approach">
@@ -19,37 +24,11 @@ const approach = await getLandingSection("approach");
 
     <div class="b-pillars">
       {
-        approach.pillars.map(pillar => (
+        pillars.map(pillar => (
           <div class="b-pillar">
-            <div class="pn">{pillar.pn}</div>
-            <h3>{pillar.h3}</h3>
-            {pillar.has_spec_block ? (
-              <div class="b-spec">
-                <div>
-                  <span class="com"># constraints.yaml</span>
-                </div>
-                <div>
-                  <span class="kw">schema:</span> warehouse.users.v12
-                </div>
-                <div>
-                  <span class="kw">invariants:</span>
-                </div>
-                <div>
-                  &nbsp;&nbsp;- non_negative(<span class="str">"retention"</span>)
-                </div>
-                <div>
-                  &nbsp;&nbsp;- monotonic(<span class="str">"cohort_month"</span>)
-                </div>
-                <div>
-                  <span class="kw">privacy:</span> aggregate_only
-                </div>
-                <div>
-                  <span class="ok">✓ 4 / 4 satisfied</span>
-                </div>
-              </div>
-            ) : (
-              pillar.body && <p>{pillar.body}</p>
-            )}
+            <div class="pn">{pillar.label}</div>
+            <h3>{pillar.title}</h3>
+            <div class="pillar-body" set:html={pillar.bodyHtml} />
           </div>
         ))
       }
@@ -57,17 +36,17 @@ const approach = await getLandingSection("approach");
 
     <div class="b-workflow">
       <div class="b-wf-head">
-        <span class="ttl">{approach.workflow.ttl}</span>
-        <span class="meta">{approach.workflow.meta}</span>
+        <span class="ttl">{approach.workflow_label}</span>
+        <span class="meta">{approach.workflow_meta}</span>
       </div>
       <div class="b-wf-row">
         {
-          approach.workflow.steps.map(step => (
+          workflow.map(step => (
             <div class="b-wf-step">
               <span class="check">✓</span>
-              <div class="sn">{step.sn}</div>
-              <h3>{step.h4}</h3>
-              <p>{step.p}</p>
+              <div class="sn">{step.label}</div>
+              <h3>{step.title}</h3>
+              <div class="step-body" set:html={step.bodyHtml} />
             </div>
           ))
         }
@@ -112,11 +91,14 @@ const approach = await getLandingSection("approach");
     line-height: 1.2;
     font-weight: 500;
   }
-  .b-pillar p {
+  .pillar-body {
+    flex: 1;
+  }
+  .b-pillar :global(p) {
     font-size: 14.5px;
     color: var(--muted);
     line-height: 1.65;
-    flex: 1;
+    margin: 0;
   }
   .b-spec {
     font-family: var(--font-mono);
@@ -193,10 +175,11 @@ const approach = await getLandingSection("approach");
     font-weight: 500;
     font-family: var(--font-head);
   }
-  .b-wf-step p {
+  .b-wf-step :global(p) {
     font-size: 13px;
     color: var(--muted);
     line-height: 1.5;
+    margin: 0;
   }
   .b-wf-step .check {
     position: absolute;

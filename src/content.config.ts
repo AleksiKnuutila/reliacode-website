@@ -81,6 +81,10 @@ const landing = defineCollection({
       title: z.string(),
       kicker: z.string(),
       headline: z.string(),
+      /** Optional paragraph rendered between the section header and the
+       *  two comparison cards. Use when the headline alone doesn't
+       *  carry the framing. */
+      intro: z.string().optional(),
       cards: z.array(
         z.object({
           variant: z.enum(["bad", "good"]),
@@ -91,34 +95,17 @@ const landing = defineCollection({
       ),
     }),
 
-    // --- approach (kicker/h2 + pillars + workflow combined) ---
+    // --- approach (kicker/h2 + workflow header scalars). Pillars and
+    //     workflow steps live in the markdown body of approach.md as
+    //     H1-delimited groups with H2 items (parsed via
+    //     parseSectionGroups). ---
     z.object({
       section: z.literal("approach"),
       title: z.string(),
       kicker: z.string(),
       headline: z.string(),
-      pillars: z.array(
-        z.object({
-          pn: z.string(),
-          h3: z.string(),
-          body: z.string().optional(),
-          // When true, the component renders its decorative constraints.yaml
-          // block in place of `body` text. The block itself lives in the
-          // component (decorative, not editable copy).
-          has_spec_block: z.boolean().default(false),
-        }),
-      ),
-      workflow: z.object({
-        ttl: z.string(),
-        meta: z.string(),
-        steps: z.array(
-          z.object({
-            sn: z.string(),
-            h4: z.string(),
-            p: z.string(),
-          }),
-        ),
-      }),
+      workflow_label: z.string(),
+      workflow_meta: z.string(),
     }),
 
     // --- team (section header only; individual members live in the

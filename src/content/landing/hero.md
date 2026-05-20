@@ -1,34 +1,23 @@
 ---
 section: hero
 title: Hero
-
-# The headline is rendered as: "{prefix}{accent in gradient}{suffix}".
-# Leave prefix empty if the accent word starts the sentence.
-headline_prefix: ""
-headline_accent: Auditable
-headline_suffix: " language models for the work that has to be right."
-
-lead: >
-  ReliaGround pairs LLMs with deterministic tools and verification methods,
-  so that analytical work done with their help stays reproducible, traceable
-  and trustworthy — the qualities serious analytics depends on.
-
+headline_prefix: "Developing AI models for "
+headline_accent: high-stakes
+headline_suffix: " decisions."
+lead: "Language models are powerful at retrieving facts from messy sources such as documents. They also frequently make mistakes while sounding confident in their answers. We're building compound AI systems with a different approach: pairing generative AI with discriminative zero-shot models, that give a clearer signal on how confident models should be."
 cta_primary:
-  label: "Become a pilot →"
+  label: Become a pilot →
   href: "#contact"
-
 cta_secondary:
-  label: "See the approach"
+  label: See the approach
   href: "#approach"
-
-# Partner logo rail. `kind` shows in the small caption under each logo.
 partners:
-  - name: "University of Helsinki"
-    kind: "Host institution"
-  - name: "Partner Logo"
-    kind: "Pilot organisation"
-  - name: "Partner Logo"
-    kind: "Pilot organisation"
-  - name: "Funder Logo"
-    kind: "Research funder"
+  - name: University of Helsinki
+    kind: Host institution
+  - name: Partner Logo
+    kind: Pilot organisation
+  - name: Partner Logo
+    kind: Pilot organisation
+  - name: Funder Logo
+    kind: Research funder
 ---
