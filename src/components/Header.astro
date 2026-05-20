@@ -10,7 +10,7 @@
  *     prefixed with "/" so they navigate back to the landing page and
  *     scroll to the target — e.g. "#problem" → "/#problem".
  */
-import { NAV_LINKS, HEADER_CTA, SITE_AFFILIATION } from "@/config";
+import { getSite } from "@/utils/getSite";
 
 type Props = {
   currentPage?: "landing" | "post" | "archives" | "tags" | "search";
@@ -18,6 +18,8 @@ type Props = {
 
 const { currentPage } = Astro.props;
 const isLanding = currentPage === "landing";
+
+const site = await getSite();
 
 /** "#foo" → "/#foo" on non-landing pages. */
 const rewriteHash = (href: string): string => {
@@ -34,16 +36,19 @@ const logoHref = isLanding ? "#top" : "/";
     <a class="rg-logo" href={logoHref}>
       <span class="mark" aria-hidden="true"></span>
       <span class="name">ReliaGround</span>
-      <span class="aff">{SITE_AFFILIATION}</span>
+      <span class="aff">{site.affiliation}</span>
     </a>
     <nav class="rg-nav" aria-label="Primary">
       {
-        NAV_LINKS.map(link => (
+        site.nav.map(link => (
           <a href={rewriteHash(link.href)}>{link.label}</a>
         ))
       }
-      <a href={rewriteHash(HEADER_CTA.href)} class="btn-primary rg-header-cta">
-        {HEADER_CTA.label}
+      <a
+        href={rewriteHash(site.header_cta.href)}
+        class="btn-primary rg-header-cta"
+      >
+        {site.header_cta.label}
       </a>
     </nav>
   </div>

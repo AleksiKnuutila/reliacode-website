@@ -37,6 +37,24 @@ const pages = defineCollection({
 
 const linkSchema = z.object({ label: z.string(), href: z.string() });
 
+// Site chrome (header, footer) editorial copy. Single file:
+// src/content/site/main.md.
+const site = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/site" }),
+  schema: z.object({
+    title: z.string(),
+    nav: z.array(linkSchema),
+    header_cta: linkSchema,
+    affiliation: z.string(),
+    colophon: z.string(),
+    footer_project_links: z.array(linkSchema),
+    pilot_email: z.string(),
+    // `{year}` is substituted with the current year at render time.
+    legal_left: z.string(),
+    legal_right: z.string(),
+  }),
+});
+
 // One file per landing section. Schema discriminated by `section` so each
 // file gets exactly the fields it needs and Zod validates strictly.
 const landing = defineCollection({
@@ -162,4 +180,4 @@ const landing = defineCollection({
   ]),
 });
 
-export const collections = { posts, pages, landing };
+export const collections = { posts, pages, landing, site };

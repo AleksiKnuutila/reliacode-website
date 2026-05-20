@@ -1,14 +1,14 @@
 ---
 // CTA — landing page pilot-recruitment block.
 //
-// Driven by src/content/landing/cta.md. Mailto links use PILOT_EMAIL
-// from src/config.ts (the address is shared with the footer and not
-// editorial copy).
+// Editorial copy from src/content/landing/cta.md.
+// Pilot mailbox from src/content/site/main.md (shared with the footer).
 
-import { PILOT_EMAIL } from "@/config";
 import { getLandingSection } from "@/utils/getLandingSection";
+import { getSite } from "@/utils/getSite";
 
 const cta = await getLandingSection("cta");
+const { pilot_email } = await getSite();
 ---
 
 <section class="b-cta" id="contact">
@@ -19,8 +19,8 @@ const cta = await getLandingSection("cta");
       <h2>{cta.headline}</h2>
       <p>{cta.lead}</p>
       <div class="cta-actions">
-        <a href={`mailto:${PILOT_EMAIL}`} class="btn-light">{cta.cta_label}</a>
-        <a href={`mailto:${PILOT_EMAIL}`} class="cta-mail">{PILOT_EMAIL}</a>
+        <a href={`mailto:${pilot_email}`} class="btn-light">{cta.cta_label}</a>
+        <a href={`mailto:${pilot_email}`} class="cta-mail">{pilot_email}</a>
       </div>
     </div>
     <div class="b-cta-card">
