@@ -1,8 +1,13 @@
 ---
 // CTA — landing page pilot-recruitment block.
 //
-// Editorial copy from src/content/landing/cta.md.
-// Pilot mailbox from src/content/site/main.md (shared with the footer).
+// Left column: kicker + headline + lead + a single primary "Email the
+// team →" button. Right column: a navy card titled "Talk to us"
+// listing four tappable contact channels (email, phone, calendar,
+// LinkedIn). Channels are editorial-driven from cta.md.
+//
+// Pilot mailbox stays in src/content/site/main.md (shared with the
+// footer) so we have one canonical address.
 
 import { getLandingSection } from "@/utils/getLandingSection";
 import { getSite } from "@/utils/getSite";
@@ -20,19 +25,60 @@ const { pilot_email } = await getSite();
       <p>{cta.lead}</p>
       <div class="cta-actions">
         <a href={`mailto:${pilot_email}`} class="btn-light">{cta.cta_label}</a>
-        <a href={`mailto:${pilot_email}`} class="cta-mail">{pilot_email}</a>
       </div>
     </div>
     <div class="b-cta-card">
       <h3>{cta.card_title}</h3>
-      {
-        cta.card_rows.map(row => (
-          <div class="row">
-            <span class="k">{row.k}</span>
-            <span>{row.v}</span>
-          </div>
-        ))
-      }
+      <div class="cta-channels">
+        {
+          cta.channels.map(ch => (
+            <a
+              class:list={["cta-channel", { feature: ch.feature }]}
+              href={ch.href}
+              target={ch.external ? "_blank" : undefined}
+              rel={ch.external ? "noopener" : undefined}
+            >
+              <span class="ic" aria-hidden="true">
+                {ch.kind === "email" && (
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="14" rx="2" />
+                    <path d="M3.5 7l8.5 6 8.5-6" />
+                  </svg>
+                )}
+                {ch.kind === "phone" && (
+                  <svg viewBox="0 0 24 24">
+                    <path d="M5 4h3.5l1.8 4.5-2.3 1.6a12 12 0 0 0 5.1 5.1l1.6-2.3 4.5 1.8V19a2 2 0 0 1-2 2A15.5 15.5 0 0 1 4 6a2 2 0 0 1 1-2z" />
+                  </svg>
+                )}
+                {ch.kind === "calendar" && (
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="5" width="18" height="16" rx="2" />
+                    <path d="M3 10h18M8 3v4M16 3v4" />
+                  </svg>
+                )}
+                {ch.kind === "linkedin" && (
+                  <svg viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <path d="M7 10.5V17" />
+                    <path d="M7 7.2v.01" />
+                    <path d="M11.5 17v-3.6a2.1 2.1 0 0 1 4.2 0V17" />
+                    <path d="M11.5 10.8V17" />
+                  </svg>
+                )}
+              </span>
+              <span class="txt">
+                <span class="lbl">{ch.label}</span>
+                <span class="val">{ch.value}</span>
+              </span>
+              {ch.external && (
+                <span class="arr" aria-hidden="true">
+                  ↗
+                </span>
+              )}
+            </a>
+          ))
+        }
+      </div>
     </div>
   </div>
 </section>
@@ -77,8 +123,6 @@ const { pilot_email } = await getSite();
     font-size: 50px;
     line-height: 1.05;
     letter-spacing: -0.018em;
-    /* Matches template line 457: 18ch with Google-CDN Fraunces ≈ 460px.
-       Pinned in px so our self-hosted Fraunces wraps identically. */
     max-width: 460px;
     font-weight: 500;
   }
@@ -104,27 +148,17 @@ const { pilot_email } = await getSite();
     text-decoration: none;
   }
 
-  /* Extracted from template line 873's inline style. */
   .cta-kicker {
     color: color-mix(in oklch, var(--primary-fg) 75%, transparent);
     margin-bottom: 18px;
   }
 
-  /* Extracted from template line 880's inline style. */
   .cta-actions {
     margin-top: 32px;
     display: flex;
     gap: 14px;
     align-items: center;
     flex-wrap: wrap;
-  }
-
-  /* Extracted from template line 882's inline style on the email link. */
-  .cta-mail {
-    color: color-mix(in oklch, var(--primary-fg) 80%, transparent);
-    font-size: 14px;
-    text-decoration: underline;
-    text-underline-offset: 4px;
   }
 
   .b-cta-card {
@@ -142,19 +176,89 @@ const { pilot_email } = await getSite();
     margin: 0 0 18px;
     font-weight: 500;
   }
-  .b-cta-card .row {
+
+  /* Channel rows */
+  .cta-channels {
     display: flex;
-    justify-content: space-between;
-    padding: 12px 0;
-    border-top: 1px solid color-mix(in oklch, var(--primary-fg) 15%, transparent);
-    font-size: 13.5px;
-    color: color-mix(in oklch, var(--primary-fg) 88%, transparent);
+    flex-direction: column;
+    gap: 8px;
   }
-  .b-cta-card .row:first-of-type {
-    border-top: 0;
+  .cta-channel {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: 9px;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition:
+      background 0.15s,
+      border-color 0.15s;
   }
-  .b-cta-card .row .k {
-    color: color-mix(in oklch, var(--primary-fg) 65%, transparent);
+  .cta-channel:hover {
+    background: color-mix(in oklch, var(--primary-fg) 10%, transparent);
+  }
+  .cta-channel .ic {
+    flex: 0 0 auto;
+    width: 38px;
+    height: 38px;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in oklch, var(--primary-fg) 12%, transparent);
+    border: 1px solid color-mix(in oklch, var(--primary-fg) 16%, transparent);
+  }
+  .cta-channel .ic svg {
+    width: 17px;
+    height: 17px;
+    stroke: var(--primary-fg);
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .cta-channel .txt {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    min-width: 0;
+  }
+  .cta-channel .lbl {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: color-mix(in oklch, var(--primary-fg) 58%, transparent);
+  }
+  .cta-channel .val {
+    font-size: 15px;
+    font-weight: 500;
+    color: color-mix(in oklch, var(--primary-fg) 94%, transparent);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .cta-channel .arr {
+    margin-left: auto;
+    padding-left: 8px;
+    color: color-mix(in oklch, var(--primary-fg) 55%, transparent);
+    transition:
+      transform 0.15s,
+      color 0.15s;
+    font-size: 15px;
+    line-height: 1;
+  }
+  .cta-channel:hover .arr {
+    color: var(--primary-fg);
+    transform: translate(2px, -2px);
+  }
+  .cta-channel.feature {
+    background: color-mix(in oklch, var(--primary-fg) 9%, transparent);
+    border-color: color-mix(in oklch, var(--primary-fg) 22%, transparent);
+  }
+  .cta-channel.feature:hover {
+    background: color-mix(in oklch, var(--primary-fg) 14%, transparent);
   }
 
   @media (max-width: 900px) {

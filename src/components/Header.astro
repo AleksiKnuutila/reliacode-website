@@ -1,6 +1,8 @@
 ---
 /**
- * Sticky header — logo, in-page nav, and a "Pilot with us" CTA.
+ * Floating header — wordmark hard-left, nav hard-right, no background,
+ * no sticky bar. Absolutely positioned at the top so the page content
+ * (hero gradient) reaches the very edge and scrolls underneath.
  *
  * Anchor rewriting:
  *   - On the landing page (currentPage === "landing"), nav hrefs stay as
@@ -35,8 +37,7 @@ const logoHref = isLanding ? "#top" : "/";
   <div class="rg-header-inner">
     <a class="rg-logo" href={logoHref}>
       <span class="mark" aria-hidden="true"></span>
-      <span class="name">ReliaGround</span>
-      <span class="aff">{site.affiliation}</span>
+      <span class="name">ReliaParse</span>
     </a>
     <nav class="rg-nav" aria-label="Primary">
       {
@@ -55,20 +56,20 @@ const logoHref = isLanding ? "#top" : "/";
 </header>
 
 <style>
-  /* ── HEADER ────────────────────────────────────────────────────
-     Ported from template.html lines 99–124. */
+  /* Absolute, transparent header — scrolls away with the page and lets
+     the hero gradient run edge-to-edge underneath. */
   .rg-header {
-    position: sticky;
+    position: absolute;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 5;
-    background: color-mix(in oklch, var(--bg) 88%, transparent);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid var(--border);
+    background: transparent;
   }
   .rg-header-inner {
-    max-width: 1180px;
-    margin: 0 auto;
-    height: 64px;
+    max-width: none;
+    margin: 0;
+    height: 84px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -77,65 +78,53 @@ const logoHref = isLanding ? "#top" : "/";
   .rg-logo {
     display: inline-flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
     text-decoration: none;
   }
   .rg-logo .mark {
-    width: 22px;
-    height: 22px;
-    border-radius: 4px;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
     background: var(--gradient-accent);
   }
   .rg-logo .name {
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    font-size: 15px;
-  }
-  .rg-logo .aff {
-    font-size: 12px;
-    color: var(--muted);
-    border-left: 1px solid var(--border);
-    padding-left: 10px;
-    margin-left: 4px;
+    font-family: var(--font-head);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    font-size: 30px;
+    color: var(--fg);
   }
   .rg-nav {
     display: flex;
     align-items: center;
-    gap: 28px;
-    font-size: 14px;
+    gap: 30px;
+    font-size: 15px;
   }
   .rg-nav a {
-    color: var(--muted);
+    color: var(--fg);
+    font-weight: 600;
     text-decoration: none;
     transition: color 0.15s;
   }
   .rg-nav a:hover {
-    color: var(--fg);
+    color: var(--brand-mid);
   }
 
-  /* Smaller pill for the header version of .btn-primary —
-     matches the inline overrides in template.html line 522. */
   .rg-header-cta {
-    padding: 7px 14px;
+    padding: 9px 16px;
     font-size: 13px;
+    white-space: nowrap;
   }
-  .rg-nav a.rg-header-cta {
-    color: var(--primary-fg);
-  }
+  .rg-nav a.rg-header-cta,
   .rg-nav a.rg-header-cta:hover {
     color: var(--primary-fg);
   }
 
-  /* ── RESPONSIVE ───────────────────────────────────────────────
-     Hide secondary nav links below ~720px to keep the header tidy.
-     The Pilot CTA stays visible so the primary action remains within
-     reach on mobile. */
+  /* Collapse nav at narrow widths; CTA stays so the primary action
+     remains within reach. */
   @media (max-width: 900px) {
     .rg-nav {
       gap: 18px;
-    }
-    .rg-logo .aff {
-      display: none;
     }
   }
   @media (max-width: 720px) {

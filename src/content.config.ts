@@ -61,16 +61,25 @@ const landing = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/landing" }),
   schema: z.discriminatedUnion("section", [
     // --- hero (flat scalars only; partners live as H2 items in the
-    //     markdown body, parsed via parseSectionItems). ---
+    //     markdown body, parsed via parseSectionItems).
+    //
+    //     The headline is split into a default-colored prefix and an
+    //     accent-colored second statement (rendered as a block). The
+    //     funder-strip label is a two-line block: `funder_lead`
+    //     (regular muted) on top, `funder_sub` (accent, semibold)
+    //     below. ---
     z.object({
       section: z.literal("hero"),
       title: z.string(),
-      headline: z.string(),
+      headline_prefix: z.string(),
+      headline_accent: z.string(),
       lead: z.string().optional(),
       cta_primary_label: z.string(),
       cta_primary_href: z.string(),
       cta_secondary_label: z.string(),
       cta_secondary_href: z.string(),
+      funder_lead: z.string(),
+      funder_sub: z.string(),
     }),
 
     // --- problem (flat scalars only; comparison cards live as H2 items
@@ -143,7 +152,11 @@ const landing = defineCollection({
       footer_link: linkSchema,
     }),
 
-    // --- cta ---
+    // --- cta (right-column card lists tappable contact channels;
+    //     each has a kind (drives which icon + scheme), a label, a
+    //     display value, and an href. `feature: true` gets the
+    //     emphasized background; `external: true` opens in a new tab
+    //     and shows the ↗ arrow.) ---
     z.object({
       section: z.literal("cta"),
       title: z.string(),
@@ -152,7 +165,16 @@ const landing = defineCollection({
       lead: z.string(),
       cta_label: z.string(),
       card_title: z.string(),
-      card_rows: z.array(z.object({ k: z.string(), v: z.string() })),
+      channels: z.array(
+        z.object({
+          kind: z.enum(["email", "phone", "calendar", "linkedin"]),
+          label: z.string(),
+          value: z.string(),
+          href: z.string(),
+          feature: z.boolean().default(false),
+          external: z.boolean().default(false),
+        })
+      ),
     }),
   ]),
 });

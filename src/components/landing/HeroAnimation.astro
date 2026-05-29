@@ -1,0 +1,537 @@
+---
+// HeroAnimation — animated ARR-extraction demo that replaces the
+// static hero illustration.
+//
+// Three stacked panels: an input document (left) with four highlighted
+// figures, a typed "data instructions" prompt (top-right), and a report
+// (bottom-right) that streams in extracted rows. One value (Public
+// Sector) is flagged as ambiguous and rendered in a warning red.
+//
+// Cross-highlighting: hovering a figure in the document highlights its
+// matching report row, and vice versa.
+//
+// The widget is designed at a fixed 500px width and scaled via a tiny
+// inline script so it fits whatever column width the hero column hands
+// it (down to ~280px on narrow phones). Vanilla JS, no framework
+// hydration — runs once on load.
+//
+// All colours and fonts are scoped under .hero-anim via local
+// `--ac-*` custom properties so nothing leaks into the rest of the
+// page.
+---
+
+<div class="hero-anim">
+  <div class="hero-anim-frame">
+    <div class="widget" id="widget">
+      <!-- LEFT: input document -->
+      <div class="panel doc">
+        <div class="panel-header">
+          <span class="dot"></span>
+          <span class="label">Input document</span>
+          <span class="right">comp_file.pdf</span>
+        </div>
+        <div class="panel-body">
+          <p class="doc-text">
+            CloudSync's Enterprise segment added
+            <span class="hl" data-id="enterprise">$42.6 million</span>
+             in ARR, Mid-Market
+            <span class="hl" data-id="midmarket">$18.3 million</span>
+            . Small Business reached
+            <span class="hl" data-id="smallbiz">$7,450 thousand</span>
+            . Public Sector was roughly
+            <span class="hl hl-warn" data-id="public">12.4 million</span>
+            , but this blends recurring and one-time fees.
+          </p>
+        </div>
+      </div>
+
+      <!-- RIGHT: stacked instruction + report panels -->
+      <div class="right-column">
+        <div class="panel">
+          <div class="panel-header">
+            <span class="dot"></span>
+            <span class="label">Data instructions</span>
+          </div>
+          <div class="panel-body">
+            <p class="prompt-text" id="prompt">
+              <span id="prompt-typed"></span><span class="caret"></span>
+            </p>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-header">
+            <span class="dot"></span>
+            <span class="label">Report</span>
+            <span class="right" id="status-mono">reading…</span>
+          </div>
+          <div class="panel-body">
+            <ul class="output-list" id="output-list"></ul>
+            <div class="source-line" id="source-line">
+              <span>source: comp_file.pdf</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="replay">
+        <button id="replay" type="button" aria-label="Replay animation">
+          <svg
+            viewBox="0 0 16 16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M2.5 8a5.5 5.5 0 1 0 1.6-3.9"></path>
+            <path d="M2.5 3v3h3"></path>
+          </svg>
+          <span>Replay</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hero-anim {
+    /* Local theme — keeps the animation's palette tweaks scoped. */
+    --ac-card: #ffffff;
+    --ac-border: var(--border);
+    --ac-border-strong: var(--border-strong);
+    --ac-text: var(--fg);
+    --ac-muted: var(--muted);
+    --ac-faint: oklch(0.62 0.02 250);
+    --ac-accent: var(--brand-mid);
+    --ac-hl: var(--brand-mid);
+    --ac-hl-soft: color-mix(in oklch, var(--brand-soft) 80%, transparent);
+    --ac-hl-softer: color-mix(in oklch, var(--brand-mid) 22%, transparent);
+    --ac-warn: oklch(0.55 0.19 27);
+    --ac-warn-soft: color-mix(in oklch, oklch(0.55 0.19 27) 14%, transparent);
+    --ac-warn-softer: color-mix(in oklch, oklch(0.55 0.19 27) 24%, transparent);
+    --ac-paper: color-mix(in oklch, var(--secondary) 40%, #fff);
+    --ac-headbg: color-mix(in oklch, var(--secondary) 70%, #fff);
+    --ac-mono: var(--font-mono);
+    --ac-sans: var(--font-body);
+
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .hero-anim-frame {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+  }
+  /* Designed at exactly 500px; the inline script scales it to fit. */
+  .hero-anim .widget {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 500px;
+    transform-origin: top left;
+    display: grid;
+    grid-template-columns: 1fr 232px;
+    gap: 14px;
+    align-items: start;
+    font-family: var(--ac-sans);
+    color: var(--ac-text);
+  }
+  .hero-anim .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .hero-anim .panel {
+    background: var(--ac-card);
+    border: 1px solid var(--ac-border);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-soft);
+  }
+  .hero-anim .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--ac-border);
+    background: var(--ac-headbg);
+  }
+  .hero-anim .panel-header .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ac-faint);
+  }
+  .hero-anim .panel-header .label {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--ac-muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+  .hero-anim .panel-header .right {
+    margin-left: auto;
+    font-size: 10px;
+    color: var(--ac-faint);
+    font-family: var(--ac-mono);
+    transition: color 0.2s ease;
+  }
+  .hero-anim .panel-header .right.flagged {
+    color: var(--ac-warn);
+  }
+  .hero-anim .panel-body {
+    padding: 12px;
+  }
+  .hero-anim .doc .panel-body {
+    background: var(--ac-paper);
+    padding: 18px 18px 12px;
+  }
+  .hero-anim .doc-text {
+    /* Serif on the source-document panel so it reads as a real document
+       distinct from the report on the right. */
+    font-family: Georgia, "Times New Roman", Times, serif;
+    font-size: 13.5px;
+    line-height: 1.85;
+    color: var(--ac-text);
+    margin: 0;
+    text-align: justify;
+    hyphens: auto;
+    -webkit-hyphens: auto;
+  }
+  .hero-anim .hl {
+    border-radius: 3px;
+    padding: 1px 2px;
+    margin: 0 -2px;
+    background: transparent;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+    transition:
+      background-color 0.35s ease,
+      box-shadow 0.2s ease;
+  }
+  .hero-anim .hl.visible {
+    background: var(--ac-hl-soft);
+    cursor: pointer;
+  }
+  .hero-anim .hl.is-hovered {
+    background: var(--ac-hl-softer);
+    box-shadow: 0 0 0 1px var(--ac-hl);
+  }
+  .hero-anim .hl-warn.visible {
+    background: var(--ac-warn-soft);
+    cursor: pointer;
+  }
+  .hero-anim .hl-warn.is-hovered {
+    background: var(--ac-warn-softer);
+    box-shadow: 0 0 0 1px var(--ac-warn);
+  }
+  .hero-anim .prompt-text {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--ac-text);
+    margin: 0;
+  }
+  .hero-anim .prompt-text .caret {
+    display: inline-block;
+    width: 1px;
+    height: 14px;
+    background: var(--ac-accent);
+    vertical-align: -2px;
+    margin-left: 2px;
+    animation: ac-blink 1s steps(1) infinite;
+  }
+  @keyframes ac-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+  .hero-anim .output-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .hero-anim .output-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 4px 6px;
+    margin: 0 -6px;
+    border-radius: 4px;
+    font-family: var(--ac-mono);
+    font-size: 11px;
+    line-height: 1.45;
+    opacity: 0;
+    transform: translateY(2px);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease,
+      background-color 0.15s ease;
+    cursor: default;
+  }
+  .hero-anim .output-row.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .hero-anim .output-row:hover,
+  .hero-anim .output-row.is-hovered {
+    background: var(--secondary);
+  }
+  .hero-anim .output-row .segment {
+    color: var(--ac-muted);
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .hero-anim .output-row .value {
+    color: var(--ac-text);
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .hero-anim .output-row.is-hovered .value {
+    color: var(--ac-hl);
+  }
+  .hero-anim .output-row.flagged.is-hovered .value {
+    color: var(--ac-warn);
+  }
+  .hero-anim .flag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ac-warn);
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .hero-anim .output-row.flagged {
+    cursor: help;
+  }
+  .hero-anim .source-line {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px dashed var(--ac-border);
+    font-size: 10.5px;
+    color: var(--ac-faint);
+    font-family: var(--ac-mono);
+    opacity: 0;
+    transition: opacity 0.4s ease 0.1s;
+  }
+  .hero-anim .source-line.visible {
+    opacity: 1;
+  }
+  .hero-anim .replay {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -4px;
+  }
+  .hero-anim .replay button {
+    background: transparent;
+    border: 1px solid var(--ac-border);
+    color: var(--ac-muted);
+    font-family: var(--ac-sans);
+    font-size: 11px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      opacity 0.3s ease,
+      color 0.15s,
+      border-color 0.15s,
+      background 0.15s;
+  }
+  .hero-anim .replay button.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .hero-anim .replay button:hover {
+    color: var(--ac-text);
+    border-color: var(--ac-border-strong);
+    background: var(--secondary);
+  }
+  .hero-anim .replay button svg {
+    width: 11px;
+    height: 11px;
+  }
+  @media (max-width: 900px) {
+    .hero-anim {
+      justify-content: flex-start;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    const widget = document.getElementById("widget");
+    if (!widget) return;
+
+    /* ----- scale-to-fit the hero column ----- */
+    const frame = widget.closest(".hero-anim-frame");
+    function fit() {
+      const avail = frame.clientWidth;
+      const scale = Math.min(1, avail / 500);
+      widget.style.transform = "scale(" + scale + ")";
+      frame.style.height = widget.offsetHeight * scale + "px";
+    }
+    fit();
+    let rafId = 0;
+    window.addEventListener("resize", function () {
+      if (rafId) cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(fit);
+    });
+    /* Re-fit once after layout settles and again once fonts have
+       loaded — both can change the widget's intrinsic height. */
+    setTimeout(fit, 300);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(fit);
+    }
+
+    /* ----- data ----- */
+    const ITEMS = [
+      { id: "enterprise", segment: "Enterprise", value: "$42.6M" },
+      { id: "midmarket", segment: "Mid-Market", value: "$18.3M" },
+      { id: "smallbiz", segment: "Small Business", value: "$7.45M" },
+      {
+        id: "public",
+        segment: "Public Sector",
+        value: "$12.4M",
+        flagged: true,
+        note: "Ambiguous — source blends recurring and one-time fees",
+      },
+    ];
+
+    const list = widget.querySelector("#output-list");
+    const statusEl = widget.querySelector("#status-mono");
+    const sourceEl = widget.querySelector("#source-line");
+    const replayBtn = widget.querySelector("#replay");
+    const promptTyped = widget.querySelector("#prompt-typed");
+    const PROMPT_TEXT = "Extract ARR by segment, in M$";
+
+    const highlights = {};
+    widget.querySelectorAll(".hl").forEach(function (h) {
+      highlights[h.dataset.id] = h;
+    });
+
+    const rows = {};
+    ITEMS.forEach(function (item) {
+      const li = document.createElement("li");
+      li.className = "output-row" + (item.flagged ? " flagged" : "");
+      li.dataset.id = item.id;
+      if (item.note) li.title = item.note;
+      li.innerHTML =
+        '<span class="segment">' +
+        item.segment +
+        "</span>" +
+        '<span class="value">' +
+        item.value +
+        "</span>" +
+        (item.flagged
+          ? '<span class="flag-dot" aria-label="ambiguous"></span>'
+          : "");
+      list.appendChild(li);
+      rows[item.id] = li;
+      const h = highlights[item.id];
+      const setHover = function (on) {
+        li.classList.toggle("is-hovered", on);
+        if (h) h.classList.toggle("is-hovered", on);
+      };
+      li.addEventListener("mouseenter", function () {
+        setHover(true);
+      });
+      li.addEventListener("mouseleave", function () {
+        setHover(false);
+      });
+      if (h) {
+        h.addEventListener("mouseenter", function () {
+          if (h.classList.contains("visible")) setHover(true);
+        });
+        h.addEventListener("mouseleave", function () {
+          setHover(false);
+        });
+      }
+    });
+
+    const TIMINGS = {
+      typeSpeed: 45,
+      typePause: 550,
+      stagger: 1700,
+      rowOffset: 300,
+      tail: 600,
+    };
+    let timers = [];
+    function clearTimers() {
+      timers.forEach(function (t) {
+        clearTimeout(t);
+      });
+      timers = [];
+    }
+    function schedule(fn, delay) {
+      timers.push(setTimeout(fn, delay));
+    }
+
+    function reset() {
+      clearTimers();
+      promptTyped.textContent = "";
+      Object.values(highlights).forEach(function (h) {
+        h.classList.remove("visible", "is-hovered");
+      });
+      Object.values(rows).forEach(function (r) {
+        r.classList.remove("visible", "is-hovered");
+      });
+      sourceEl.classList.remove("visible");
+      statusEl.classList.remove("flagged");
+      statusEl.textContent = "reading…";
+      replayBtn.classList.remove("visible");
+    }
+
+    function typeInstruction(done) {
+      let i = 0;
+      const step = function () {
+        promptTyped.textContent = PROMPT_TEXT.slice(0, i);
+        if (i < PROMPT_TEXT.length) {
+          i++;
+          schedule(step, TIMINGS.typeSpeed);
+        } else {
+          schedule(done, TIMINGS.typePause);
+        }
+      };
+      step();
+    }
+
+    function extract() {
+      let t = 0;
+      ITEMS.forEach(function (item) {
+        schedule(function () {
+          highlights[item.id].classList.add("visible");
+        }, t);
+        schedule(function () {
+          rows[item.id].classList.add("visible");
+        }, t + TIMINGS.rowOffset);
+        t += TIMINGS.stagger;
+      });
+      const tDone = t - TIMINGS.stagger + TIMINGS.rowOffset + TIMINGS.tail;
+      schedule(function () {
+        statusEl.textContent = "4 values · 1 flagged";
+        statusEl.classList.add("flagged");
+        sourceEl.classList.add("visible");
+        replayBtn.classList.add("visible");
+      }, tDone);
+    }
+
+    function play() {
+      reset();
+      typeInstruction(extract);
+    }
+    replayBtn.addEventListener("click", play);
+    play();
+  })();
+</script>

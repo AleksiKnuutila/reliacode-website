@@ -1,27 +1,48 @@
 ---
 // Hero — landing page hero section.
 //
-// Composes the headline column, the verification trace mock card, the
-// Truchet maze SVG behind everything, and the "Funded by"
-// partner logo rail below the main content.
+// Two-column layout: stacked headline (default-color prefix + accent
+// second line) on the left, animated ARR-extraction demo on the right.
+// The Truchet maze SVG sits behind everything; the "Funded by" partner
+// rail floats below.
 //
-// Editorial copy lives in src/content/landing/hero.md — flat scalars in
-// frontmatter for the headline / lead / CTAs, and partners as H2 items
-// in the body (`## {Name} — {Kind}`).
+// Editorial copy lives in src/content/landing/hero.md — flat scalars
+// in frontmatter for the headline halves, CTAs, and funder strip; the
+// partner logos live as H2 items in the body
+// (`## {Partner} — {Kind}` followed by a markdown image).
 
 import { getLandingSectionWithBody } from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 import TruchetGrid from "./TruchetGrid.astro";
+import HeroAnimation from "./HeroAnimation.astro";
 
 const { data: hero, body } = await getLandingSectionWithBody("hero");
 const partners = parseSectionItems(body);
+
+// Slug a partner name to a class so the funder-rail can size each logo
+// individually (UoH is sized up, Business Finland eased down to
+// optical balance).
+const slugify = (s: string) =>
+  s
+    .toLowerCase()
+    .replace(/&/g, " and ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const partnerClassMap: Record<string, string> = {
+  "university-of-helsinki": "uh",
+  "business-finland": "bf",
+};
 ---
 
 <section class="b-hero" id="top">
   <TruchetGrid />
   <div class="b-wrap b-hero-inner">
     <div>
-      <h1>{hero.headline}</h1>
+      <h1>
+        {hero.headline_prefix}
+        <span class="accent">{hero.headline_accent}</span>
+      </h1>
       {hero.lead && <p class="lead">{hero.lead}</p>}
       <div class="b-hero-cta">
         <a href={hero.cta_primary_href} class="btn-primary">
@@ -32,23 +53,25 @@ const partners = parseSectionItems(body);
         </a>
       </div>
     </div>
-    <img
-      class="b-hero-image"
-      src="/frontpage.png"
-      alt=""
-      width="1024"
-      height="521"
-      loading="eager"
-    />
+    <HeroAnimation />
   </div>
 
   {
     partners.length > 0 && (
-      <div class="b-collab" aria-label="Funded by">
-        <div class="label">Funded by</div>
+      <div
+        class="b-collab"
+        aria-label={`${hero.funder_lead} ${hero.funder_sub}`}
+      >
+        <div class="label">
+          <span class="lead">{hero.funder_lead}</span>
+          <span class="sub">{hero.funder_sub}</span>
+        </div>
         <div class="logos">
           {partners.map(p => (
-            <div class="b-logo" title={`${p.label} — ${p.title}`}>
+            <div
+              class:list={["b-logo", partnerClassMap[slugify(p.label)]]}
+              title={`${p.label} — ${p.title}`}
+            >
               {p.bodyHtml ? (
                 <Fragment set:html={p.bodyHtml} />
               ) : (
@@ -72,30 +95,27 @@ const partners = parseSectionItems(body);
     border-bottom: 1px solid var(--border);
     background: var(--gradient-hero);
   }
+  /* Top padding clears the 84px absolute header so the headline and
+     animation don't slide under it. */
   .b-hero-inner {
     position: relative;
     display: grid;
-    grid-template-columns: 1.05fr 1fr;
-    gap: 64px;
-    padding: 88px 0 80px;
+    grid-template-columns: 1.25fr 1fr;
+    gap: 48px;
+    padding-block: 116px 80px;
     align-items: center;
   }
   .b-hero h1 {
-    font-size: 68px;
-    line-height: 1.04;
-    letter-spacing: -0.022em;
-    /* Matches template line 143: 13ch with Google-CDN Fraunces ≈ 460px
-       at 68px. Pinned in px so the self-hosted variable Fraunces (with
-       a wider "0" glyph at opsz=96) wraps the same way. */
-    max-width: 460px;
-    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    max-width: 21ch;
+    font-weight: 600;
   }
-  .b-hero-image {
+  .b-hero h1 .accent {
     display: block;
-    width: 100%;
-    height: auto;
-    max-width: 100%;
-    border-radius: 8px;
+    color: var(--brand-mid);
+    margin-top: 0.34em;
   }
   .b-hero p.lead {
     margin-top: 28px;
@@ -126,25 +146,29 @@ const partners = parseSectionItems(body);
     position: relative;
     max-width: 1180px;
     margin: 0 auto;
-    padding: 28px 40px 56px;
+    padding: 8px 40px 56px;
     display: flex;
     align-items: center;
-    gap: 36px;
-    border-top: 1px dashed var(--border);
+    gap: 44px;
   }
   .b-collab .label {
     flex: 0 0 auto;
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--brand-mid);
-    max-width: 14ch;
+    font-family: var(--font-body);
+    font-size: 16.5px;
+    color: var(--muted);
+    max-width: 20ch;
     line-height: 1.5;
+  }
+  .b-collab .label .lead {
+    display: block;
+  }
+  .b-collab .label .sub {
+    color: var(--brand-mid);
+    font-weight: 600;
   }
   .b-collab .logos {
     display: flex;
-    gap: 48px;
+    gap: 56px;
     flex: 1;
     align-items: center;
     flex-wrap: wrap;
@@ -153,14 +177,24 @@ const partners = parseSectionItems(body);
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 64px;
+    height: 84px;
   }
   .b-logo :global(img) {
     display: block;
-    max-height: 56px;
+    max-height: 72px;
     width: auto;
-    max-width: 220px;
+    max-width: 260px;
     object-fit: contain;
+  }
+  /* Optical balance: UoH lockup is wider and reads small at the same
+     height, so size it up; Business Finland is just a wordmark, ease
+     it down. */
+  .b-logo.uh :global(img) {
+    max-height: 92px;
+    max-width: 300px;
+  }
+  .b-logo.bf :global(img) {
+    max-height: 56px;
   }
   .b-logo :global(p) {
     margin: 0;
@@ -171,10 +205,10 @@ const partners = parseSectionItems(body);
     .b-hero-inner {
       grid-template-columns: 1fr;
       gap: 40px;
-      padding: 56px 0 56px;
+      padding-block: 116px 56px;
     }
     .b-hero h1 {
-      font-size: 52px;
+      font-size: 46px;
       max-width: none;
     }
     .b-hero p.lead {
@@ -194,16 +228,22 @@ const partners = parseSectionItems(body);
 
   @media (max-width: 600px) {
     .b-hero h1 {
-      font-size: 44px;
+      font-size: 40px;
     }
     .b-hero-inner {
-      padding: 40px 0 40px;
+      padding-block: 108px 40px;
     }
     .b-logo {
       height: 56px;
     }
     .b-logo :global(img) {
       max-height: 48px;
+    }
+    .b-logo.uh :global(img) {
+      max-height: 64px;
+    }
+    .b-logo.bf :global(img) {
+      max-height: 40px;
     }
   }
 </style>
