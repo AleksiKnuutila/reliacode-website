@@ -60,31 +60,16 @@ export default defineConfig({
   },
   fonts: [
     {
-      // Display serif. Variable across opsz/wght with optional SOFT and
-      // WONK axes (low-contrast Fraunces look used on h1-h4). Italic 400
-      // only — we never italicize a weight other than the body weight.
-      name: "Fraunces",
-      cssVariable: "--font-fraunces",
+      // Display sans. 700 is the header wordmark; 400/500/600 cover
+      // h1–h4 / display text. `ttf` is included so satori (which needs
+      // raw font tables) can load Poppins for OG-image titles.
+      name: "Poppins",
+      cssVariable: "--font-poppins",
       provider: fontProviders.google(),
-      fallbacks: ["Source Serif 4", "Georgia", "serif"],
-      weights: ["400 600"],
-      styles: ["normal", "italic"],
-      // `ttf` is included so satori (which needs raw font tables) can
-      // load Fraunces for OG-image titles.
+      fallbacks: ["ui-sans-serif", "system-ui", "sans-serif"],
+      weights: [400, 500, 600, 700],
+      styles: ["normal"],
       formats: ["woff2", "woff", "ttf"],
-      // Unifont experimental option, forwarded by Astro to the google
-      // provider. Tuples become range axes (`9..144`); strings are
-      // passed through. SOFT 0..100, WONK 0..1 are Fraunces-specific
-      // axes; opsz 9..144 is the standard optical-sizing range.
-      options: {
-        experimental: {
-          variableAxis: {
-            opsz: [["9", "144"]],
-            SOFT: [["0", "100"]],
-            WONK: [["0", "1"]],
-          },
-        },
-      },
     },
     {
       // Body sans. Discrete weights are sufficient — the body never

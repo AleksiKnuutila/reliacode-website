@@ -9,33 +9,33 @@ import config from "@/config";
  * Site-wide Open Graph image (1200x630).
  *
  * Layout mirrors the brand: navy gradient background, brand-mark +
- * site title in the top-left, large Fraunces title in the center-left,
+ * site title in the top-left, large Poppins title in the center-left,
  * mono hostname in the bottom-left.
  */
 export const GET: APIRoute = async context => {
   const manropeFonts = fontData["--font-manrope"];
-  const frauncesFonts = fontData["--font-fraunces"];
+  const poppinsFonts = fontData["--font-poppins"];
 
   const manropeRegPath = getFontPathByWeight(manropeFonts, 400);
   const manropeBoldPath = getFontPathByWeight(manropeFonts, 700);
-  const frauncesPath = getFontPathByWeight(frauncesFonts, 600);
+  const poppinsPath = getFontPathByWeight(poppinsFonts, 600);
 
   if (
     manropeRegPath === undefined ||
     manropeBoldPath === undefined ||
-    frauncesPath === undefined
+    poppinsPath === undefined
   ) {
     throw new Error("Cannot find a required font path for OG image.");
   }
 
-  const [manropeReg, manropeBold, frauncesData] = await Promise.all([
+  const [manropeReg, manropeBold, poppinsData] = await Promise.all([
     fetch(experimental_getFontFileURL(manropeRegPath, context.url)).then(res =>
       res.arrayBuffer()
     ),
     fetch(experimental_getFontFileURL(manropeBoldPath, context.url)).then(res =>
       res.arrayBuffer()
     ),
-    fetch(experimental_getFontFileURL(frauncesPath, context.url)).then(res =>
+    fetch(experimental_getFontFileURL(poppinsPath, context.url)).then(res =>
       res.arrayBuffer()
     ),
   ]);
@@ -110,7 +110,7 @@ export const GET: APIRoute = async context => {
                   type: "div",
                   props: {
                     style: {
-                      fontFamily: "Fraunces",
+                      fontFamily: "Poppins",
                       fontSize: 28,
                       fontWeight: 600,
                       letterSpacing: "-0.01em",
@@ -136,7 +136,7 @@ export const GET: APIRoute = async context => {
                   type: "div",
                   props: {
                     style: {
-                      fontFamily: "Fraunces",
+                      fontFamily: "Poppins",
                       fontSize: 84,
                       fontWeight: 600,
                       lineHeight: 1.05,
@@ -174,7 +174,7 @@ export const GET: APIRoute = async context => {
       fonts: [
         { name: "Manrope", data: manropeReg, weight: 400, style: "normal" },
         { name: "Manrope", data: manropeBold, weight: 700, style: "normal" },
-        { name: "Fraunces", data: frauncesData, weight: 600, style: "normal" },
+        { name: "Poppins", data: poppinsData, weight: 600, style: "normal" },
       ],
     }
   );

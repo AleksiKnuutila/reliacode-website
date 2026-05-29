@@ -31,11 +31,11 @@
     0 8px 24px oklch(0.3 0.05 250 / 0.06);
 
   /* Font families — aliases of the Astro-generated font CSS variables.
-     Astro's font system exposes families as e.g. `--font-fraunces`,
+     Astro's font system exposes families as e.g. `--font-poppins`,
      `--font-manrope`, `--font-geist-mono`. We re-expose them under the
      template's semantic names so the rest of the codebase can use
      `var(--font-head)` / `--font-body` / `--font-mono` directly. */
-  --font-head: var(--font-fraunces), "Source Serif 4", Georgia, serif;
+  --font-head: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
 }
@@ -73,7 +73,7 @@
   --color-muted-foreground: var(--muted);
 
   /* Font utilities (Tailwind: font-head / font-body / font-mono) */
-  --font-head: var(--font-fraunces), "Source Serif 4", Georgia, serif;
+  --font-head: var(--font-poppins), ui-sans-serif, system-ui, sans-serif;
   --font-body: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-geist-mono), ui-monospace, "SF Mono", Menlo, monospace;
   /* Legacy alias — AstroPaper uses `font-app` for body in Layout.astro */

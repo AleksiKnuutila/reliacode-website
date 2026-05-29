@@ -41,9 +41,6 @@
     font-weight: 600;
     line-height: 1.08;
     margin: 0;
-    /* Fraunces optional axes — falls back gracefully if not loaded */
-    font-variation-settings: "SOFT" 50, "WONK" 0, "opsz" 96;
-    font-optical-sizing: auto;
   }
 
   p {
