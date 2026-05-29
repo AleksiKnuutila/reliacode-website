@@ -17,6 +17,8 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import config from "./astro-paper.config";
 
+const tunnel = process.env.TUNNEL === "1";
+
 export default defineConfig({
   site: config.site.url,
   integrations: [
@@ -49,6 +51,12 @@ export default defineConfig({
   },
   vite: {
     plugins: [tailwindcss()],
+    server: tunnel
+      ? {
+          allowedHosts: ["website.taival.dev"],
+          hmr: { host: "website.taival.dev", protocol: "wss", clientPort: 443 },
+        }
+      : undefined,
   },
   fonts: [
     {
