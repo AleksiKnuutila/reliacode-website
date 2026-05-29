@@ -1,9 +1,9 @@
 ---
 title: "About"
-description: "ReliaGround is a research-to-business project on reliable, auditable LLM-assisted analytics, hosted at the University of Helsinki."
+description: "ReliaParse is a research-to-business project on reliable, auditable LLM-assisted analytics, hosted at the University of Helsinki."
 ---
 
-ReliaGround is a research project at the University of Helsinki on **reliable, auditable LLM-assisted analytics**. We work with a small number of pilot organisations to develop and validate methods that make large-language-model-driven data work trustworthy enough to use on real decisions.
+ReliaParse is a research project at the University of Helsinki on **reliable, auditable LLM-assisted analytics**. We work with a small number of pilot organisations to develop and validate methods that make large-language-model-driven data work trustworthy enough to use on real decisions.
 
 ## What we do
 

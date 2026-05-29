@@ -33,10 +33,10 @@ footer_project_links:
 
 # Pilot enquiries mailbox. Used by the footer contact column and the
 # landing-page CTA section.
-pilot_email: "pilots@reliaground.example"
+pilot_email: "pilots@reliaparse.com"
 
 # Thin bar at the very bottom of the page. `{year}` is replaced with the
 # current year at build time.
-legal_left:  "© {year} ReliaGround · University of Helsinki"
+legal_left:  "© {year} ReliaParse · University of Helsinki"
 legal_right: "Research preview · Pilots open"
 ---

@@ -21,7 +21,7 @@ ran the question through all four.
 
 1. **A Jupyter notebook with an LLM-assisted SQL helper.** A senior analyst
    wrote the prompts, the model wrote the SQL, the notebook charted it.
-2. **A ReliaGround-verified run.** Same warehouse, same question, intent
+2. **A ReliaParse-verified run.** Same warehouse, same question, intent
    captured up front, verification check on the output.
 3. **A SQL-only baseline.** Hand-written by a data engineer who had not seen
    the other answers.
@@ -38,7 +38,7 @@ day. A small off-by-one boundary, invisible in the chart, surfaced
 immediately in the verification step.
 
 The BI tool agreed with the SQL baseline because the vendor's retention
-macro was solid. The ReliaGround run agreed because the verification check
+macro was solid. The ReliaParse run agreed because the verification check
 explicitly compared cohort sizes against a known reference.
 
 ## What we took away

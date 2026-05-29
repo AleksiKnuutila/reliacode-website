@@ -6,7 +6,7 @@ kicker: "Research team"
 headline: "A small group based in Helsinki."
 
 intro: >
-  ReliaGround is run by a tight team working across machine learning,
+  ReliaParse is run by a tight team working across machine learning,
   software engineering and applied analytics, alongside pilot organisations
   and external advisors. We share what we learn — methods, failure modes,
   and the auditable artefacts our pipelines produce.
