@@ -2,7 +2,7 @@
 // Hero — landing page hero section.
 //
 // Composes the headline column, the verification trace mock card, the
-// Truchet maze SVG behind everything, and the "In collaboration with"
+// Truchet maze SVG behind everything, and the "Funded by"
 // partner logo rail below the main content.
 //
 // Editorial copy lives in src/content/landing/hero.md — flat scalars in
@@ -12,7 +12,6 @@
 import { getLandingSectionWithBody } from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 import TruchetGrid from "./TruchetGrid.astro";
-import TraceCard from "./TraceCard.astro";
 
 const { data: hero, body } = await getLandingSectionWithBody("hero");
 const partners = parseSectionItems(body);
@@ -22,12 +21,8 @@ const partners = parseSectionItems(body);
   <TruchetGrid />
   <div class="b-wrap b-hero-inner">
     <div>
-      <h1>
-        {hero.headline_prefix}<span class="accent">{hero.headline_accent}</span>{
-          hero.headline_suffix
-        }
-      </h1>
-      <p class="lead">{hero.lead}</p>
+      <h1>{hero.headline}</h1>
+      {hero.lead && <p class="lead">{hero.lead}</p>}
       <div class="b-hero-cta">
         <a href={hero.cta_primary_href} class="btn-primary">
           {hero.cta_primary_label}
@@ -37,18 +32,31 @@ const partners = parseSectionItems(body);
         </a>
       </div>
     </div>
-    <TraceCard />
+    <img
+      class="b-hero-image"
+      src="/frontpage.png"
+      alt=""
+      width="1024"
+      height="521"
+      loading="eager"
+    />
   </div>
 
   {
     partners.length > 0 && (
-      <div class="b-collab" aria-label="In collaboration with">
-        <div class="label">In collaboration with</div>
+      <div class="b-collab" aria-label="Funded by">
+        <div class="label">Funded by</div>
         <div class="logos">
           {partners.map(p => (
-            <div class="b-logo">
-              {p.label}
-              <span class="sub">{p.title}</span>
+            <div class="b-logo" title={`${p.label} — ${p.title}`}>
+              {p.bodyHtml ? (
+                <Fragment set:html={p.bodyHtml} />
+              ) : (
+                <>
+                  {p.label}
+                  <span class="sub">{p.title}</span>
+                </>
+              )}
             </div>
           ))}
         </div>
@@ -82,11 +90,12 @@ const partners = parseSectionItems(body);
     max-width: 460px;
     font-weight: 500;
   }
-  .b-hero h1 .accent {
-    background: linear-gradient(135deg, var(--brand-deep), var(--brand-mid));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+  .b-hero-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 8px;
   }
   .b-hero p.lead {
     margin-top: 28px;
@@ -112,7 +121,7 @@ const partners = parseSectionItems(body);
   /* `.b-chip` styles live in global.css so /tags, /posts/<slug>,
      and the hero all share one source. */
 
-  /* In collaboration with — partner logo rail */
+  /* Funded by — partner logo rail */
   .b-collab {
     position: relative;
     max-width: 1180px;
@@ -134,39 +143,27 @@ const partners = parseSectionItems(body);
     line-height: 1.5;
   }
   .b-collab .logos {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 24px;
+    display: flex;
+    gap: 48px;
     flex: 1;
+    align-items: center;
+    flex-wrap: wrap;
   }
   .b-logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 56px;
-    padding: 0 18px;
-    border: 1px dashed var(--border-strong);
-    border-radius: 6px;
-    color: var(--muted);
-    font-family: var(--font-head);
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    background: repeating-linear-gradient(
-      135deg,
-      color-mix(in oklch, var(--card) 100%, transparent) 0 14px,
-      color-mix(in oklch, var(--secondary) 70%, var(--card)) 14px 15px
-    );
-    text-align: center;
+    height: 64px;
   }
-  .b-logo .sub {
+  .b-logo :global(img) {
     display: block;
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--brand-mid);
-    margin-top: 2px;
+    max-height: 56px;
+    width: auto;
+    max-width: 220px;
+    object-fit: contain;
+  }
+  .b-logo :global(p) {
+    margin: 0;
   }
 
   /* ── RESPONSIVE ─────────────────────────────────────────────── */
@@ -190,7 +187,7 @@ const partners = parseSectionItems(body);
       padding: 24px 24px 40px;
     }
     .b-collab .logos {
-      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
       width: 100%;
     }
   }
@@ -203,9 +200,10 @@ const partners = parseSectionItems(body);
       padding: 40px 0 40px;
     }
     .b-logo {
-      height: 52px;
-      font-size: 14px;
-      padding: 0 12px;
+      height: 56px;
+    }
+    .b-logo :global(img) {
+      max-height: 48px;
     }
   }
 </style>
