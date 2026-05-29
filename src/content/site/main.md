@@ -5,8 +5,9 @@ title: Site chrome
 # component rewrites them to "/#…" on non-landing pages so they still
 # scroll to the right section.
 nav:
-  - { label: "Problem",  href: "#problem"  }
-  - { label: "Approach", href: "#approach" }
+  - { label: "Problem",      href: "#problem"  }
+  - { label: "How it works", href: "#how"      }
+  - { label: "Approach",     href: "#approach" }
   - { label: "Team",     href: "#team"     }
   - { label: "FAQ",      href: "#faq"      }
   - { label: "Blog",     href: "#blog"     }

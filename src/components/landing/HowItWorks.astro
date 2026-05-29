@@ -1,0 +1,410 @@
+---
+// HowItWorks — landing page "How it works" section.
+//
+// Three steps shown left-to-right with arrows between them. Each step
+// gets a decorative illustration above the prose; illustrations are
+// hardcoded per index (0 = doc stack, 1 = spec card, 2 = export
+// preview) because they're tightly coupled to the step's visual rather
+// than to its copy.
+//
+// Editorial copy lives in src/content/landing/howitworks.md — kicker and
+// headline as frontmatter, and the three steps as H2 items in the body
+// (`## {label} — {title}` + paragraph).
+
+import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import { parseSectionItems } from "@/utils/parseSectionBody";
+
+const { data: how, body } = await getLandingSectionWithBody("howitworks");
+const steps = parseSectionItems(body);
+---
+
+<section class="b-section" id="how">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">{how.kicker}</div>
+      <h2>{how.headline}</h2>
+    </div>
+
+    <div class="b-how">
+      {
+        steps.map((step, i) => (
+          <>
+            {i > 0 && (
+              <div class="b-step-arrow" aria-hidden="true">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="square"
+                >
+                  <path d="M4 12 H20" />
+                  <path d="M14 6 L20 12 L14 18" />
+                </svg>
+              </div>
+            )}
+            <div class="b-step">
+              <div class="pn">{step.label}</div>
+              <div class="illus" aria-hidden="true">
+                {i === 0 && (
+                  <div class="b-docs">
+                    <div class="b-doc tilt-l">
+                      <div class="lines">
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                      PDF
+                    </div>
+                    <div class="b-doc center">
+                      <div class="lines">
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                      DOCX
+                    </div>
+                    <div class="b-doc tilt-r">
+                      <div class="lines">
+                        <span />
+                        <span />
+                        <span />
+                      </div>
+                      XLSX
+                    </div>
+                  </div>
+                )}
+                {i === 1 && (
+                  <div class="b-spec-card">
+                    <div class="hd">
+                      <span>extract.spec</span>
+                      <span>draft</span>
+                    </div>
+                    <div class="field">
+                      <span class="k">report</span>
+                      <span class="v">Counterparty risk · Q2</span>
+                    </div>
+                    <div class="field">
+                      <span class="k">extract</span>
+                      <span class="v">
+                        <span class="pill">loan_amount</span>
+                        <span class="pill">interest_rate</span>
+                      </span>
+                    </div>
+                    <div class="field">
+                      <span class="k">format</span>
+                      <span class="v">
+                        table · one row per counterparty
+                        <span class="cursor" />
+                      </span>
+                    </div>
+                  </div>
+                )}
+                {i === 2 && (
+                  <div class="b-export">
+                    <div class="hd">
+                      <span>extract.csv</span>
+                      <span>verified</span>
+                    </div>
+                    <div class="row">
+                      <span class="k">Counterparty</span>
+                      <span class="v">Acme Holdings</span>
+                    </div>
+                    <div class="row">
+                      <span class="k">Loan amount</span>
+                      <span class="v">€ 500,000</span>
+                    </div>
+                    <div class="row">
+                      <span class="k">Interest rate</span>
+                      <span class="v">6.2 %</span>
+                    </div>
+                    <div class="ft">
+                      <span>4 / 4 constraints</span>
+                      <span class="stamp">✓ traced</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <h3>{step.title}</h3>
+              <div class="step-body" set:html={step.bodyHtml} />
+            </div>
+          </>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<style>
+  /* --- Layout: 3 step cards + 2 arrows between them --- */
+  .b-how {
+    display: grid;
+    grid-template-columns: 1fr 28px 1fr 28px 1fr;
+    gap: 0;
+    align-items: stretch;
+  }
+  .b-step {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px 26px 28px;
+    display: flex;
+    flex-direction: column;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .b-step:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-step .pn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .b-step .illus {
+    position: relative;
+    height: 200px;
+    border-radius: 8px;
+    background: color-mix(in oklch, var(--secondary) 65%, var(--card));
+    border: 1px dashed var(--border-strong);
+    padding: 18px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 22px;
+  }
+  .b-step h3 {
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+  .b-step :global(p) {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+  .b-step-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--brand-mid);
+  }
+  .b-step-arrow svg {
+    width: 24px;
+    height: 24px;
+    display: block;
+  }
+
+  /* --- Illustration 1: tilted document stack --- */
+  .b-docs {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    justify-content: center;
+  }
+  .b-doc {
+    width: 64px;
+    height: 84px;
+    border-radius: 4px;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-soft);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 8px 8px 9px;
+    font-family: var(--font-mono);
+    font-size: 9.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    position: relative;
+  }
+  .b-doc::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 14px;
+    height: 14px;
+    background: linear-gradient(225deg, var(--secondary) 50%, transparent 50%);
+    border-left: 1px solid var(--border-strong);
+    border-bottom: 1px solid var(--border-strong);
+  }
+  .b-doc .lines {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .b-doc .lines span {
+    display: block;
+    height: 2px;
+    border-radius: 1px;
+    background: color-mix(in oklch, var(--border-strong) 85%, var(--muted));
+  }
+  .b-doc .lines span:nth-child(2) {
+    width: 78%;
+  }
+  .b-doc .lines span:nth-child(3) {
+    width: 60%;
+  }
+  .b-doc.tilt-l {
+    transform: rotate(-6deg) translateY(4px);
+  }
+  .b-doc.tilt-r {
+    transform: rotate(6deg) translateY(4px);
+  }
+  .b-doc.center {
+    transform: translateY(-6px);
+    z-index: 1;
+  }
+
+  /* --- Illustration 2: extract.spec card --- */
+  .b-spec-card {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    box-shadow: var(--shadow-soft);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    overflow: hidden;
+  }
+  .b-spec-card .hd {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: color-mix(in oklch, var(--secondary) 70%, var(--card));
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--brand-mid);
+    font-size: 9.5px;
+  }
+  .b-spec-card .field {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    padding: 7px 12px;
+    border-bottom: 1px dashed var(--border);
+    align-items: center;
+    gap: 10px;
+  }
+  .b-spec-card .field:last-child {
+    border-bottom: 0;
+  }
+  .b-spec-card .field .k {
+    color: var(--muted);
+    font-size: 10px;
+    letter-spacing: 0.06em;
+  }
+  .b-spec-card .field .v {
+    color: var(--fg);
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .b-spec-card .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    border-radius: 3px;
+    background: color-mix(in oklch, var(--brand-soft) 70%, var(--card));
+    color: var(--brand-deep);
+    font-size: 10px;
+  }
+  /* Blinking caret at the tail of the last spec field. */
+  .b-spec-card .cursor {
+    display: inline-block;
+    width: 1px;
+    height: 11px;
+    background: var(--brand-mid);
+    margin-left: 1px;
+    animation: bblink 1.1s steps(2, end) infinite;
+    vertical-align: -2px;
+  }
+  @keyframes bblink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* --- Illustration 3: extract.csv export preview --- */
+  .b-export {
+    width: 100%;
+    background: var(--card);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    font-family: var(--font-mono);
+    font-size: 11px;
+  }
+  .b-export .hd {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 8px 12px;
+    background: color-mix(in oklch, var(--secondary) 70%, var(--card));
+    border-bottom: 1px solid var(--border);
+    color: var(--brand-mid);
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .b-export .row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 7px 12px;
+    border-bottom: 1px dashed var(--border);
+    align-items: center;
+  }
+  .b-export .row:last-child {
+    border-bottom: 0;
+  }
+  .b-export .row .k {
+    color: var(--muted);
+    font-size: 10.5px;
+  }
+  .b-export .row .v {
+    color: var(--fg);
+    font-size: 11px;
+  }
+  .b-export .ft {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: color-mix(in oklch, var(--secondary) 70%, var(--card));
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .b-export .ft .stamp {
+    color: var(--brand-mid);
+  }
+
+  /* --- Responsive: stack vertically, swap arrows to point down --- */
+  @media (max-width: 900px) {
+    .b-how {
+      grid-template-columns: 1fr;
+    }
+    .b-step-arrow {
+      padding: 12px 0;
+    }
+    .b-step-arrow svg {
+      transform: rotate(90deg);
+    }
+  }
+</style>

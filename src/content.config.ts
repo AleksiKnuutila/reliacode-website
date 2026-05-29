@@ -65,10 +65,8 @@ const landing = defineCollection({
     z.object({
       section: z.literal("hero"),
       title: z.string(),
-      headline_prefix: z.string().default(""),
-      headline_accent: z.string(),
-      headline_suffix: z.string().default(""),
-      lead: z.string(),
+      headline: z.string(),
+      lead: z.string().optional(),
       cta_primary_label: z.string(),
       cta_primary_href: z.string(),
       cta_secondary_label: z.string(),
@@ -87,6 +85,17 @@ const landing = defineCollection({
        *  two comparison cards. Use when the headline alone doesn't
        *  carry the framing. */
       intro: z.string().optional(),
+    }),
+
+    // --- howitworks (flat scalars only; three steps live as H2 items in
+    //     the markdown body with `## {label} — {title}` followed by a
+    //     prose paragraph. Step illustrations are hardcoded in the
+    //     HowItWorks component, picked by step index). ---
+    z.object({
+      section: z.literal("howitworks"),
+      title: z.string(),
+      kicker: z.string(),
+      headline: z.string(),
     }),
 
     // --- approach (kicker/h2 + workflow header scalars). Pillars and
