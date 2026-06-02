@@ -9,16 +9,16 @@ card_title: Talk to us
 channels:
   - kind: email
     label: Email
-    value: pilots@reliaparse.ai
-    href: mailto:pilots@reliaparse.ai
+    value: antti.nikander@helsinki.fi
+    href: mailto:antti.nikander@helsinki.fi
   - kind: phone
     label: Phone
-    value: +358 40 123 4567
-    href: tel:+358401234567
+    value: +358408455748
+    href: tel:+358408455748
   - kind: calendar
     label: Book a meeting
     value: 30-min intro call
-    href: https://calendly.com/reliaparse/intro
+    href: https://calendly.com/helsinki_university_annik
     feature: true
     external: true
   - kind: linkedin
