@@ -24,7 +24,7 @@ colophon: >
 
 # Pilot enquiries mailbox. Used by the footer contact column and the
 # landing-page CTA section.
-pilot_email: "pilots@reliaparse.ai"
+pilot_email: "antti.nikander@helsinki.fi"
 
 # Copyright line at the very bottom of the page. `{year}` is replaced
 # with the current year at build time.
