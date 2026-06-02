@@ -61,7 +61,6 @@ const locale = Astro.currentLocale ?? config.site.lang;
             title={p.data.title}
             description={p.data.description}
             pubDate={p.data.pubDatetime}
-            category={p.data.category}
             stamp={stamps.get(p.id)}
           />
         ))

@@ -1,5 +1,10 @@
 ---
-import { type CollectionEntry, getCollection, render } from "astro:content";
+import {
+  type CollectionEntry,
+  getCollection,
+  getEntry,
+  render,
+} from "astro:content";
 import PostLayout from "@/layouts/PostLayout.astro";
 import { getPostSlug, getPostUrl } from "@/utils/getPostPaths";
 import { getSortedPosts } from "@/utils/getSortedPosts";
@@ -29,9 +34,22 @@ const {
   canonicalURL,
   pubDatetime,
   modDatetime,
-  category,
-  tags,
+  author,
 } = post.data;
+
+// Resolve the author reference into a team entry so we can pass
+// name / role / photo into PostLayout's byline.
+const authorEntry = await getEntry(author);
+if (!authorEntry) {
+  throw new Error(
+    `Post '${post.id}' references unknown team member '${author.id}'.`
+  );
+}
+const {
+  name: authorName,
+  role: authorRole,
+  photo: authorPhoto,
+} = authorEntry.data;
 
 const { Content } = await render(post);
 
@@ -81,9 +99,10 @@ const ogImage = ogImageUrl
   canonicalURL={canonicalURL}
   pubDatetime={pubDatetime}
   modDatetime={modDatetime}
-  category={category}
-  tags={tags}
   readingMinutes={readingMinutes}
+  authorName={authorName}
+  authorRole={authorRole}
+  authorPhoto={authorPhoto}
   currentPage="post"
 >
   <Content />

@@ -13,8 +13,6 @@ type Props = {
   description: string;
   /** Publication date — either a Date or an ISO-ish string. */
   pubDate: Date | string;
-  /** Optional category label appended to the meta line. */
-  category?: string;
   /**
    * Optional badge shown on the thumbnail. If omitted, a fallback is
    * derived from the publication date (e.g. "Note · 2026-05").
@@ -22,16 +20,14 @@ type Props = {
   stamp?: string;
 };
 
-const { href, title, description, pubDate, category, stamp } = Astro.props;
+const { href, title, description, pubDate, stamp } = Astro.props;
 
 const date = pubDate instanceof Date ? pubDate : new Date(pubDate);
 
-const monthYear = date.toLocaleDateString("en-GB", {
+const formattedMeta = date.toLocaleDateString("en-GB", {
   month: "long",
   year: "numeric",
 });
-
-const formattedMeta = category ? `${monthYear} · ${category}` : monthYear;
 
 const fallbackStamp = `Note · ${date.getFullYear()}-${String(
   date.getMonth() + 1,

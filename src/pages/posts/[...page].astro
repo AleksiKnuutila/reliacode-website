@@ -1,6 +1,6 @@
 ---
 import type { GetStaticPaths } from "astro";
-import { getCollection } from "astro:content";
+import { getCollection, getEntry } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import PostCard from "@/components/PostCard.astro";
 import { getSortedPosts } from "@/utils/getSortedPosts";
@@ -22,18 +22,32 @@ const allPosts = await getCollection("posts", ({ data }) => data.draft !== true)
 const stamps = buildPostStamps(allPosts);
 
 const posts = page.data;
+
+// Page header copy lives in src/content/pages/posts.md so it's
+// editable in the Obsidian vault. Title → on-page headline (and meta
+// title); description → small line under the headline (and meta
+// description).
+const headerEntry = await getEntry("pages", "posts");
+if (!headerEntry) {
+  throw new Error(
+    "Missing content entry: `posts.md` in `src/content/pages/`"
+  );
+}
+const header = headerEntry.data;
 ---
 
 <Layout
-  title={`Notes | ${config.site.title}`}
-  description="Research notes, field reports, and position pieces."
+  title={`${header.title} | ${config.site.title}`}
+  description={header.description}
   currentPage="post"
 >
   <section class="b-section">
     <div class="b-wrap">
       <div class="b-shead">
-        <div class="b-kicker">All notes</div>
-        <h2>From the research notebook.</h2>
+        <h2>{header.title}</h2>
+        {header.description && (
+          <p class="posts-desc">{header.description}</p>
+        )}
       </div>
 
       {
@@ -47,7 +61,6 @@ const posts = page.data;
                 title={p.data.title}
                 description={p.data.description}
                 pubDate={p.data.pubDatetime}
-                category={p.data.category}
                 stamp={stamps.get(p.id)}
               />
             ))}
@@ -83,6 +96,14 @@ const posts = page.data;
 </Layout>
 
 <style>
+  .posts-desc {
+    margin-top: 14px;
+    font-size: 15px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+
   .b-blog {
     display: grid;
     grid-template-columns: repeat(3, 1fr);

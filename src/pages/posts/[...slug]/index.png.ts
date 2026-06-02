@@ -35,28 +35,28 @@ export const GET: APIRoute = async ({ props, url }) => {
   }
 
   const manropeFonts = fontData["--font-manrope"];
-  const frauncesFonts = fontData["--font-fraunces"];
+  const poppinsFonts = fontData["--font-poppins"];
 
   const manropeRegPath = getFontPathByWeight(manropeFonts, 400);
   const manropeBoldPath = getFontPathByWeight(manropeFonts, 700);
-  const frauncesPath = getFontPathByWeight(frauncesFonts, 600);
+  const poppinsPath = getFontPathByWeight(poppinsFonts, 600);
 
   if (
     manropeRegPath === undefined ||
     manropeBoldPath === undefined ||
-    frauncesPath === undefined
+    poppinsPath === undefined
   ) {
     throw new Error("Cannot find a required font path for OG image.");
   }
 
-  const [manropeReg, manropeBold, frauncesData] = await Promise.all([
+  const [manropeReg, manropeBold, poppinsData] = await Promise.all([
     fetch(experimental_getFontFileURL(manropeRegPath, url)).then(res =>
       res.arrayBuffer()
     ),
     fetch(experimental_getFontFileURL(manropeBoldPath, url)).then(res =>
       res.arrayBuffer()
     ),
-    fetch(experimental_getFontFileURL(frauncesPath, url)).then(res =>
+    fetch(experimental_getFontFileURL(poppinsPath, url)).then(res =>
       res.arrayBuffer()
     ),
   ]);
@@ -136,7 +136,7 @@ export const GET: APIRoute = async ({ props, url }) => {
                   type: "div",
                   props: {
                     style: {
-                      fontFamily: "Fraunces",
+                      fontFamily: "Poppins",
                       fontSize: 28,
                       fontWeight: 600,
                       letterSpacing: "-0.01em",
@@ -164,7 +164,7 @@ export const GET: APIRoute = async ({ props, url }) => {
                   type: "div",
                   props: {
                     style: {
-                      fontFamily: "Fraunces",
+                      fontFamily: "Poppins",
                       fontSize: 72,
                       fontWeight: 600,
                       lineHeight: 1.05,
@@ -219,7 +219,7 @@ export const GET: APIRoute = async ({ props, url }) => {
       fonts: [
         { name: "Manrope", data: manropeReg, weight: 400, style: "normal" },
         { name: "Manrope", data: manropeBold, weight: 700, style: "normal" },
-        { name: "Fraunces", data: frauncesData, weight: 600, style: "normal" },
+        { name: "Poppins", data: poppinsData, weight: 600, style: "normal" },
       ],
     }
   );

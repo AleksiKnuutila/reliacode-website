@@ -3,13 +3,17 @@
  * PostLayout — calmer reading shell for individual posts.
  *
  * Renders the Layout chrome (Header / Footer / SEO) and a narrow-measure
- * article body. Strips AstroPaper's default breadcrumb, share links,
- * edit-post link, table of contents, related posts, and prev/next nav —
- * the design calls for a quiet single-column page.
+ * article body with a title + author byline (avatar · name in bold,
+ * role underneath). Strips AstroPaper's default breadcrumb, share
+ * links, edit-post link, table of contents, related posts, prev/next
+ * nav, category, and tags — the design calls for a quiet single-column
+ * page.
  *
  * Prose styles live in `src/styles/global.css` under `.post-prose` so
  * markdown-rendered descendants pick them up.
  */
+import type { ImageMetadata } from "astro";
+import { Image } from "astro:assets";
 import Layout from "./Layout.astro";
 import config from "@/config";
 
@@ -20,14 +24,15 @@ type Props = {
   canonicalURL?: string;
   pubDatetime?: Date;
   modDatetime?: Date | null;
-  category?: string;
-  tags?: string[];
   /** Approximate read time in minutes — omitted if undefined. */
   readingMinutes?: number;
+  /** Author byline — resolved from the post's team-collection
+   *  reference by the slug page and passed in. */
+  authorName: string;
+  authorRole: string;
+  authorPhoto: ImageMetadata;
   currentPage?: "landing" | "post" | "archives" | "tags" | "search";
 };
-
-const { site } = config;
 
 const {
   title,
@@ -36,9 +41,10 @@ const {
   canonicalURL,
   pubDatetime,
   modDatetime,
-  category,
-  tags = [],
   readingMinutes,
+  authorName,
+  authorRole,
+  authorPhoto,
   currentPage,
 } = Astro.props;
 
@@ -49,13 +55,7 @@ const structuredData = {
   image: ogImage,
   ...(pubDatetime && { datePublished: pubDatetime.toISOString() }),
   ...(modDatetime && { dateModified: modDatetime.toISOString() }),
-  author: [
-    {
-      "@type": "Person",
-      name: site.author,
-      ...(site.profile && { url: site.profile }),
-    },
-  ],
+  author: [{ "@type": "Person", name: authorName }],
 };
 
 const monthYear = pubDatetime
@@ -69,13 +69,12 @@ const monthYear = pubDatetime
 // rendering empty slots.
 const metaParts = [
   monthYear,
-  category,
   readingMinutes ? `${readingMinutes} min read` : undefined,
 ].filter((part): part is string => Boolean(part));
 ---
 
 <Layout
-  title={`${title} | ${site.title}`}
+  title={`${title} | ${config.site.title}`}
   description={description}
   ogImage={ogImage}
   canonicalURL={canonicalURL}
@@ -125,17 +124,19 @@ const metaParts = [
         )
       }
       <h1 class="post-title">{title}</h1>
-      {
-        tags.length > 0 && (
-          <div class="post-tags">
-            {tags.map(t => (
-              <a class="b-chip" href={`/tags/${t}/`}>
-                {t}
-              </a>
-            ))}
-          </div>
-        )
-      }
+      <div class="post-byline">
+        <Image
+          class="byline-photo"
+          src={authorPhoto}
+          alt={authorName}
+          widths={[80, 120, 160]}
+          sizes="56px"
+        />
+        <div class="byline-text">
+          <span class="byline-name">{authorName}</span>
+          <span class="byline-role">{authorRole}</span>
+        </div>
+      </div>
     </header>
 
     <div class="post-prose">
@@ -200,25 +201,36 @@ const metaParts = [
     }
   }
 
-  .post-tags {
+  /* Title → byline (avatar + name + role). */
+  .post-byline {
     margin-top: 22px;
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
   }
-
-  /* Base `.b-chip` styles live in global.css. Add link-specific
-     niceties (hover state, no underline) for tag chips inside the
-     post header. */
-  .post-tags :global(.b-chip) {
-    text-decoration: none;
-    transition:
-      border-color 0.15s,
-      color 0.15s;
+  .post-byline :global(.byline-photo) {
+    display: block;
+    width: 56px;
+    height: 56px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 50%;
+    background: var(--secondary);
+    flex-shrink: 0;
   }
-  .post-tags :global(.b-chip:hover) {
-    border-color: var(--brand-mid);
+  .byline-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.35;
+  }
+  .byline-name {
+    font-size: 15px;
+    font-weight: 600;
     color: var(--fg);
+  }
+  .byline-role {
+    font-size: 13px;
+    color: var(--muted);
   }
 
   .post-foot {
