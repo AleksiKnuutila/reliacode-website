@@ -1,9 +1,8 @@
 ---
 section: faq
 title: FAQ section header
-
 kicker: FAQ
-headline: "Questions we hear from prospective pilots."
+headline: Questions we hear from potential users.
 ---
 
 <!--

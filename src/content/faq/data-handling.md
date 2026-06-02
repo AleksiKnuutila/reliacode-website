@@ -1,11 +1,6 @@
 ---
-title: "What happens to data we share during a pilot?"
-question: "What happens to data we share during a pilot?"
+title: What happens to the data of potential users?
+question: What happens to the data of potential users?
 sort: 60
 ---
-
-Data shared during a pilot is used only for the pilot itself — not for
-training models, not for any other purpose. We work within whatever data
-handling arrangement your team requires, including on-premise deployment
-for sensitive workflows. We're happy to sign a DPA before any documents
-are shared.
+The pilot version of our system runs on CSC infrastructure in a data centre in Kajaani, Finland, not on the public cloud. Data shared during a pilot is not used for training models nor any other purposes. We work within whatever data handling arrangement potential users require, and are open to on-premise deployment for sensitive workflows where needed. We're happy to sign a DPA before any documents are shared.
