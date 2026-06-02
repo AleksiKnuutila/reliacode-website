@@ -45,12 +45,7 @@ const partnerClassMap: Record<string, string> = {
       </h1>
       {hero.lead && <p class="lead">{hero.lead}</p>}
       <div class="b-hero-cta">
-        <a href={hero.cta_primary_href} class="btn-primary">
-          {hero.cta_primary_label}
-        </a>
-        <a href={hero.cta_secondary_href} class="btn-ghost">
-          {hero.cta_secondary_label}
-        </a>
+        <a href={hero.cta_href} class="btn-primary">{hero.cta_label}</a>
       </div>
     </div>
     <HeroAnimation />
@@ -100,7 +95,7 @@ const partnerClassMap: Record<string, string> = {
   .b-hero-inner {
     position: relative;
     display: grid;
-    grid-template-columns: 1.25fr 1fr;
+    grid-template-columns: 1fr 1.25fr;
     gap: 48px;
     padding-block: 116px 80px;
     align-items: center;

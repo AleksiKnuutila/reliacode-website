@@ -1,7 +1,7 @@
 ---
 /**
- * Site footer — four columns (colophon / Site / Project / Contact)
- * plus a thin legal strip. Markup mirrors template.html lines 897–935.
+ * Site footer — three columns (colophon / Site / Contact) plus a thin
+ * legal strip with the copyright line.
  *
  * All section links use the "/#anchor" form so they work whether the
  * footer is rendered on the landing page or any other page.
@@ -12,8 +12,7 @@ const site = await getSite();
 const currentYear = new Date().getFullYear();
 const legalLeft = site.legal_left.replace("{year}", String(currentYear));
 
-/** Force hash links to "/#…" so they resolve from any page. Pass-through
- *  for anything else (e.g. project links currently set to "#"). */
+/** Force hash links to "/#…" so they resolve from any page. */
 const toFooterHref = (href: string): string =>
   href.startsWith("#") && href.length > 1 ? `/${href}` : href;
 ---
@@ -40,21 +39,8 @@ const toFooterHref = (href: string): string =>
       </ul>
     </div>
     <div>
-      <h4>Project</h4>
-      <ul>
-        {
-          site.footer_project_links.map(link => (
-            <li>
-              <a href={link.href}>{link.label}</a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-    <div>
       <h4>Contact</h4>
       <p class="contact">
-        Pilot enquiries<br />
         <a class="contact-mail" href={`mailto:${site.pilot_email}`}>
           {site.pilot_email}
         </a>
@@ -63,7 +49,6 @@ const toFooterHref = (href: string): string =>
   </div>
   <div class="legal">
     <span>{legalLeft}</span>
-    <span>{site.legal_right}</span>
   </div>
 </footer>
 
@@ -79,7 +64,7 @@ const toFooterHref = (href: string): string =>
     margin: 0 auto;
     padding: 56px 40px 28px;
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr;
     gap: 40px;
   }
   .b-footer h4 {

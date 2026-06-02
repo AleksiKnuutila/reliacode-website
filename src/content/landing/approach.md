@@ -3,11 +3,7 @@ section: approach
 title: Approach
 kicker: Approach
 headline: A different architecture for trustworthy answers.
-workflow_label: Workflow · five-step loop
-workflow_meta: each step writes to the run's audit bundle
 ---
-
-# Pillars
 
 ## Pillar I — New model architectures
 
@@ -20,25 +16,3 @@ Workflows operate over whole collections, not single files. When several passage
 ## Pillar III — UI built for verification
 
 	The interface is the proof. Every answer traces back to a highlighted span in its source document, with reconciliation steps and conflicting information shown in full, turning verification from a re-investigation into a glance.
-
-# Workflow
-
-## 01 — User intent
-
-Goal & stated constraints
-
-## 02 — LLM proposal
-
-Candidate implementation
-
-## 03 — Deterministic exec.
-
-Reproducible run
-
-## 04 — Verification
-
-Intent & constraints checked
-
-## 05 — Auditable result
-
-Trace, inputs, outputs

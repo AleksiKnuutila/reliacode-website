@@ -18,6 +18,35 @@
 // All colours and fonts are scoped under .hero-anim via local
 // `--ac-*` custom properties so nothing leaks into the rest of the
 // page.
+//
+// The four report rows are server-rendered (not built in JS) so the
+// scoped CSS — opacity gate, transitions, segment/value typography,
+// hover treatment — actually applies to them. Astro's CSS scoping
+// adds a `data-astro-cid-*` attribute to SSR'd elements and only
+// matches selectors against elements that carry it; `createElement`
+// nodes don't get that attribute, which would silently strip every
+// rule and break the stagger animation.
+
+type ReportItem = {
+  id: string;
+  segment: string;
+  value: string;
+  flagged?: boolean;
+  note?: string;
+};
+
+const ITEMS: ReportItem[] = [
+  { id: "enterprise", segment: "Enterprise", value: "$42.6M" },
+  { id: "midmarket", segment: "Mid-Market", value: "$18.3M" },
+  { id: "smallbiz", segment: "Small Business", value: "$7.45M" },
+  {
+    id: "public",
+    segment: "Public Sector",
+    value: "$12.4M",
+    flagged: true,
+    note: "Ambiguous — source blends recurring and one-time fees",
+  },
+];
 ---
 
 <div class="hero-anim">
@@ -65,7 +94,23 @@
             <span class="right" id="status-mono">reading…</span>
           </div>
           <div class="panel-body">
-            <ul class="output-list" id="output-list"></ul>
+            <ul class="output-list" id="output-list">
+              {
+                ITEMS.map(item => (
+                  <li
+                    class:list={["output-row", { flagged: item.flagged }]}
+                    data-id={item.id}
+                    title={item.note}
+                  >
+                    <span class="segment">{item.segment}</span>
+                    <span class="value">{item.value}</span>
+                    {item.flagged && (
+                      <span class="flag-dot" aria-label="ambiguous" />
+                    )}
+                  </li>
+                ))
+              }
+            </ul>
             <div class="source-line" id="source-line">
               <span>source: comp_file.pdf</span>
             </div>
@@ -121,17 +166,17 @@
   .hero-anim-frame {
     position: relative;
     width: 100%;
-    max-width: 500px;
+    max-width: 620px;
   }
-  /* Designed at exactly 500px; the inline script scales it to fit. */
+  /* Designed at exactly 620px; the inline script scales it to fit. */
   .hero-anim .widget {
     position: absolute;
     top: 0;
     left: 0;
-    width: 500px;
+    width: 620px;
     transform-origin: top left;
     display: grid;
-    grid-template-columns: 1fr 232px;
+    grid-template-columns: 1fr 280px;
     gap: 14px;
     align-items: start;
     font-family: var(--ac-sans);
@@ -191,8 +236,8 @@
     /* Serif on the source-document panel so it reads as a real document
        distinct from the report on the right. */
     font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 13.5px;
-    line-height: 1.85;
+    font-size: 15px;
+    line-height: 1.8;
     color: var(--ac-text);
     margin: 0;
     text-align: justify;
@@ -227,7 +272,7 @@
     box-shadow: 0 0 0 1px var(--ac-warn);
   }
   .hero-anim .prompt-text {
-    font-size: 13px;
+    font-size: 14.5px;
     line-height: 1.5;
     color: var(--ac-text);
     margin: 0;
@@ -235,7 +280,7 @@
   .hero-anim .prompt-text .caret {
     display: inline-block;
     width: 1px;
-    height: 14px;
+    height: 15px;
     background: var(--ac-accent);
     vertical-align: -2px;
     margin-left: 2px;
@@ -258,12 +303,12 @@
     display: flex;
     align-items: baseline;
     gap: 8px;
-    padding: 4px 6px;
-    margin: 0 -6px;
+    padding: 5px 7px;
+    margin: 0 -7px;
     border-radius: 4px;
     font-family: var(--ac-mono);
-    font-size: 11px;
-    line-height: 1.45;
+    font-size: 12.5px;
+    line-height: 1.5;
     opacity: 0;
     transform: translateY(2px);
     transition:
@@ -292,6 +337,7 @@
     color: var(--ac-text);
     font-weight: 500;
     flex-shrink: 0;
+    font-size: 12.5px;
   }
   .hero-anim .output-row.is-hovered .value {
     color: var(--ac-hl);
@@ -314,7 +360,7 @@
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px dashed var(--ac-border);
-    font-size: 10.5px;
+    font-size: 11.5px;
     color: var(--ac-faint);
     font-family: var(--ac-mono);
     opacity: 0;
@@ -375,10 +421,11 @@
     if (!widget) return;
 
     /* ----- scale-to-fit the hero column ----- */
+    const DESIGN_WIDTH = 620;
     const frame = widget.closest(".hero-anim-frame");
     function fit() {
       const avail = frame.clientWidth;
-      const scale = Math.min(1, avail / 500);
+      const scale = Math.min(1, avail / DESIGN_WIDTH);
       widget.style.transform = "scale(" + scale + ")";
       frame.style.height = widget.offsetHeight * scale + "px";
     }
@@ -395,21 +442,6 @@
       document.fonts.ready.then(fit);
     }
 
-    /* ----- data ----- */
-    const ITEMS = [
-      { id: "enterprise", segment: "Enterprise", value: "$42.6M" },
-      { id: "midmarket", segment: "Mid-Market", value: "$18.3M" },
-      { id: "smallbiz", segment: "Small Business", value: "$7.45M" },
-      {
-        id: "public",
-        segment: "Public Sector",
-        value: "$12.4M",
-        flagged: true,
-        note: "Ambiguous — source blends recurring and one-time fees",
-      },
-    ];
-
-    const list = widget.querySelector("#output-list");
     const statusEl = widget.querySelector("#status-mono");
     const sourceEl = widget.querySelector("#source-line");
     const replayBtn = widget.querySelector("#replay");
@@ -421,25 +453,11 @@
       highlights[h.dataset.id] = h;
     });
 
-    const rows = {};
-    ITEMS.forEach(function (item) {
-      const li = document.createElement("li");
-      li.className = "output-row" + (item.flagged ? " flagged" : "");
-      li.dataset.id = item.id;
-      if (item.note) li.title = item.note;
-      li.innerHTML =
-        '<span class="segment">' +
-        item.segment +
-        "</span>" +
-        '<span class="value">' +
-        item.value +
-        "</span>" +
-        (item.flagged
-          ? '<span class="flag-dot" aria-label="ambiguous"></span>'
-          : "");
-      list.appendChild(li);
-      rows[item.id] = li;
-      const h = highlights[item.id];
+    /* Rows are SSR'd (see frontmatter ITEMS). We just index them and
+       wire the cross-hover between each row and its document span. */
+    const orderedRows = Array.from(widget.querySelectorAll(".output-row"));
+    orderedRows.forEach(function (li) {
+      const h = highlights[li.dataset.id];
       const setHover = function (on) {
         li.classList.toggle("is-hovered", on);
         if (h) h.classList.toggle("is-hovered", on);
@@ -459,6 +477,12 @@
         });
       }
     });
+    const totalCount = orderedRows.length;
+    const flaggedCount = orderedRows.filter(function (li) {
+      return li.classList.contains("flagged");
+    }).length;
+    const FINAL_STATUS =
+      totalCount + " values · " + flaggedCount + " flagged";
 
     const TIMINGS = {
       typeSpeed: 45,
@@ -484,7 +508,7 @@
       Object.values(highlights).forEach(function (h) {
         h.classList.remove("visible", "is-hovered");
       });
-      Object.values(rows).forEach(function (r) {
+      orderedRows.forEach(function (r) {
         r.classList.remove("visible", "is-hovered");
       });
       sourceEl.classList.remove("visible");
@@ -509,18 +533,19 @@
 
     function extract() {
       let t = 0;
-      ITEMS.forEach(function (item) {
+      orderedRows.forEach(function (li) {
+        const h = highlights[li.dataset.id];
         schedule(function () {
-          highlights[item.id].classList.add("visible");
+          if (h) h.classList.add("visible");
         }, t);
         schedule(function () {
-          rows[item.id].classList.add("visible");
+          li.classList.add("visible");
         }, t + TIMINGS.rowOffset);
         t += TIMINGS.stagger;
       });
       const tDone = t - TIMINGS.stagger + TIMINGS.rowOffset + TIMINGS.tail;
       schedule(function () {
-        statusEl.textContent = "4 values · 1 flagged";
+        statusEl.textContent = FINAL_STATUS;
         statusEl.classList.add("flagged");
         sourceEl.classList.add("visible");
         replayBtn.classList.add("visible");

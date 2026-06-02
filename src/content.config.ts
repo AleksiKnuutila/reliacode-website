@@ -44,14 +44,11 @@ const site = defineCollection({
   schema: z.object({
     title: z.string(),
     nav: z.array(linkSchema),
-    header_cta: linkSchema,
     affiliation: z.string(),
     colophon: z.string(),
-    footer_project_links: z.array(linkSchema),
     pilot_email: z.string(),
     // `{year}` is substituted with the current year at render time.
     legal_left: z.string(),
-    legal_right: z.string(),
   }),
 });
 
@@ -74,10 +71,8 @@ const landing = defineCollection({
       headline_prefix: z.string(),
       headline_accent: z.string(),
       lead: z.string().optional(),
-      cta_primary_label: z.string(),
-      cta_primary_href: z.string(),
-      cta_secondary_label: z.string(),
-      cta_secondary_href: z.string(),
+      cta_label: z.string(),
+      cta_href: z.string(),
       funder_lead: z.string(),
       funder_sub: z.string(),
     }),
@@ -107,17 +102,14 @@ const landing = defineCollection({
       headline: z.string(),
     }),
 
-    // --- approach (kicker/h2 + workflow header scalars). Pillars and
-    //     workflow steps live in the markdown body of approach.md as
-    //     H1-delimited groups with H2 items (parsed via
-    //     parseSectionGroups). ---
+    // --- approach (kicker + headline scalars; the three pillar cards
+    //     live in the markdown body as H2 items parsed via
+    //     parseSectionItems). ---
     z.object({
       section: z.literal("approach"),
       title: z.string(),
       kicker: z.string(),
       headline: z.string(),
-      workflow_label: z.string(),
-      workflow_meta: z.string(),
     }),
 
     // --- team (section header only; individual members live in the
@@ -126,10 +118,8 @@ const landing = defineCollection({
     z.object({
       section: z.literal("team"),
       title: z.string(),
-      kicker: z.string(),
       headline: z.string(),
       intro: z.string(),
-      note: z.string().optional(),
     }),
 
     // --- faq (section header only; individual Q&As live in the `faq`
@@ -195,22 +185,24 @@ const faq = defineCollection({
 });
 
 // Team members — one file per person. The short bio lives in the
-// markdown body.
+// markdown body; the photo lives in the same folder so it's editable
+// alongside the markdown in Obsidian.
 const team = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/team" }),
-  schema: z.object({
-    title: z.string(),
-    /** Single character shown inside the gradient avatar tile. */
-    initial: z.string(),
-    /** Role title — used in place of a real name until the team is public. */
-    name: z.string(),
-    /** Sub-line below the name. */
-    role: z.string(),
-    /** Small mono tag at the bottom of the card. */
-    affiliation: z.string(),
-    /** Lower numbers appear first. */
-    sort: z.number(),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      /** Full name as shown on the card. */
+      name: z.string(),
+      /** Sub-line below the name. */
+      role: z.string(),
+      /** Path to the profile photo, relative to this markdown file
+       *  (typically `./<slug>.jpeg`). Astro's image pipeline optimizes
+       *  it. */
+      photo: image(),
+      /** Lower numbers appear first. */
+      sort: z.number(),
+    }),
 });
 
 export const collections = { posts, pages, landing, site, faq, team };

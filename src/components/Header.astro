@@ -45,12 +45,6 @@ const logoHref = isLanding ? "#top" : "/";
           <a href={rewriteHash(link.href)}>{link.label}</a>
         ))
       }
-      <a
-        href={rewriteHash(site.header_cta.href)}
-        class="btn-primary rg-header-cta"
-      >
-        {site.header_cta.label}
-      </a>
     </nav>
   </div>
 </header>
@@ -110,18 +104,8 @@ const logoHref = isLanding ? "#top" : "/";
     color: var(--brand-mid);
   }
 
-  .rg-header-cta {
-    padding: 9px 16px;
-    font-size: 13px;
-    white-space: nowrap;
-  }
-  .rg-nav a.rg-header-cta,
-  .rg-nav a.rg-header-cta:hover {
-    color: var(--primary-fg);
-  }
-
-  /* Collapse nav at narrow widths; CTA stays so the primary action
-     remains within reach. */
+  /* Tighten nav at narrow widths; collapse the secondary links on
+     small phones (Contact stays — last link, primary action). */
   @media (max-width: 900px) {
     .rg-nav {
       gap: 18px;
@@ -131,7 +115,7 @@ const logoHref = isLanding ? "#top" : "/";
     .rg-header-inner {
       padding: 0 20px;
     }
-    .rg-nav > a:not(.rg-header-cta) {
+    .rg-nav > a:not(:last-child) {
       display: none;
     }
   }

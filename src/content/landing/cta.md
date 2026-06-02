@@ -1,38 +1,29 @@
 ---
 section: cta
 title: CTA
-
-kicker: "Pilots — open"
-headline: "We are looking for pilot organisations."
-
-lead: >
-  Bring an analytical workflow where correctness matters. We bring the methods,
-  the team and a scoped engagement. No licence fees during the research phase.
-
-cta_label: "Email the team →"
-
-card_title: "Talk to us"
-
-# Right-column card. Channels render in this order; `feature: true` is
-# emphasized; `external: true` opens in a new tab and shows the ↗ arrow.
+kicker: Get in touch
+headline: We are looking for early adopters.
+lead: Could your work benefit from new approaches to AI? Get in touch to discuss how we would collaborate. We are looking for early users to help us develop the project following user needs. We are able to offer our system free for early users.
+cta_label: Email the team →
+card_title: Talk to us
 channels:
-  - kind: "email"
-    label: "Email"
-    value: "pilots@reliaparse.com"
-    href: "mailto:pilots@reliaparse.com"
-  - kind: "phone"
-    label: "Phone"
-    value: "+358 40 123 4567"
-    href: "tel:+358401234567"
-  - kind: "calendar"
-    label: "Book a meeting"
-    value: "30-min intro call"
-    href: "https://calendly.com/reliaparse/intro"
+  - kind: email
+    label: Email
+    value: pilots@reliaparse.ai
+    href: mailto:pilots@reliaparse.ai
+  - kind: phone
+    label: Phone
+    value: +358 40 123 4567
+    href: tel:+358401234567
+  - kind: calendar
+    label: Book a meeting
+    value: 30-min intro call
+    href: https://calendly.com/reliaparse/intro
     feature: true
     external: true
-  - kind: "linkedin"
-    label: "LinkedIn"
-    value: "/company/reliaparse"
-    href: "https://www.linkedin.com/company/reliaparse"
+  - kind: linkedin
+    label: LinkedIn
+    value: /company/reliaparse
+    href: https://www.linkedin.com/company/reliaparse
     external: true
 ---

@@ -1,18 +1,16 @@
 ---
 // Approach — landing page "Approach" section.
 //
-// Combines the shared shead (kicker + h2), the three Pillars cards, and
-// the five-step Workflow strip. Driven by src/content/landing/approach.md
-// — kicker/headline/workflow labels are frontmatter scalars; pillars and
-// workflow steps are H1-delimited groups of H2 items in the body.
+// Combines the shared shead (kicker + h2) with the three Pillars cards.
+// Driven by src/content/landing/approach.md — kicker/headline as
+// frontmatter scalars; pillars as H2 items in the body parsed via
+// parseSectionItems.
 
 import { getLandingSectionWithBody } from "@/utils/getLandingSection";
-import { parseSectionGroups } from "@/utils/parseSectionBody";
+import { parseSectionItems } from "@/utils/parseSectionBody";
 
 const { data: approach, body } = await getLandingSectionWithBody("approach");
-const groups = parseSectionGroups(body);
-const pillars = groups.find(g => g.heading === "Pillars")?.items ?? [];
-const workflow = groups.find(g => g.heading === "Workflow")?.items ?? [];
+const pillars = parseSectionItems(body);
 ---
 
 <section class="b-section alt" id="approach">
@@ -32,25 +30,6 @@ const workflow = groups.find(g => g.heading === "Workflow")?.items ?? [];
           </div>
         ))
       }
-    </div>
-
-    <div class="b-workflow">
-      <div class="b-wf-head">
-        <span class="ttl">{approach.workflow_label}</span>
-        <span class="meta">{approach.workflow_meta}</span>
-      </div>
-      <div class="b-wf-row">
-        {
-          workflow.map(step => (
-            <div class="b-wf-step">
-              <span class="check">✓</span>
-              <div class="sn">{step.label}</div>
-              <h3>{step.title}</h3>
-              <div class="step-body" set:html={step.bodyHtml} />
-            </div>
-          ))
-        }
-      </div>
     </div>
   </div>
 </section>
@@ -100,101 +79,6 @@ const workflow = groups.find(g => g.heading === "Workflow")?.items ?? [];
     line-height: 1.65;
     margin: 0;
   }
-  .b-spec {
-    font-family: var(--font-mono);
-    font-size: 12px;
-    background: color-mix(in oklch, var(--brand-deep) 96%, white);
-    color: color-mix(in oklch, var(--primary-fg) 92%, transparent);
-    border-radius: 6px;
-    padding: 14px 16px;
-    line-height: 1.7;
-  }
-  .b-spec .kw {
-    color: color-mix(in oklch, var(--brand-soft) 80%, white);
-  }
-  .b-spec .str {
-    color: oklch(0.85 0.12 80);
-  }
-  .b-spec .com {
-    color: color-mix(in oklch, var(--primary-fg) 55%, transparent);
-  }
-  .b-spec .ok {
-    color: oklch(0.82 0.16 155);
-  }
-
-  /* --- Workflow --- */
-  .b-workflow {
-    margin-top: 64px;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 28px 32px;
-  }
-  .b-wf-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 22px;
-  }
-  .b-wf-head .ttl {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.16em;
-    color: var(--brand-mid);
-    text-transform: uppercase;
-  }
-  .b-wf-head .meta {
-    font-size: 12px;
-    color: var(--muted);
-    font-family: var(--font-mono);
-  }
-  .b-wf-row {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
-    align-items: stretch;
-  }
-  .b-wf-step {
-    position: relative;
-    padding: 14px 18px;
-    border-left: 1px solid var(--border);
-  }
-  .b-wf-step:first-child {
-    border-left: 0;
-    padding-left: 0;
-  }
-  .b-wf-step .sn {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--brand-mid);
-    letter-spacing: 0.16em;
-  }
-  .b-wf-step h3 {
-    margin: 6px 0 4px;
-    font-size: 16px;
-    font-weight: 500;
-    font-family: var(--font-head);
-  }
-  .b-wf-step :global(p) {
-    font-size: 13px;
-    color: var(--muted);
-    line-height: 1.5;
-    margin: 0;
-  }
-  .b-wf-step .check {
-    position: absolute;
-    right: 14px;
-    top: 14px;
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    background: var(--brand-mid);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-fg);
-    font-size: 10px;
-  }
 
   /* --- Responsive --- */
   @media (max-width: 900px) {
@@ -203,23 +87,6 @@ const workflow = groups.find(g => g.heading === "Workflow")?.items ?? [];
     }
     .b-pillar {
       min-height: auto;
-    }
-    .b-wf-row {
-      grid-template-columns: 1fr;
-    }
-    .b-wf-step {
-      padding: 18px 0;
-      border-left: 0;
-      border-top: 1px dashed var(--border);
-    }
-    .b-wf-step:first-child {
-      border-top: 0;
-      padding-top: 4px;
-    }
-    .b-wf-head {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 6px;
     }
   }
 </style>

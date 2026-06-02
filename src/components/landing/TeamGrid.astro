@@ -1,10 +1,12 @@
 ---
-// TeamGrid — landing page "Research team" section.
+// TeamGrid — landing page "Team" section.
 //
-// Section header (kicker + headline + intro + closing note) from
-// src/content/landing/team.md. Individual members are one file per
-// person under src/content/team/, sorted by the `sort` field.
+// Section header (headline + intro) from src/content/landing/team.md.
+// Individual members are one file per person under src/content/team/,
+// each with a co-located photo (`./<slug>.{jpeg,png,jpg}`) referenced
+// from the `photo:` frontmatter field. Sorted by the `sort` field.
 
+import { Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
 import { getLandingSection } from "@/utils/getLandingSection";
 
@@ -17,14 +19,13 @@ const members = await Promise.all(
   memberEntries.map(async entry => {
     const { Content } = await render(entry);
     return { data: entry.data, Content };
-  }),
+  })
 );
 ---
 
 <section class="b-section" id="team">
   <div class="b-wrap">
     <div class="b-shead">
-      <div class="b-kicker">{team.kicker}</div>
       <h2>{team.headline}</h2>
     </div>
 
@@ -36,21 +37,22 @@ const members = await Promise.all(
       {
         members.map(({ data, Content }) => (
           <div class="b-tcard">
-            <div class="av" aria-hidden="true">
-              {data.initial}
-            </div>
+            <Image
+              class="photo"
+              src={data.photo}
+              alt={data.name}
+              widths={[160, 240, 320]}
+              sizes="(max-width: 600px) 280px, (max-width: 900px) 220px, 240px"
+            />
             <div class="nm">{data.name}</div>
             <div class="rl">{data.role}</div>
             <div class="bio">
               <Content />
             </div>
-            <div class="af">{data.affiliation}</div>
           </div>
         ))
       }
     </div>
-
-    {team.note && <p class="team-note">{team.note}</p>}
   </div>
 </section>
 
@@ -87,32 +89,16 @@ const members = await Promise.all(
     border-color: var(--brand-mid);
     transform: translateY(-2px);
   }
-  .b-tcard .av {
-    width: 56px;
-    height: 56px;
+  /* Square crop so faces sit consistently regardless of source ratio. */
+  .b-tcard :global(.photo) {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
     border-radius: 8px;
-    background: var(--gradient-accent);
     margin-bottom: 18px;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--primary-fg);
-    font-family: var(--font-head);
-    font-size: 18px;
-    font-weight: 500;
-  }
-  .b-tcard .av::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      135deg,
-      transparent 40%,
-      color-mix(in oklch, white 30%, transparent) 60%,
-      transparent 80%
-    );
+    background: var(--secondary);
   }
   .b-tcard .nm {
     font-family: var(--font-head);
@@ -136,42 +122,6 @@ const members = await Promise.all(
   }
   .b-tcard .bio :global(p:last-child) {
     margin-bottom: 0;
-  }
-  .b-tcard .af {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    color: var(--brand-mid);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid var(--border);
-  }
-  .b-team-foot {
-    margin-top: 48px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    padding: 28px 32px;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    background: var(--card);
-  }
-  .b-team-foot h4 {
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 8px;
-  }
-  .b-team-foot p {
-    font-size: 14px;
-    color: var(--muted);
-    line-height: 1.65;
-  }
-
-  .team-note {
-    margin-top: 32px;
-    font-size: 13px;
-    color: var(--muted);
   }
 
   @media (max-width: 900px) {

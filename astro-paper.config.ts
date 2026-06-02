@@ -3,7 +3,7 @@ import { defineAstroPaperConfig } from "./src/types/config";
 export default defineAstroPaperConfig({
   site: {
     // Placeholder. Real deploy URL is set later (see Phase 6).
-    url: "https://reliaparse.com/",
+    url: "https://reliaparse.ai/",
     title: "ReliaParse",
     description: "Auditable LLMs for the work that has to be right.",
     author: "ReliaParse Team",
