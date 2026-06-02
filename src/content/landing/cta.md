@@ -13,8 +13,8 @@ channels:
     href: mailto:antti.nikander@helsinki.fi
   - kind: phone
     label: Phone
-    value: +358408455748
-    href: tel:+358408455748
+    value: "+358 40 845 5748"
+    href: "tel:+358408455748"
   - kind: calendar
     label: Book a meeting
     value: 30-min intro call
