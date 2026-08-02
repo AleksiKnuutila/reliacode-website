@@ -16,9 +16,12 @@ import { getSite } from "@/utils/getSite";
 
 type Props = {
   currentPage?: "landing" | "post" | "archives" | "tags" | "search";
+  /** Wordmark text. Defaults to "ReliaParse"; the ReliaCheck page
+   *  (src/pages/reliacheck.astro) passes "ReliaCheck" instead. */
+  brandName?: string;
 };
 
-const { currentPage } = Astro.props;
+const { currentPage, brandName = "ReliaParse" } = Astro.props;
 const isLanding = currentPage === "landing";
 
 const site = await getSite();
@@ -37,7 +40,7 @@ const logoHref = isLanding ? "#top" : "/";
   <div class="rg-header-inner">
     <a class="rg-logo" href={logoHref}>
       <span class="mark" aria-hidden="true"></span>
-      <span class="name">ReliaParse</span>
+      <span class="name">{brandName}</span>
     </a>
     <nav class="rg-nav" aria-label="Primary">
       {

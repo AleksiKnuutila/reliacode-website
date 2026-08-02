@@ -55,9 +55,13 @@ const site = defineCollection({
 
 // One file per landing section. Schema discriminated by `section` so each
 // file gets exactly the fields it needs and Zod validates strictly.
-const landing = defineCollection({
-  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/landing" }),
-  schema: z.discriminatedUnion("section", [
+//
+// Shared by two collections: `landing` (ReliaParse, served at "/") and
+// `landingReliacheck` (ReliaCheck, served at "/reliacheck" — see
+// src/content/landing-reliacheck/ and src/pages/reliacheck.astro). Both
+// use this exact schema so components can accept either collection name
+// interchangeably (see the `collection` prop on the landing components).
+const landingSectionSchema = z.discriminatedUnion("section", [
     // --- hero (flat scalars only; partners live as H2 items in the
     //     markdown body, parsed via parseSectionItems).
     //
@@ -167,22 +171,48 @@ const landing = defineCollection({
         })
       ),
     }),
-  ]),
+]);
+
+const landing = defineCollection({
+  loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/landing" }),
+  schema: landingSectionSchema,
+});
+
+// ReliaCheck's landing sections — same shape as `landing`, different
+// vault folder, so ReliaCheck copy can be edited in Obsidian independently
+// of ReliaParse's.
+const landingReliacheck = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: "./src/content/landing-reliacheck",
+  }),
+  schema: landingSectionSchema,
 });
 
 // FAQ entries — one file per question. The answer lives in the markdown
 // body so it can use full markdown formatting.
+const faqSectionSchema = z.object({
+  title: z.string(),
+  question: z.string(),
+  /** Lower numbers appear first. Leave gaps (10, 20, 30…) for easy
+   *  insertion between items later. */
+  sort: z.number(),
+  /** Render this item with the `open` attribute on first paint. */
+  open: z.boolean().default(false),
+});
+
 const faq = defineCollection({
   loader: glob({ pattern: "**/[^_]*.{md,mdx}", base: "./src/content/faq" }),
-  schema: z.object({
-    title: z.string(),
-    question: z.string(),
-    /** Lower numbers appear first. Leave gaps (10, 20, 30…) for easy
-     *  insertion between items later. */
-    sort: z.number(),
-    /** Render this item with the `open` attribute on first paint. */
-    open: z.boolean().default(false),
+  schema: faqSectionSchema,
+});
+
+// ReliaCheck's FAQ entries — same shape as `faq`, separate vault folder.
+const faqReliacheck = defineCollection({
+  loader: glob({
+    pattern: "**/[^_]*.{md,mdx}",
+    base: "./src/content/faq-reliacheck",
   }),
+  schema: faqSectionSchema,
 });
 
 // Team members — one file per person. The short bio lives in the
@@ -206,4 +236,13 @@ const team = defineCollection({
     }),
 });
 
-export const collections = { posts, pages, landing, site, faq, team };
+export const collections = {
+  posts,
+  pages,
+  landing,
+  landingReliacheck,
+  site,
+  faq,
+  faqReliacheck,
+  team,
+};

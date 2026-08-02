@@ -6,10 +6,19 @@
 // frontmatter scalars; pillars as H2 items in the body parsed via
 // parseSectionItems.
 
-import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import {
+  getLandingSectionWithBody,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 
-const { data: approach, body } = await getLandingSectionWithBody("approach");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const { data: approach, body } = await getLandingSectionWithBody(
+  "approach",
+  collection,
+);
 const pillars = parseSectionItems(body);
 ---
 

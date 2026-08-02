@@ -11,10 +11,19 @@
 // headline as frontmatter, and the three steps as H2 items in the body
 // (`## {label} — {title}` + paragraph).
 
-import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import {
+  getLandingSectionWithBody,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 
-const { data: how, body } = await getLandingSectionWithBody("howitworks");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const { data: how, body } = await getLandingSectionWithBody(
+  "howitworks",
+  collection,
+);
 const steps = parseSectionItems(body);
 ---
 

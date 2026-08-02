@@ -7,10 +7,19 @@
 // followed by a prose paragraph). First card uses the `bad` styling
 // variant; second uses `good` (assigned by position).
 
-import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import {
+  getLandingSectionWithBody,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 
-const { data: problem, body } = await getLandingSectionWithBody("problem");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const { data: problem, body } = await getLandingSectionWithBody(
+  "problem",
+  collection,
+);
 const cards = parseSectionItems(body);
 const variants = ["bad", "good"] as const;
 ---

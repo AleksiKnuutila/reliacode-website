@@ -8,9 +8,15 @@
 
 import { Image } from "astro:assets";
 import { getCollection, render } from "astro:content";
-import { getLandingSection } from "@/utils/getLandingSection";
+import {
+  getLandingSection,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 
-const team = await getLandingSection("team");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const team = await getLandingSection("team", collection);
 
 const memberEntries = await getCollection("team");
 memberEntries.sort((a, b) => a.data.sort - b.data.sort);

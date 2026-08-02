@@ -6,11 +6,23 @@
 // sorted by the `sort` field in each file's frontmatter.
 
 import { getCollection, render } from "astro:content";
-import { getLandingSection } from "@/utils/getLandingSection";
+import {
+  getLandingSection,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 
-const faq = await getLandingSection("faq");
+type Props = {
+  collection?: LandingCollection;
+  /** Which FAQ-entries collection to pull questions from. Defaults to
+   *  "faq" (ReliaParse); pass "faqReliacheck" for the ReliaCheck page. */
+  faqCollection?: "faq" | "faqReliacheck";
+};
+const { collection = "landing", faqCollection = "faq" } =
+  Astro.props as Props;
 
-const itemEntries = await getCollection("faq");
+const faq = await getLandingSection("faq", collection);
+
+const itemEntries = await getCollection(faqCollection);
 itemEntries.sort((a, b) => a.data.sort - b.data.sort);
 
 // Pre-render each item's body so we can drop it into the accordion.

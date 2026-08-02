@@ -8,6 +8,13 @@
  */
 import { getSite } from "@/utils/getSite";
 
+type Props = {
+  /** Wordmark text. Defaults to "ReliaParse"; the ReliaCheck page
+   *  (src/pages/reliacheck.astro) passes "ReliaCheck" instead. */
+  brandName?: string;
+};
+const { brandName = "ReliaParse" } = Astro.props;
+
 const site = await getSite();
 const currentYear = new Date().getFullYear();
 const legalLeft = site.legal_left.replace("{year}", String(currentYear));
@@ -22,7 +29,7 @@ const toFooterHref = (href: string): string =>
     <div>
       <div class="rg-logo">
         <span class="mark" aria-hidden="true"></span>
-        <span class="name">ReliaParse</span>
+        <span class="name">{brandName}</span>
       </div>
       <p class="colophon">{site.colophon}</p>
     </div>

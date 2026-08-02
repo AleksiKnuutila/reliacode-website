@@ -11,12 +11,21 @@
 // partner logos live as H2 items in the body
 // (`## {Partner} — {Kind}` followed by a markdown image).
 
-import { getLandingSectionWithBody } from "@/utils/getLandingSection";
+import {
+  getLandingSectionWithBody,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 import { parseSectionItems } from "@/utils/parseSectionBody";
 import TruchetGrid from "./TruchetGrid.astro";
 import HeroAnimation from "./HeroAnimation.astro";
 
-const { data: hero, body } = await getLandingSectionWithBody("hero");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const { data: hero, body } = await getLandingSectionWithBody(
+  "hero",
+  collection,
+);
 const partners = parseSectionItems(body);
 
 // Slug a partner name to a class so the funder-rail can size each logo

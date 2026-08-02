@@ -22,6 +22,9 @@ type Props = {
    * "not the landing page".
    */
   currentPage?: "landing" | "post" | "archives" | "tags" | "search";
+  /** Wordmark text passed through to Header/Footer. Defaults to
+   *  "ReliaParse"; the ReliaCheck page passes "ReliaCheck" instead. */
+  brandName?: string;
 };
 
 const { site } = config;
@@ -32,6 +35,7 @@ const {
   ogImage = resolveDefaultOgImagePath(config),
   canonicalURL = new URL(Astro.url.pathname, Astro.site).href,
   currentPage,
+  brandName,
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.site ?? Astro.url);
@@ -111,8 +115,8 @@ const rssHref = getRelativeLocaleUrl(
   <body
     class="bg-background font-app text-foreground selection:bg-accent/75 selection:text-accent-foreground flex min-h-svh flex-col"
   >
-    <Header currentPage={currentPage} />
+    <Header currentPage={currentPage} brandName={brandName} />
     <slot />
-    <Footer />
+    <Footer brandName={brandName} />
   </body>
 </html>

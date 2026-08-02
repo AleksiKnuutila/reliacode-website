@@ -9,10 +9,16 @@
 // Pilot mailbox stays in src/content/site/main.md (shared with the
 // footer) so we have one canonical address.
 
-import { getLandingSection } from "@/utils/getLandingSection";
+import {
+  getLandingSection,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
 import { getSite } from "@/utils/getSite";
 
-const cta = await getLandingSection("cta");
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const cta = await getLandingSection("cta", collection);
 const { pilot_email } = await getSite();
 ---
 
