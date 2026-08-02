@@ -3,7 +3,7 @@ section: problem
 title: Problem
 kicker: Problem
 headline: Every contract has fine print. Most invoices are never checked against it.
-intro: "Volume tiers, indexation clauses, rebate thresholds, rate-change cutover dates.. pricing rules that read as one paragraph in a contract but apply across tens of thousands of invoice lines. Nobody re-derives that arithmetic by hand every month, so mis-billed or under-applied terms quietly go unnoticed."
+intro: "Enterprises typically lose 2-5% of supplier spend to contracts that are mis-billed or under-leveraged. Volume tiers, indexation clauses, rebate thresholds, rate-change cutover dates — pricing rules that read as one paragraph in a contract but apply across tens of thousands of invoice lines — routinely go unchecked, because nobody re-derives that arithmetic by hand every month."
 ---
 
 ## Today's approach — Manual or periodic review

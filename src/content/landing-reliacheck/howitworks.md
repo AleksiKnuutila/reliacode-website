@@ -9,7 +9,7 @@ headline: From contract clause to dollar figure, in three steps.
 
 Contracts, pricing schedules, and invoice or billing history. We work off what you already run — no new system to adopt, nothing to migrate.
 
-## Step 02 — Define
+## Step 02 — Decode the fine print
 
 We encode your contracts' pricing rules — tiers, rebates, indexation, cutover dates — as reviewable, testable checks. Not a black box: you can read exactly what each check verifies.
 
