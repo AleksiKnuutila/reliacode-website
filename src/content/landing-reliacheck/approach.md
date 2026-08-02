@@ -7,7 +7,7 @@ headline: Built to be checked, not just trusted.
 
 ## Pillar I — Continuous coverage at scale
 
-Every contract, every invoice, every month. Not a periodic sample that resets once an engagement ends. 99% precision, evidence-grade outputs, ready for action. LLMs read and understand your contracts once. The resulting rules then run on a fast, consistent engine that gives the same answer every time. That combination is what makes it possible to reconcile thousands of contracts and millions of invoice lines, not just a sampled few.
+LLMs read and understand your contracts once. The resulting rules then run on a fast, consistent engine that gives the same answer every time. That combination is what makes it possible to reconcile thousands of contracts and millions of invoice lines, not just a sampled few.
 
 ## Pillar II — Defensible findings
 
