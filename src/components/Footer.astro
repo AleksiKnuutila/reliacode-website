@@ -27,7 +27,7 @@ const toFooterHref = (href: string): string =>
   <div class="b-footer-inner">
     <div>
       <div class="rg-logo">
-        <span class="mark" aria-hidden="true"></span>
+        <img class="mark" src="/logos/reliaparse-mark.svg" alt="" aria-hidden="true" />
         <span class="name">{brandName}</span>
       </div>
       <p class="colophon">{site.colophon}</p>
@@ -126,8 +126,7 @@ const toFooterHref = (href: string): string =>
   .b-footer .rg-logo .mark {
     width: 22px;
     height: 22px;
-    border-radius: 4px;
-    background: var(--gradient-accent);
+    display: block;
   }
   .b-footer .rg-logo .name {
     font-weight: 600;

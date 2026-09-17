@@ -38,7 +38,7 @@ const logoHref = isLanding ? "#top" : "/";
 <header class="rg-header">
   <div class="rg-header-inner">
     <a class="rg-logo" href={logoHref}>
-      <span class="mark" aria-hidden="true"></span>
+      <img class="mark" src="/logos/reliaparse-mark.svg" alt="" aria-hidden="true" />
       <span class="name">{brandName}</span>
     </a>
     <nav class="rg-nav" aria-label="Primary">
@@ -78,10 +78,9 @@ const logoHref = isLanding ? "#top" : "/";
     text-decoration: none;
   }
   .rg-logo .mark {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    background: var(--gradient-accent);
+    width: 30px;
+    height: 30px;
+    display: block;
   }
   .rg-logo .name {
     font-family: var(--font-head);
