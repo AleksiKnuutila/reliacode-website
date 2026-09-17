@@ -21,6 +21,9 @@ const tunnel = process.env.TUNNEL === "1";
 
 export default defineConfig({
   site: config.site.url,
+  // The invoice-auditing pitch moved from /reliacheck to the home page;
+  // keep old shared /reliacheck links working.
+  redirects: { "/reliacheck": "/" },
   integrations: [
     mdx(),
     sitemap({

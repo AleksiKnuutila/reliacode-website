@@ -11,18 +11,18 @@ import FAQ from "@/components/landing/FAQ.astro";
 import BlogTeaser from "@/components/landing/BlogTeaser.astro";
 import CTA from "@/components/landing/CTA.astro";
 
-const title = "ReliaParse - From documents to defensible findings";
+const title = "ReliaParse - Contracts say one price. Invoices say another.";
 const description =
-  "ReliaParse pairs LLMs with deterministic tools and verification methods, so analytical work stays reproducible, traceable and trustworthy.";
+  "ReliaParse checks every invoice against your contracts, continuously, and produces evidence-grade findings your procurement and finance teams can act on.";
 ---
 
 <Layout title={title} description={description} currentPage="landing">
-  <Hero />
-  <ProblemSplit />
-  <HowItWorks />
-  <Approach />
-  <TeamGrid />
-  <FAQ />
+  <Hero collection="landingReliacheck" showAnimation={false} />
+  <ProblemSplit collection="landingReliacheck" />
+  <HowItWorks collection="landingReliacheck" />
+  <Approach collection="landingReliacheck" />
+  <TeamGrid collection="landingReliacheck" />
+  <FAQ collection="landingReliacheck" faqCollection="faqReliacheck" />
   {/* <BlogTeaser /> */}
-  <CTA />
+  <CTA collection="landingReliacheck" />
 </Layout>
