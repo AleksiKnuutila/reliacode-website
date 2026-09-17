@@ -11,7 +11,7 @@ tags:
   - zero-shot
 ---
 
-*How [llmex](https://github.com/ReliaParse/llmex) turns a causal LM's logits into probabilities you can actually filter and trust.*
+**How [llmex](https://github.com/ReliaParse/llmex) turns a causal LM's logits into probabilities you can actually filter and trust.**
 
 Zero-shot with an instruct-tuned LM is a fantastic way to prototype an NLP pipeline. In fifteen lines of Python you can classify tickets, extract entities, verify claims, or rank passages — no fine-tuning, no annotated data, no task-specific head.
 
@@ -180,7 +180,7 @@ The result: `extract_entities()` gives you span confidences you can actually fil
 
 ## Making the numbers trustworthy: temperature scaling
 
-Even with recognition prompts, the raw probabilities coming out of an instruct-tuned LM are systematically **overconfident**. A 0.95 score on a task with 8 % accuracy tells you the model likes to sound sure. Ranking is fine (AUC &gt; 0.5), but the numbers themselves lie.
+Even with recognition prompts, the raw probabilities coming out of an instruct-tuned LM are systematically **overconfident**. A 0.95 score on a task with 8 % accuracy tells you the model likes to sound sure. Ranking is fine (AUC > 0.5), but the numbers themselves lie.
 
 Fit a single scalar `T` on a small labelled calibration set (~50 examples) and apply `softmax(logits / T)` at inference. That's temperature scaling. It is monotonic — argmax, accuracy, and AUC are exactly preserved — so it can only help.
 
@@ -280,7 +280,7 @@ A pre-calibration rule of thumb:
 | **0.90 – 1.00** | Model was highly certain |
 | **0.70 – 0.90** | Confident, but alternatives considered |
 | **0.50 – 0.70** | Moderate — worth reviewing |
-| **&lt; 0.50** | Low — may be unreliable |
+| **< 0.50** | Low — may be unreliable |
 
 After temperature scaling on a set that included hard cases, those thresholds correspond to genuine probabilities and you can pick decision thresholds on principled grounds — target ECE, precision at a coverage rate, or a conformal-prediction-set width. Composing per-check confidences into a per-record verdict? Use the geometric mean, not the arithmetic mean or raw product — it penalises any weak link and stays comparable across records with different numbers of checks.
 
