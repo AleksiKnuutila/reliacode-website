@@ -11,7 +11,7 @@ Commercial clauses are a compilation problem. We study how language models can t
 
 ## Pillar II — Record linkage without shared keys
 
-Invoice lines rarely reference the agreement that governs them, or name the product the way the contract does. A line reading "DSL 500L HQ" must be resolved to the diesel price grid, not the gasoline one, before any price can be checked. This is entity resolution under noisy data, at both the supplier and the product level. Our linkage models output calibrated match probabilities, and we study when a link is strong enough to justify a verification claim.
+Invoice lines rarely reference the agreement that governs them, or name the product the way the contract does. Matching them is entity resolution under noisy data, at both the supplier and the product level. Our linkage models output calibrated match probabilities, and we study when a link is strong enough to justify a verification claim.
 
 ## Pillar III — Calibrated uncertainty in reasoning
 
