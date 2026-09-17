@@ -9,8 +9,7 @@
 import { getSite } from "@/utils/getSite";
 
 type Props = {
-  /** Wordmark text. Defaults to "ReliaParse"; the ReliaCheck page
-   *  (src/pages/reliacheck.astro) passes "ReliaCheck" instead. */
+  /** Wordmark text. Defaults to "ReliaParse". */
   brandName?: string;
 };
 const { brandName = "ReliaParse" } = Astro.props;

@@ -1,6 +1,6 @@
 ---
-title: "Is ReliaCheck a product I can buy today?"
-question: "Is ReliaCheck a product I can buy today?"
+title: "Is ReliaParse a product I can buy today?"
+question: "Is ReliaParse a product I can buy today?"
 sort: 10
 open: true
 ---

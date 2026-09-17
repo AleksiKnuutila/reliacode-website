@@ -19,8 +19,8 @@ import { parseSectionItems } from "@/utils/parseSectionBody";
 import TruchetGrid from "./TruchetGrid.astro";
 import HeroAnimation from "./HeroAnimation.astro";
 
-type Props = { collection?: LandingCollection };
-const { collection = "landing" } = Astro.props as Props;
+type Props = { collection?: LandingCollection; showAnimation?: boolean };
+const { collection = "landing", showAnimation = true } = Astro.props as Props;
 
 const { data: hero, body } = await getLandingSectionWithBody(
   "hero",
@@ -46,7 +46,7 @@ const partnerClassMap: Record<string, string> = {
 
 <section class="b-hero" id="top">
   <TruchetGrid />
-  <div class="b-wrap b-hero-inner">
+  <div class:list={["b-wrap", "b-hero-inner", { "no-anim": !showAnimation }]}>
     <div>
       <h1>
         {hero.headline_prefix}
@@ -57,7 +57,7 @@ const partnerClassMap: Record<string, string> = {
         <a href={hero.cta_href} class="btn-primary">{hero.cta_label}</a>
       </div>
     </div>
-    <HeroAnimation />
+    {showAnimation && <HeroAnimation />}
   </div>
 
   {
@@ -108,6 +108,13 @@ const partnerClassMap: Record<string, string> = {
     gap: 48px;
     padding-block: 116px 80px;
     align-items: center;
+  }
+  /* Without the animation column, let the copy own the row. */
+  .b-hero-inner.no-anim {
+    grid-template-columns: 1fr;
+  }
+  .b-hero-inner.no-anim h1 {
+    max-width: 26ch;
   }
   .b-hero h1 {
     font-size: 44px;

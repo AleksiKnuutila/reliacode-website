@@ -1,10 +1,10 @@
 ---
-// ReliaCheck landing page — a sibling brand/product page served at
-// /reliacheck, reusing the same landing-page components as ReliaParse's
-// home page but pointed at the "landingReliacheck" / "faqReliacheck"
-// content collections (src/content/landing-reliacheck/,
-// src/content/faq-reliacheck/) and rebranded via the `brandName` prop
-// on Layout. Does not touch or replace ReliaParse's own index.astro.
+// Invoice-auditing landing page served at /reliacheck, reusing the same
+// landing-page components as the home page but pointed at the
+// "landingReliacheck" / "faqReliacheck" content collections
+// (src/content/landing-reliacheck/, src/content/faq-reliacheck/).
+// Branded ReliaParse like the rest of the site; does not touch or
+// replace the home page's index.astro.
 import Layout from "@/layouts/Layout.astro";
 import Hero from "@/components/landing/Hero.astro";
 import ProblemSplit from "@/components/landing/ProblemSplit.astro";
@@ -14,18 +14,13 @@ import TeamGrid from "@/components/landing/TeamGrid.astro";
 import FAQ from "@/components/landing/FAQ.astro";
 import CTA from "@/components/landing/CTA.astro";
 
-const title = "ReliaCheck - Contracts say one price. Invoices say another.";
+const title = "ReliaParse - Contracts say one price. Invoices say another.";
 const description =
-  "ReliaCheck checks every invoice against your contracts, continuously, and produces evidence-grade findings your procurement and finance teams can act on.";
+  "ReliaParse checks every invoice against your contracts, continuously, and produces evidence-grade findings your procurement and finance teams can act on.";
 ---
 
-<Layout
-  title={title}
-  description={description}
-  currentPage="landing"
-  brandName="ReliaCheck"
->
-  <Hero collection="landingReliacheck" />
+<Layout title={title} description={description} currentPage="landing">
+  <Hero collection="landingReliacheck" showAnimation={false} />
   <ProblemSplit collection="landingReliacheck" />
   <HowItWorks collection="landingReliacheck" />
   <Approach collection="landingReliacheck" />

@@ -10,6 +10,6 @@ intro: "Enterprises typically lose 2-5% of supplier spend to contracts that are 
 
 A spot check might sample a handful of high-value invoices once a year. The rest goes unexamined, month after month. Numbers are plausible but not reproducible, and there's no way to check the reasoning behind them.
 
-## With ReliaCheck — Continuous, defensible, evidence-grade
+## With ReliaParse — Continuous, defensible, evidence-grade
 
 Checks every invoice line against every applicable contract rule, every month. Every finding includes the contractual evidence and the calculation behind it — outputs ready for procurement and finance to action directly with suppliers.

@@ -2,7 +2,7 @@
 section: team
 title: Team section header
 headline: Our team
-intro: ReliaCheck is created by a team of academics and commercial experts based at the University of Helsinki.
+intro: ReliaParse is created by a team of academics and commercial experts based at the University of Helsinki.
 ---
 
 <!--
