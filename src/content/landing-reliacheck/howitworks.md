@@ -1,18 +1,30 @@
 ---
 section: howitworks
-title: How it works
-kicker: How it works
-headline: From contract clause to dollar figure, in three steps.
+title: Use cases
+kicker: Use cases
+headline: Questions your contracts should answer. We make them answerable.
 ---
 
-## Step 01 — Connect your data
+## 01 — "Do we even have a contract with them — and what did we agree?"
 
-Contracts, pricing schedules, and invoice or billing history. We work off what you already run — no new system to adopt, nothing to migrate.
+Every supplier, every document, one view of what's actually in force.
 
-## Step 02 — Decode the fine print
+## 02 — "Why is this contract still active?"
 
-We encode your contracts' pricing rules — tiers, rebates, indexation, cutover dates — as reviewable, testable checks. Not a black box: you can read exactly what each check verifies.
+Superseded amendments, replaced price lists, duplicates, things that should have died years ago — flagged, with the paper trail.
 
-## Step 03 — Check and send off
+## 03 — "Which of our contracts would hurt us in a downturn?"
 
-Get prioritized findings back with a full audit bundle: dollar exposure, the clause, the calculation, and the exact invoice lines behind it.
+Every clause compared against your own standard: payment terms, auto-renewals, indexation, liability. A risk map, not a reading assignment.
+
+## 04 — "Are we being billed what we agreed?"
+
+Every invoice line recomputed from the contract.
+
+## 05 — "What are we owed that we never collected?"
+
+Rebate tiers reached, compensation clauses triggered, credits earned — and never claimed.
+
+## 06 — "Is anything about to renew or expire without us noticing?"
+
+Notice windows and auto-renewals, tracked before they close.

@@ -1,0 +1,131 @@
+---
+// UseCases — landing page use-case rail, rendered in the "How it works"
+// slot (same #how anchor the "Solution" nav link targets).
+//
+// A single row of question cards that scrolls horizontally when they
+// don't fit the viewport (scroll-snap per card; the row bleeds to the
+// right viewport edge as a scroll affordance).
+//
+// Editorial copy lives in the collection's howitworks.md — kicker and
+// headline as frontmatter, one H2 item per use case
+// (`## {number} — {question}` + paragraph). The em-dash split takes the
+// first separator only, so questions may themselves contain em dashes.
+
+import {
+  getLandingSectionWithBody,
+  type LandingCollection,
+} from "@/utils/getLandingSection";
+import { parseSectionItems } from "@/utils/parseSectionBody";
+
+type Props = { collection?: LandingCollection };
+const { collection = "landing" } = Astro.props as Props;
+
+const { data: how, body } = await getLandingSectionWithBody(
+  "howitworks",
+  collection,
+);
+const cases = parseSectionItems(body);
+---
+
+<section class="b-section" id="how">
+  <div class="b-wrap">
+    <div class="b-shead">
+      <div class="b-kicker">{how.kicker}</div>
+      <h2>{how.headline}</h2>
+    </div>
+  </div>
+
+  <div class="b-cases" tabindex="0" aria-label={how.kicker}>
+    {
+      cases.map(uc => (
+        <div class="b-case">
+          <div class="pn">{uc.label}</div>
+          <h3>{uc.title}</h3>
+          <div class="case-body" set:html={uc.bodyHtml} />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* --- Horizontal card rail --- */
+  .b-cases {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 320px;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    /* Align the rail's left edge with .b-wrap content, let cards run to
+       the viewport edge so a cut-off card signals scrollability. */
+    padding: 4px max(40px, calc((100vw - 1180px) / 2 + 40px)) 18px;
+    scroll-padding-inline-start: max(40px, calc((100vw - 1180px) / 2 + 40px));
+  }
+  .b-cases:focus-visible {
+    outline: 2px dashed var(--brand-mid);
+    outline-offset: -2px;
+  }
+  .b-case {
+    scroll-snap-align: start;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    transition:
+      border-color 0.2s,
+      transform 0.2s;
+  }
+  .b-case:hover {
+    border-color: var(--brand-mid);
+    transform: translateY(-2px);
+  }
+  .b-case .pn {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    color: var(--brand-mid);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+  .b-case h3 {
+    font-size: 20px;
+    line-height: 1.3;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .b-case :global(p) {
+    font-size: 14.5px;
+    color: var(--muted);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* Thin, theme-matched scrollbar so the rail reads as scrollable
+     without shouting. */
+  .b-cases {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .b-cases::-webkit-scrollbar {
+    height: 8px;
+  }
+  .b-cases::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: 4px;
+  }
+  .b-cases::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  @media (max-width: 720px) {
+    .b-cases {
+      grid-auto-columns: min(300px, 82vw);
+      padding-inline: 20px;
+      scroll-padding-inline-start: 20px;
+      gap: 14px;
+    }
+  }
+</style>
