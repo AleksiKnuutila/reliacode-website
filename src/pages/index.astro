@@ -6,8 +6,6 @@ import HowItWorks from "@/components/landing/HowItWorks.astro";
 import Approach from "@/components/landing/Approach.astro";
 import TeamGrid from "@/components/landing/TeamGrid.astro";
 import FAQ from "@/components/landing/FAQ.astro";
-// Blog section is hidden for now — uncomment the import + render below
-// (and the Blog nav entry in src/content/site/main.md) to restore.
 import BlogTeaser from "@/components/landing/BlogTeaser.astro";
 import CTA from "@/components/landing/CTA.astro";
 
@@ -23,6 +21,6 @@ const description =
   <Approach collection="landingReliacheck" />
   <TeamGrid collection="landingReliacheck" />
   <FAQ collection="landingReliacheck" faqCollection="faqReliacheck" />
-  {/* <BlogTeaser /> */}
+  <BlogTeaser />
   <CTA collection="landingReliacheck" />
 </Layout>

@@ -11,9 +11,7 @@ nav:
   - { label: "Solution", href: "#how"     }
   - { label: "Team",     href: "#team"    }
   - { label: "FAQ",      href: "#faq"     }
-  # Blog is hidden for now — restore by uncommenting this line and
-  # the {/* <BlogTeaser /> */} in src/pages/index.astro.
-  # - { label: "Blog",     href: "/posts"   }
+  - { label: "Blog",     href: "/posts"   }
   - { label: "Contact",  href: "#contact" }
 
 # Small text next to the logo (header) and used in the legal strip below.
