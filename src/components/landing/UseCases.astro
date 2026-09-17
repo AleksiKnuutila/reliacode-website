@@ -46,7 +46,72 @@ const cases = parseSectionItems(body);
       ))
     }
   </div>
+  <div class="b-case-dots" role="tablist" aria-label="Use case pages"></div>
 </section>
+
+<script>
+  // Pager dots for the use-case rail. One dot per "page" (a viewport's
+  // worth of cards); clicking a dot scrolls the rail, and manual
+  // scrolling / swiping moves the active dot. Dots are built in JS so
+  // the count always matches the current viewport; on very wide screens
+  // where everything fits, no dots render at all.
+  const rail = document.querySelector<HTMLElement>(".b-cases");
+  const dotsBox = document.querySelector<HTMLElement>(".b-case-dots");
+
+  if (rail && dotsBox) {
+    const maxScroll = () => rail.scrollWidth - rail.clientWidth;
+    const pageCount = () =>
+      maxScroll() > 4 ? Math.ceil(rail.scrollWidth / rail.clientWidth) : 1;
+
+    const activeIndex = () => {
+      const pages = pageCount();
+      // Snap the final page exactly when scrolled to the end.
+      if (rail.scrollLeft >= maxScroll() - 4) return pages - 1;
+      return Math.min(
+        pages - 1,
+        Math.round(rail.scrollLeft / rail.clientWidth)
+      );
+    };
+
+    const paint = () => {
+      const dots = Array.from(dotsBox.children);
+      const active = activeIndex();
+      dots.forEach((d, i) => {
+        d.classList.toggle("active", i === active);
+        d.setAttribute("aria-selected", i === active ? "true" : "false");
+      });
+    };
+
+    const build = () => {
+      const pages = pageCount();
+      dotsBox.innerHTML = "";
+      if (pages < 2) return;
+      for (let i = 0; i < pages; i++) {
+        const dot = document.createElement("button");
+        dot.type = "button";
+        dot.className = "dot";
+        dot.setAttribute("role", "tab");
+        dot.setAttribute("aria-label", `Go to use cases page ${i + 1}`);
+        dot.addEventListener("click", () => {
+          rail.scrollTo({
+            left: Math.min(i * rail.clientWidth, maxScroll()),
+            behavior: "smooth",
+          });
+        });
+        dotsBox.appendChild(dot);
+      }
+      paint();
+    };
+
+    let raf = 0;
+    rail.addEventListener("scroll", () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(paint);
+    });
+    window.addEventListener("resize", build);
+    build();
+  }
+</script>
 
 <style>
   /* --- Horizontal card rail --- */
@@ -103,21 +168,42 @@ const cases = parseSectionItems(body);
     margin: 0;
   }
 
-  /* Thin, theme-matched scrollbar so the rail reads as scrollable
-     without shouting. */
+  /* Scrollbar hidden — the pager dots (plus the cut-off card at the
+     viewport edge) carry the scroll affordance instead. */
   .b-cases {
-    scrollbar-width: thin;
-    scrollbar-color: var(--border-strong) transparent;
+    scrollbar-width: none;
   }
   .b-cases::-webkit-scrollbar {
-    height: 8px;
+    display: none;
   }
-  .b-cases::-webkit-scrollbar-thumb {
+
+  /* --- Pager dots --- */
+  .b-case-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 6px;
+    min-height: 12px;
+  }
+  .b-case-dots :global(.dot) {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
     background: var(--border-strong);
-    border-radius: 4px;
+    cursor: pointer;
+    transition:
+      background 0.2s,
+      width 0.2s;
   }
-  .b-cases::-webkit-scrollbar-track {
-    background: transparent;
+  .b-case-dots :global(.dot:hover) {
+    background: color-mix(in oklch, var(--brand-mid) 55%, var(--border-strong));
+  }
+  .b-case-dots :global(.dot.active) {
+    background: var(--brand-mid);
+    width: 26px;
+    border-radius: 5px;
   }
 
   @media (max-width: 720px) {
