@@ -375,6 +375,30 @@
   font-weight: 600;
 }
 
+/* Inline-SVG figures in posts (diagram panels). The typography plugin
+   used for the post body doesn't size figure > svg, so without this the
+   diagrams render at intrinsic size and unpanelled. */
+.app-prose figure:has(> svg) {
+  margin: 1.6em 0;
+  padding: 1rem;
+  background: var(--secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.app-prose figure > svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.app-prose figure:has(> svg) figcaption {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
 @utility max-w-app {
   @apply max-w-3xl;
 }

@@ -25,8 +25,8 @@ You could try to squeeze a confidence out by prompting: *"On a scale of 0 to 1, 
 
 llmex fixes both. Every function returns a value **and** a confidence in `[0, 1]` derived from the model's own logits (not from anything the model *says* about itself), and can be calibrated to match empirical accuracy with a 50-example fit. The schema stays short — you pass it as a Python object, not as prompt text — and structural correctness comes for free because llmex reads probabilities over the candidates you provided, one at a time, instead of generating a JSON blob and hoping.
 
-<figure style="margin:1.75rem 0;padding:1rem;background:#f5f5fa;border:1px solid #e5e7eb;border-radius:8px;">
-<svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two zero-shot pipelines compared: standard LLM output vs llmex output" style="display:block;width:100%;height:auto;">
+<figure>
+<svg viewBox="0 0 800 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two zero-shot pipelines compared: standard LLM output vs llmex output">
   <style>
     .lx1-box{fill:#f5f5fa;stroke:#4b5563;stroke-width:1.2}
     .lx1-box-hi{fill:#eef2ff;stroke:#4338ca;stroke-width:1.5}
@@ -53,7 +53,6 @@ llmex fixes both. Every function returns a value **and** a confidence in `[0, 1]
   <text x="430" y="57" class="lx1-sm">Free-form reply</text>
   <text x="430" y="76" class="lx1-code">"positive"</text>
   <text x="610" y="68" class="lx1-sm" fill="#b91c1c">? — no confidence</text>
-
   <text x="20" y="150" class="lx1-title">llmex — logit scoring over candidates</text>
   <rect class="lx1-box-hi" x="20" y="166" width="210" height="48" rx="6"/>
   <text x="30" y="185" class="lx1-sm">Prompt + candidates</text>
@@ -68,7 +67,7 @@ llmex fixes both. Every function returns a value **and** a confidence in `[0, 1]
   <text x="710" y="188" class="lx1-sm" fill="#065f46">value</text>
   <text x="710" y="204" class="lx1-sm" fill="#065f46">+ confidence</text>
 </svg>
-<figcaption style="color:#4b5563;font-size:.9rem;margin-top:.75rem;text-align:center;"><em>Instead of parsing a text reply, llmex reads the model's own probability distribution over the labels you supplied.</em></figcaption>
+<figcaption><em>Instead of parsing a text reply, llmex reads the model's own probability distribution over the labels you supplied.</em></figcaption>
 </figure>
 
 ## The core idea in one paragraph
@@ -89,8 +88,8 @@ That single trick powers `classify`, `mcqa`, `verify`, `rank`, `disambiguate`, a
 
 The tokeniser doesn't respect your label semantics. `"Sports"` and `"Sci/Tech"` both start with the token `"S"`; the digits `"1"` and `"10"` start with the token `"1"`. A naïve first-token softmax over such labels is meaningless — it can't distinguish them.
 
-<figure style="margin:1.75rem 0;padding:1rem;background:#f5f5fa;border:1px solid #e5e7eb;border-radius:8px;">
-<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: first-token collision detection triggers fallback to full-span teacher-forcing" style="display:block;width:100%;height:auto;">
+<figure>
+<svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagram: first-token collision detection triggers fallback to full-span teacher-forcing">
   <style>
     .lx2-box{fill:#f5f5fa;stroke:#4b5563;stroke-width:1.2}
     .lx2-box-warn{fill:#fef3c7;stroke:#b45309;stroke-width:1.2}
@@ -120,7 +119,7 @@ The tokeniser doesn't respect your label semantics. `"Sports"` and `"Sci/Tech"` 
   <text x="20" y="146" class="lx2-sm" fill="#065f46"><tspan font-weight="700">Cost:</tspan> only the colliding candidates pay for extra forward passes. Non-colliding labels stay on the fast 1-pass path.</text>
   <text x="20" y="170" class="lx2-sm">Length-normalised so a 3-token label doesn't lose to a 1-token label just for being longer.</text>
 </svg>
-<figcaption style="color:#4b5563;font-size:.9rem;margin-top:.75rem;text-align:center;"><em>The tokeniser doesn't respect label boundaries — llmex detects and works around it per-label, not per-batch.</em></figcaption>
+<figcaption><em>The tokeniser doesn't respect label boundaries — llmex detects and works around it per-label, not per-batch.</em></figcaption>
 </figure>
 
 ### Multi-label ≠ softmax
@@ -133,8 +132,8 @@ For open-ended tasks — NER, ABSA, relations, structured JSON — the classic a
 
 llmex switches to a **recognition prompt** instead. After the generation pass finds a candidate span, it re-prompts the model with a yes/no question — `"Is [Elon Musk] the PERSON entity in this text?"` — and reads `P(yes)` via the same collision-safe logit-scoring path.
 
-<figure style="margin:1.75rem 0;padding:1rem;background:#f5f5fa;border:1px solid #e5e7eb;border-radius:8px;">
-<svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two-stage extraction diagram: generation then per-span recognition prompt" style="display:block;width:100%;height:auto;">
+<figure>
+<svg viewBox="0 0 800 280" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Two-stage extraction diagram: generation then per-span recognition prompt">
   <style>
     .lx3-box{fill:#f5f5fa;stroke:#4b5563;stroke-width:1.2}
     .lx3-box-hi{fill:#eef2ff;stroke:#4338ca;stroke-width:1.4}
@@ -147,7 +146,6 @@ llmex switches to a **recognition prompt** instead. After the generation pass fi
   </style>
   <defs><marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4338ca"/></marker></defs>
   <text x="20" y="22" class="lx3-title">extract_entities()  —  generate → recognise</text>
-
   <text x="20" y="52" class="lx3-stage">Stage 1 — greedy generation (1 pass)</text>
   <rect class="lx3-box" x="20" y="62" width="200" height="46" rx="6"/>
   <text x="30" y="80" class="lx3-sm">source</text>
@@ -159,7 +157,6 @@ llmex switches to a **recognition prompt** instead. After the generation pass fi
   <rect class="lx3-box" x="510" y="62" width="280" height="46" rx="6"/>
   <text x="520" y="80" class="lx3-sm">candidate spans</text>
   <text x="520" y="98" class="lx3-code">[Elon Musk/PERSON, Tesla/ORG]</text>
-
   <text x="20" y="152" class="lx3-stage">Stage 2 — per-span recognition (yes/no scoring)</text>
   <rect class="lx3-box-hi" x="20" y="162" width="420" height="66" rx="6"/>
   <text x="30" y="181" class="lx3-sm">prompt (repeated per span, KV-cached prefix)</text>
@@ -170,10 +167,9 @@ llmex switches to a **recognition prompt** instead. After the generation pass fi
   <text x="495" y="181" class="lx3-sm">score_choices(["yes","no"])</text>
   <text x="495" y="200" class="lx3-code">P(yes) = 0.963  ← text_confidence</text>
   <text x="495" y="218" class="lx3-code">label_confidence via softmax</text>
-
   <text x="20" y="258" class="lx3-sm"><tspan font-weight="700">Per-entity output:</tspan> confidence = geometric mean(text_conf, label_conf) — one number for sort / filter, either weak component pulls it down.</text>
 </svg>
-<figcaption style="color:#4b5563;font-size:.9rem;margin-top:.75rem;text-align:center;"><em>The recognition prompt gives well-separated span confidences (0.5–1.0 range) instead of teacher-forcing crush (near 0). Same trick for ABSA, relations, and per-field extract().</em></figcaption>
+<figcaption><em>The recognition prompt gives well-separated span confidences (0.5–1.0 range) instead of teacher-forcing crush (near 0). Same trick for ABSA, relations, and per-field extract().</em></figcaption>
 </figure>
 
 The result: `extract_entities()` gives you span confidences you can actually filter on. The KV prefix cache reuses the source-text prefix across all recognition prompts, so the second stage is nearly free even on CPU.
@@ -184,8 +180,8 @@ Even with recognition prompts, the raw probabilities coming out of an instruct-t
 
 Fit a single scalar `T` on a small labelled calibration set (~50 examples) and apply `softmax(logits / T)` at inference. That's temperature scaling. It is monotonic — argmax, accuracy, and AUC are exactly preserved — so it can only help.
 
-<figure style="margin:1.75rem 0;padding:1rem;background:#f5f5fa;border:1px solid #e5e7eb;border-radius:8px;">
-<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reliability diagram: before and after temperature scaling on REBEL relation extraction" style="display:block;width:100%;height:auto;">
+<figure>
+<svg viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Reliability diagram: before and after temperature scaling on REBEL relation extraction">
   <style>
     .lx4-ax{stroke:#374151;stroke-width:1}
     .lx4-grid{stroke:#e5e7eb;stroke-width:1}
@@ -250,7 +246,7 @@ Fit a single scalar `T` on a small labelled calibration set (~50 examples) and a
   </g>
   <text x="20" y="248" class="lx4-legend">Argmax, accuracy, and AUC are unchanged by T-scaling — only the probability changes. Mean conf drops from 0.579 to 0.172, matching true accuracy 0.083.</text>
 </svg>
-<figcaption style="color:#4b5563;font-size:.9rem;margin-top:.75rem;text-align:center;"><em>Fitting a single scalar T on ~50 labelled examples took REBEL relation confidences from wildly overconfident to nearly perfectly calibrated. Same trick works for every task in llmex.</em></figcaption>
+<figcaption><em>Fitting a single scalar T on ~50 labelled examples took REBEL relation confidences from wildly overconfident to nearly perfectly calibrated. Same trick works for every task in llmex.</em></figcaption>
 </figure>
 
 ```python
