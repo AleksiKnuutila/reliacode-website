@@ -1,7 +1,7 @@
 ---
 title: Vinod Vadakital
 name: Dr. MBA Vinod Vadakital
-role: LLM Verification
+role: "Industry & Pilots"
 photo: ./vinod-vadakital.jpg
 sort: 25
 ---

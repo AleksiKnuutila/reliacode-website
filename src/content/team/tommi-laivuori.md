@@ -1,7 +1,7 @@
 ---
 title: "Tommi Laivuori"
 name: "Tommi Laivuori"
-role: "LLM Verification"
+role: "Industry & Pilots"
 photo: ./tommi-laivuori.png
 sort: 20
 ---
