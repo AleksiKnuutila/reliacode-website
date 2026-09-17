@@ -2,17 +2,17 @@
 section: approach
 title: Approach
 kicker: Approach
-headline: Built to be checked, not just trusted.
+headline: Open research problems we're solving
 ---
 
-## Pillar I — Continuous coverage at scale
+## Pillar I — From contract language to executable rules
 
-LLMs read and understand your contracts once. The resulting rules then run on a fast, consistent engine that gives the same answer every time. That combination is what makes it possible to reconcile thousands of contracts and millions of invoice lines, not just a sampled few.
+Commercial clauses are a compilation problem. We study how language models can translate pricing terms into formal, human-verifiable rules, and where that translation fails. Extraction is probabilistic, execution is deterministic, and the boundary between the two is the core design question of the system.
 
-## Pillar II — Defensible findings
+## Pillar II — Record linkage without shared keys
 
-Every finding includes the contractual evidence and the calculation behind it, not a suggestion. Something procurement and finance can act on directly with a supplier.
+Invoice lines rarely reference the agreement that governs them, or name the product the way the contract does. A line reading "DSL 500L HQ" must be resolved to the diesel price grid, not the gasoline one, before any price can be checked. This is entity resolution under noisy data, at both the supplier and the product level. Our linkage models output calibrated match probabilities, and we study when a link is strong enough to justify a verification claim.
 
-## Pillar III — Runs alongside what you already have
+## Pillar III — Calibrated uncertainty in reasoning
 
-	We work off your existing payments and operational data, deployed inside your own environment so privacy and security stay on your terms. We're not selling another app to manage. The goal is the result, not adoption of a new tool.
+Most LLM systems cannot tell you how sure they are. We develop methods for calibrated confidence in zero-shot data extraction and reasoning, so every finding carries a defensible probability and weak evidence yields *cannot verify* rather than a guess.
