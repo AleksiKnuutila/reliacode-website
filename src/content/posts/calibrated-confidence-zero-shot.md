@@ -1,7 +1,7 @@
 ---
 title: Calibrated confidence for zero-shot LLMs
 description: How llmex turns a causal LM's logits into probabilities you can actually filter and trust — with visual explainers of logit scoring, collision fallback, recognition prompts, and temperature scaling.
-author: aleksi-knuutila
+author: roman-kyrychenko
 pubDatetime: 2026-07-31T09:00:00Z
 featured: true
 draft: false
