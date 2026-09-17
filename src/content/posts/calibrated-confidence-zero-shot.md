@@ -11,7 +11,7 @@ tags:
   - zero-shot
 ---
 
-**How [llmex](https://github.com/ReliaParse/llmex) turns a causal LM's logits into probabilities you can actually filter and trust.**
+**How llmex turns a causal LM's logits into probabilities you can actually filter and trust.**
 
 Zero-shot with an instruct-tuned LM is a fantastic way to prototype an NLP pipeline. In fifteen lines of Python you can classify tickets, extract entities, verify claims, or rank passages — no fine-tuning, no annotated data, no task-specific head.
 
@@ -288,4 +288,4 @@ If your workflow currently parses free-text LM output with a regex and hopes for
 
 ---
 
-**Try it:** [github.com/ReliaParse/llmex](https://github.com/ReliaParse/llmex) · [docs](https://reliaparse.github.io/llmex/) · [calibration recipe](https://reliaparse.github.io/llmex/calibration/)
+**Open source publication coming soon.** We're preparing llmex for public release — watch this space.
